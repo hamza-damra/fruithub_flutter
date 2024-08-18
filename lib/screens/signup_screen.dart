@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/screens/signin_screen.dart';
+import 'package:fruitshub/widgets/my_textfield.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
@@ -9,10 +9,18 @@ class SignUpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back_ios),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        leading: const SizedBox(),
+        title: const Text(
+          'حساب جديد',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -21,53 +29,20 @@ class SignUpScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                const Center(
-                  child: Text(
-                    'حساب جديد',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
                 const SizedBox(height: 40),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'اسم المستخدم',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textAlign: TextAlign.right,
+                const MyTextField(
+                  hint: 'الاسم كامل',
+                  showSuffixIcon: false,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'الايميل الالكتروني',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textAlign: TextAlign.right,
-                  keyboardType: TextInputType.emailAddress,
+                const MyTextField(
+                  hint: 'البريد الالكتروني',
+                  showSuffixIcon: false,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'كلمة المرور',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textAlign: TextAlign.right,
-                  obscureText: true,
+                const MyTextField(
+                  hint: 'كلمة المرور',
+                  showSuffixIcon: true,
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -114,16 +89,19 @@ class SignUpScreen extends StatelessWidget {
                   child: Text.rich(
                     TextSpan(
                       text: 'تمتلك حساب بالفعل؟ ',
-                      style: const TextStyle(fontSize: 16, color: Color(0XFF949D9E)),
+                      style: const TextStyle(
+                          fontSize: 16, color: Color(0XFF949D9E)),
                       children: [
                         TextSpan(
                           text: 'تسجيل دخول',
-                          style: const TextStyle(fontSize: 16, color: Color(0XFF1B5E37)),
+                          style: const TextStyle(
+                              fontSize: 16, color: Color(0XFF1B5E37)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SignInScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const SignInScreen()),
                               );
                             },
                         ),

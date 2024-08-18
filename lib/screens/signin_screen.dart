@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/screens/signup_screen.dart';
+import 'package:fruitshub/widgets/my_textfield.dart';
 
 class SignInScreen extends StatelessWidget {
   const SignInScreen({super.key});
@@ -8,10 +9,18 @@ class SignInScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
-        leading: const Icon(Icons.arrow_back_ios),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
+        backgroundColor: Colors.white,
+        centerTitle: true,
+        leading: const SizedBox(),
+        title: const Text(
+          'تسجيل الدخول',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -20,40 +29,15 @@ class SignInScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
-                const Center(
-                  child: Text(
-                    'تسجيل دخول',
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                ),
                 const SizedBox(height: 40),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'الايميل الالكتروني',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textAlign: TextAlign.right,
-                  keyboardType: TextInputType.emailAddress,
+                const MyTextField(
+                  hint: 'البريد الالكتروني',
+                  showSuffixIcon: false,
                 ),
                 const SizedBox(height: 20),
-                TextFormField(
-                  decoration: InputDecoration(
-                    hintText: 'كلمة المرور',
-                    filled: true,
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      borderSide: BorderSide.none,
-                    ),
-                  ),
-                  textAlign: TextAlign.right,
-                  obscureText: true,
+                const MyTextField(
+                  hint: 'كلمه السر',
+                  showSuffixIcon: true,
                 ),
                 const SizedBox(height: 10),
                 Align(
@@ -61,7 +45,7 @@ class SignInScreen extends StatelessWidget {
                   child: TextButton(
                     onPressed: () {},
                     child: const Text(
-                      'نسيت كلمة المرور؟',
+                      'نسيت كلمة المرور',
                       style: TextStyle(
                         color: Color(0xFF2D9F5D),
                       ),
@@ -88,16 +72,19 @@ class SignInScreen extends StatelessWidget {
                   child: Text.rich(
                     TextSpan(
                       text: 'لا تمتلك حساب؟ ',
-                      style: const TextStyle(fontSize: 16, color: Color(0xFF949D9E)),
+                      style: const TextStyle(
+                          fontSize: 16, color: Color(0xFF949D9E)),
                       children: [
                         TextSpan(
                           text: 'قم بإنشاء حساب',
-                          style: const TextStyle(color: Color(0xFF1B5E37), fontSize: 16),
+                          style: const TextStyle(
+                              color: Color(0xFF1B5E37), fontSize: 16),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                                MaterialPageRoute(
+                                    builder: (context) => const SignUpScreen()),
                               );
                             },
                         ),
