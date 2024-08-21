@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fruitshub/widgets/app_controller.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fruitshub/widgets/most_selling.dart';
 import 'package:fruitshub/widgets/product_card.dart';
+import 'package:fruitshub/widgets/search.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -15,9 +16,9 @@ class HomeScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      bottomNavigationBar: const AppController(),
       appBar: AppBar(
         backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
         actions: [
           Padding(
             padding: EdgeInsets.only(right: screenWidth * 0.02),
@@ -64,9 +65,19 @@ class HomeScreen extends StatelessWidget {
               icon: const Icon(
                 Icons.notifications_none_rounded,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Fluttertoast.showToast(
+                  msg: "سيتم توفير الاشعارات قريبا",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.TOP,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.cyan[100],
+                  textColor: const Color.fromARGB(255, 129, 129, 129),
+                  fontSize: 16.0,
+                );
+              },
               color: const Color.fromARGB(255, 39, 139, 43),
-              iconSize: screenWidth * 0.07, // Responsive icon size
+              iconSize: screenWidth * 0.07,
             ),
           ),
         ),
@@ -74,75 +85,15 @@ class HomeScreen extends StatelessWidget {
       body: Column(
         children: [
           SizedBox(height: screenHeight * 0.01), // Responsive spacing
-          Padding(
-            padding: EdgeInsets.all(screenWidth * 0.02),
-            child: Container(
-              width: double.infinity,
-              height: screenHeight * 0.05, // Responsive height
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(screenWidth * 0.04),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.shade400,
-                    blurRadius: 5,
-                    spreadRadius: 3,
-                  ),
-                ],
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  const Spacer(flex: 25),
-                  Text(
-                    '.... ابحث عن',
-                    style: TextStyle(
-                      fontFamily: 'Cairo',
-                      fontSize: 14 * textScaleFactor,
-                    ),
-                  ),
-                  SizedBox(
-                    width: screenWidth * 0.02,
-                  ),
-                  FaIcon(
-                    FontAwesomeIcons.magnifyingGlass,
-                    color: const Color(0xff1B5E37),
-                    size: screenWidth * 0.05,
-                  ),
-                  const Spacer(flex: 1),
-                ],
-              ),
-            ),
+          Search(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            textScaleFactor: textScaleFactor,
           ),
-          Expanded(
-            child: Row(
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.04,
-                ),
-                Expanded(
-                  child: GridView.builder(
-                    itemCount: 50,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      childAspectRatio: 2 / 2.5,
-                      mainAxisSpacing: 8,
-                      crossAxisSpacing:
-                          MediaQuery.of(context).size.width * 0.04,
-                    ),
-                    itemBuilder: (context, index) {
-                      return ProductCard(
-                        screenWidth: screenWidth,
-                        screenHeight: screenHeight,
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.04,
-                ),
-              ],
-            ),
+          const SizedBox(height: 7),
+          MostSelling(
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
           ),
         ],
       ),
