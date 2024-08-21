@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'package:fruitshub/screens/splash.dart';
+import 'package:fruitshub/screens/main_screens/home_screen.dart';
+import 'package:fruitshub/widgets/app_controller.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -51,7 +52,9 @@ class _MyAppState extends State<MyApp> {
               fontFamily: 'Cairo', fontSize: 16, fontWeight: FontWeight.bold),
         ),
       ),
-      home: const Splash(),
+      home: const Scaffold(
+        body: AppController(),
+      ),
     );
   }
 }

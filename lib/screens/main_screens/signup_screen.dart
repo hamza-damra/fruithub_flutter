@@ -1,6 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fruitshub/screens/signin_screen.dart';
+import 'package:fruitshub/screens/main_screens/signin_screen.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
 
 class SignUpScreen extends StatelessWidget {
