@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fruitshub/widgets/most_selling.dart';
+import 'package:fruitshub/widgets/most_selling_builder.dart';
 
 class MostSellingScreen extends StatelessWidget {
   const MostSellingScreen({super.key});

@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:fruitshub/models/product.dart';
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
 class ProductCard extends StatelessWidget {
   const ProductCard({
     super.key,
     required this.screenWidth,
     required this.screenHeight,
+    required this.product,
   });
 
   final double screenWidth;
   final double screenHeight;
+  final Product product;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +35,11 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Flexible(
-                  child: Image.asset(
-                    'assets/images/strawberry.png',
-                    fit: BoxFit.contain,
+                  child: FancyShimmerImage(
+                    imageUrl: product.imageUrl,
+                    shimmerBaseColor: Colors.grey[300],
+                    shimmerHighlightColor: Colors.white,
+                    boxFit: BoxFit.contain,
                   ),
                 ),
               ],
@@ -44,7 +50,7 @@ class ProductCard extends StatelessWidget {
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerRight,
               child: Text(
-                'فراولة',
+                product.name,
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontWeight: FontWeight.w700,
@@ -106,7 +112,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        '30',
+                        product.price.toString(),
                         style: TextStyle(
                           color: const Color(0xffF4A91F),
                           fontWeight: FontWeight.w700,

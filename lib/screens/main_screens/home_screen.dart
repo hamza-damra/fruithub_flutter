@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fruitshub/widgets/most_selling.dart';
-import 'package:fruitshub/widgets/product_card.dart';
+import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  String? _selectedOption;
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +95,101 @@ class HomeScreen extends StatelessWidget {
             screenWidth: screenWidth,
             screenHeight: screenHeight,
             textScaleFactor: textScaleFactor,
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return StatefulBuilder(
+                    builder: (BuildContext context, StateSetter setState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Text(
+                              ': ترتيب حسب',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                          RadioListTile<String>(
+                            title: const Text(
+                              'السعر ( الأقل الي الأعلي )',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            value: 'option1',
+                            groupValue: _selectedOption,
+                            activeColor: Colors.green.shade600,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedOption = value;
+                              });
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text(
+                              'السعر ( الأعلي الي الأقل )',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            value: 'option2',
+                            activeColor: Colors.green.shade600,
+                            groupValue: _selectedOption,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedOption = value;
+                              });
+                            },
+                          ),
+                          RadioListTile<String>(
+                            title: const Text(
+                              'الأبجديه',
+                              style: TextStyle(
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            value: 'option3',
+                            groupValue: _selectedOption,
+                            activeColor: Colors.green.shade600,
+                            onChanged: (String? value) {
+                              setState(() {
+                                _selectedOption = value;
+                              });
+                            },
+                          ),
+                          const SizedBox(height: 9),
+                          Center(
+                            child: SizedBox(
+                              width: screenWidth * 0.90,
+                              height: 40,
+                              child: ElevatedButton(
+                                style: const ButtonStyle(
+                                  backgroundColor: WidgetStatePropertyAll(
+                                    Color(0xff1B5E37),
+                                  ),
+                                ),
+                                onPressed: () {},
+                                child: const Text(
+                                  'تصفيه',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
+              );
+            },
           ),
           const SizedBox(height: 7),
           MostSelling(

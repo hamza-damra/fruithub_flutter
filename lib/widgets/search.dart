@@ -7,11 +7,13 @@ class Search extends StatelessWidget {
     required this.screenWidth,
     required this.screenHeight,
     required this.textScaleFactor,
+    required this.onTap,
   });
 
   final double screenWidth;
   final double screenHeight;
   final double textScaleFactor;
+  final void Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,15 @@ class Search extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
+              const Spacer(flex: 1),
+              GestureDetector(
+                onTap: onTap,
+                child: Image.asset(
+                  'assets/images/setting-lines.png',
+                  color: Colors.grey[700],
+                  width: screenWidth * 0.05,
+                ),
+              ),
               const Spacer(flex: 25),
               FittedBox(
                 fit: BoxFit.scaleDown,

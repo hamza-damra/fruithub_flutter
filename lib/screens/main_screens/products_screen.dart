@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fruitshub/models/product.dart';
+import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
-import 'package:fruitshub/widgets/most_selling.dart';
+import 'package:fruitshub/widgets/most_selling_builder.dart';
+import 'package:fruitshub/widgets/our_product_card.dart';
 import 'package:fruitshub/widgets/search.dart';
 
 class ProductsScreen extends StatefulWidget {
@@ -17,6 +20,72 @@ class _ProductsScreenState extends State<ProductsScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final textScaleFactor = MediaQuery.of(context).textScaleFactor;
+    List<Product> products = [
+      Product(
+        id: 1,
+        name: 'فواكه',
+        description: 'fruits description',
+        price: 30,
+        quantity: 1,
+        imageUrl:
+            'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
+        categoryId: 2,
+        totalRating: 3.5,
+        counterFiveStars: 3,
+        counterFourStars: 6,
+        counterThreeStars: 7,
+        counterTwoStars: 3,
+        counterOneStars: 2,
+      ),
+      Product(
+        id: 1,
+        name: 'سلطه فواكه',
+        description: 'fruit salad description',
+        price: 30,
+        quantity: 1,
+        imageUrl:
+            'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
+        categoryId: 2,
+        totalRating: 3.5,
+        counterFiveStars: 3,
+        counterFourStars: 6,
+        counterThreeStars: 7,
+        counterTwoStars: 3,
+        counterOneStars: 2,
+      ),
+      Product(
+        id: 1,
+        name: 'مانجا',
+        description: 'mango description',
+        price: 30,
+        quantity: 1,
+        imageUrl:
+            'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
+        categoryId: 2,
+        totalRating: 3.5,
+        counterFiveStars: 3,
+        counterFourStars: 6,
+        counterThreeStars: 7,
+        counterTwoStars: 3,
+        counterOneStars: 2,
+      ),
+      Product(
+        id: 1,
+        name: 'كريز',
+        description: 'Cherries description',
+        price: 30,
+        quantity: 1,
+        imageUrl:
+            'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
+        categoryId: 2,
+        totalRating: 3.5,
+        counterFiveStars: 3,
+        counterFourStars: 6,
+        counterThreeStars: 7,
+        counterTwoStars: 3,
+        counterOneStars: 2,
+      ),
+    ];
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -71,6 +140,19 @@ class _ProductsScreenState extends State<ProductsScreen> {
             textScaleFactor: textScaleFactor,
             screenWidth: screenWidth,
             screenHeight: screenHeight,
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                builder: (context) {
+                  return const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.abc),
+                    ],
+                  );
+                },
+              );
+            },
           ),
           Padding(
             padding: EdgeInsets.all(screenWidth * 0.02),
@@ -119,55 +201,23 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
               child: ListView.builder(
                 reverse: true,
-                itemCount: 10,
+                itemCount: products.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: EdgeInsets.only(
-                        left: screenWidth * 0.02), // Responsive left padding
-                    child: SizedBox(
-                      width: screenWidth * 0.20, // Adjusted size for better fit
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            child: Container(
-                              width: screenWidth * 0.20, // 20% of screen width
-                              height: screenWidth * 0.20, // Ensure square shape
-                              decoration: const BoxDecoration(
-                                color: Color(0xffF3F5F7),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Padding(
-                                padding: EdgeInsets.all(screenWidth *
-                                    0.02), // Responsive padding inside the circle
-                                child: Image.asset(
-                                  'assets/images/strawberry.png',
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: screenHeight *
-                                0.01, // Responsive space between image and text
-                          ),
-                          Flexible(
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                'فرولة',
-                                style: TextStyle(
-                                  fontFamily: 'Cairo',
-                                  fontWeight: FontWeight.w700,
-                                  fontSize: screenWidth * 0.048,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return DetailsScreen(
+                            product: products[index],
+                          );
+                        },
+                      ));
+                    },
+                    child: OurProductCard(
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight,
+                      product: products[index],
                     ),
                   );
                 },
