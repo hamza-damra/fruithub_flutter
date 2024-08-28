@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:fruitshub/widgets/search_delegate.dart';
 
 class Search extends StatelessWidget {
   const Search({
@@ -33,25 +34,27 @@ class Search extends StatelessWidget {
             ),
           ],
         ),
-        child: GestureDetector(
-          onTap: () {
-            ///////
-            // search logic
-          },
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Spacer(flex: 1),
-              GestureDetector(
-                onTap: onTap,
-                child: Image.asset(
-                  'assets/images/setting-lines.png',
-                  color: Colors.grey[700],
-                  width: screenWidth * 0.05,
-                ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            const Spacer(flex: 1),
+            GestureDetector(
+              onTap: onTap,
+              child: Image.asset(
+                'assets/images/setting-lines.png',
+                color: Colors.grey[700],
+                width: screenWidth * 0.05,
               ),
-              const Spacer(flex: 25),
-              FittedBox(
+            ),
+            const Spacer(flex: 25),
+            GestureDetector(
+              onTap: () {
+                showSearch(
+                  context: context,
+                  delegate: Searchdelegate(),
+                );
+              },
+              child: FittedBox(
                 fit: BoxFit.scaleDown,
                 child: Text(
                   '.... ابحث عن',
@@ -61,17 +64,25 @@ class Search extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(
-                width: screenWidth * 0.02,
-              ),
-              FaIcon(
+            ),
+            SizedBox(
+              width: screenWidth * 0.02,
+            ),
+            GestureDetector(
+              onTap: () {
+                showSearch(
+                  context: context,
+                  delegate: Searchdelegate(),
+                );
+              },
+              child: FaIcon(
                 FontAwesomeIcons.magnifyingGlass,
                 color: const Color(0xff1B5E37),
                 size: screenWidth * 0.05,
               ),
-              const Spacer(flex: 1),
-            ],
-          ),
+            ),
+            const Spacer(flex: 1),
+          ],
         ),
       ),
     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
+import 'package:fruitshub/widgets/search_delegate.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -12,6 +14,85 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? _selectedOption;
+  String sort = 'name'; // Default sort order
+
+  List<Product> products = [
+    Product(
+      id: 1,
+      name: 'فواكه',
+      description: 'fruits description',
+      price: 20,
+      quantity: 1,
+      imageUrl:
+          'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
+      categoryId: 2,
+      totalRating: 3.5,
+      counterFiveStars: 3,
+      counterFourStars: 6,
+      counterThreeStars: 7,
+      counterTwoStars: 3,
+      counterOneStars: 2,
+    ),
+    Product(
+      id: 1,
+      name: 'سلطه فواكه',
+      description: 'fruit salad description',
+      price: 30,
+      quantity: 1,
+      imageUrl:
+          'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
+      categoryId: 2,
+      totalRating: 3.5,
+      counterFiveStars: 3,
+      counterFourStars: 6,
+      counterThreeStars: 7,
+      counterTwoStars: 3,
+      counterOneStars: 2,
+    ),
+    Product(
+      id: 1,
+      name: 'مانجا',
+      description: 'mango description',
+      price: 25,
+      quantity: 1,
+      imageUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
+      categoryId: 2,
+      totalRating: 3.5,
+      counterFiveStars: 3,
+      counterFourStars: 6,
+      counterThreeStars: 7,
+      counterTwoStars: 3,
+      counterOneStars: 2,
+    ),
+    Product(
+      id: 1,
+      name: 'كريز',
+      description: 'Cherries description',
+      price: 40,
+      quantity: 1,
+      imageUrl:
+          'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
+      categoryId: 2,
+      totalRating: 3.5,
+      counterFiveStars: 3,
+      counterFourStars: 6,
+      counterThreeStars: 7,
+      counterTwoStars: 3,
+      counterOneStars: 2,
+    ),
+  ];
+
+  void _sortProducts() {
+    if (sort == 'asc') {
+      products.sort((a, b) => a.price.compareTo(b.price));
+    } else if (sort == 'desc') {
+      products.sort((a, b) => b.price.compareTo(a.price));
+    } else if (sort == 'name') {
+      products.sort((a, b) => a.name.compareTo(b.name));
+    }
+    setState(() {}); // Trigger rebuild to reflect changes
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,110 +172,144 @@ class _HomeScreenState extends State<HomeScreen> {
       body: Column(
         children: [
           SizedBox(height: screenHeight * 0.01), // Responsive spacing
-          Search(
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
-            textScaleFactor: textScaleFactor,
+          GestureDetector(
             onTap: () {
-              showModalBottomSheet(
+              showSearch(
                 context: context,
-                builder: (context) {
-                  return StatefulBuilder(
-                    builder: (BuildContext context, StateSetter setState) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.all(16.0),
-                            child: Text(
-                              ': ترتيب حسب',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          RadioListTile<String>(
-                            title: const Text(
-                              'السعر ( الأقل الي الأعلي )',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            value: 'option1',
-                            groupValue: _selectedOption,
-                            activeColor: Colors.green.shade600,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedOption = value;
-                              });
-                            },
-                          ),
-                          RadioListTile<String>(
-                            title: const Text(
-                              'السعر ( الأعلي الي الأقل )',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            value: 'option2',
-                            activeColor: Colors.green.shade600,
-                            groupValue: _selectedOption,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedOption = value;
-                              });
-                            },
-                          ),
-                          RadioListTile<String>(
-                            title: const Text(
-                              'الأبجديه',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            value: 'option3',
-                            groupValue: _selectedOption,
-                            activeColor: Colors.green.shade600,
-                            onChanged: (String? value) {
-                              setState(() {
-                                _selectedOption = value;
-                              });
-                            },
-                          ),
-                          const SizedBox(height: 9),
-                          Center(
-                            child: SizedBox(
-                              width: screenWidth * 0.90,
-                              height: 40,
-                              child: ElevatedButton(
-                                style: const ButtonStyle(
-                                  backgroundColor: WidgetStatePropertyAll(
-                                    Color(0xff1B5E37),
-                                  ),
-                                ),
-                                onPressed: () {},
-                                child: const Text(
-                                  'تصفيه',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                },
+                delegate: Searchdelegate(),
               );
             },
+            child: Search(
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+              textScaleFactor: textScaleFactor,
+              onTap: () {
+                showModalBottomSheet(
+                  context: context,
+                  builder: (context) {
+                    return StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 5),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: 70,
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[400],
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 17),
+                            const Padding(
+                              padding: EdgeInsets.only(right: 13.0),
+                              child: Text(
+                                ': ترتيب حسب',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w900,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            RadioListTile<String>(
+                              title: const Text(
+                                'السعر ( الأقل الي الأعلي )',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              value: 'asc',
+                              groupValue: _selectedOption,
+                              activeColor: Colors.green.shade600,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedOption = value;
+                                  sort = 'asc';
+                                });
+                              },
+                            ),
+                            RadioListTile<String>(
+                              title: const Text(
+                                'السعر ( الأعلي الي الأقل )',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              value: 'desc',
+                              groupValue: _selectedOption,
+                              activeColor: Colors.green.shade600,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedOption = value;
+                                  sort = 'desc';
+                                });
+                              },
+                            ),
+                            RadioListTile<String>(
+                              title: const Text(
+                                'الأبجديه',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              value: 'name',
+                              groupValue: _selectedOption,
+                              activeColor: Colors.green.shade600,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedOption = value;
+                                  sort = 'name';
+                                });
+                              },
+                            ),
+                            const SizedBox(height: 9),
+                            Center(
+                              child: SizedBox(
+                                width: screenWidth * 0.90,
+                                height: 40,
+                                child: ElevatedButton(
+                                  style: const ButtonStyle(
+                                    backgroundColor: WidgetStatePropertyAll(
+                                      Color(0xff1B5E37),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    _sortProducts(); // Call sort function
+                                  },
+                                  child: const Text(
+                                    'تصفيه',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w700,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                );
+              },
+            ),
           ),
           const SizedBox(height: 7),
           MostSelling(
-            screenWidth: screenWidth,
-            screenHeight: screenHeight,
+            products: products, // Pass sorted products
+            sorting: sort,
+            showText: false,
           ),
         ],
       ),

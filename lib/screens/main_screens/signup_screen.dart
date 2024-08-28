@@ -31,16 +31,19 @@ class SignUpScreen extends StatelessWidget {
               children: [
                 const SizedBox(height: 40),
                 const MyTextField(
+                  align: TextAlign.right,
                   hint: 'الاسم كامل',
                   showSuffixIcon: false,
                 ),
                 const SizedBox(height: 20),
                 const MyTextField(
+                  align: TextAlign.right,
                   hint: 'البريد الالكتروني',
                   showSuffixIcon: false,
                 ),
                 const SizedBox(height: 20),
                 const MyTextField(
+                  align: TextAlign.right,
                   hint: 'كلمة المرور',
                   showSuffixIcon: true,
                 ),

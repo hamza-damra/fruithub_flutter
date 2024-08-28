@@ -1,124 +1,129 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
+import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
 
-class MostSelling extends StatelessWidget {
+class MostSelling extends StatefulWidget {
   const MostSelling({
     super.key,
-    required this.screenWidth,
-    required this.screenHeight,
+    required this.products,
+    this.sorting,
+    required this.showText,
   });
 
-  final double screenWidth;
-  final double screenHeight;
+  final List<Product> products;
+  final String? sorting;
+  final bool showText;
 
   @override
+  State<MostSelling> createState() => _MostSellingState();
+}
+
+class _MostSellingState extends State<MostSelling> {
+  @override
   Widget build(BuildContext context) {
-    List<Product> products = [
-      Product(
-        id: 1,
-        name: 'فواكه',
-        description: 'fruits description',
-        price: 30,
-        quantity: 1,
-        imageUrl:
-            'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
-        categoryId: 2,
-        totalRating: 3.5,
-        counterFiveStars: 3,
-        counterFourStars: 6,
-        counterThreeStars: 7,
-        counterTwoStars: 3,
-        counterOneStars: 2,
-      ),
-      Product(
-        id: 1,
-        name: 'سلطه فواكه',
-        description: 'fruit salad description',
-        price: 30,
-        quantity: 1,
-        imageUrl:
-            'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
-        categoryId: 2,
-        totalRating: 3.5,
-        counterFiveStars: 3,
-        counterFourStars: 6,
-        counterThreeStars: 7,
-        counterTwoStars: 3,
-        counterOneStars: 2,
-      ),
-      Product(
-        id: 1,
-        name: 'مانجا',
-        description: 'mango description',
-        price: 30,
-        quantity: 1,
-        imageUrl:
-            'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
-        categoryId: 2,
-        totalRating: 3.5,
-        counterFiveStars: 3,
-        counterFourStars: 6,
-        counterThreeStars: 7,
-        counterTwoStars: 3,
-        counterOneStars: 2,
-      ),
-      Product(
-        id: 1,
-        name: 'كريز',
-        description: 'Cherries description',
-        price: 30,
-        quantity: 1,
-        imageUrl:
-            'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
-        categoryId: 2,
-        totalRating: 3.5,
-        counterFiveStars: 3,
-        counterFourStars: 6,
-        counterThreeStars: 7,
-        counterTwoStars: 3,
-        counterOneStars: 2,
-      ),
-    ];
+    if (widget.sorting == 'asc') {
+      widget.products.sort((a, b) => a.price.compareTo(b.price));
+    } else if (widget.sorting == 'desc') {
+      widget.products.sort((a, b) => b.price.compareTo(a.price));
+    } else {
+      widget.products.sort((a, b) => a.name.compareTo(b.name));
+    }
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Expanded(
-      child: Row(
+      child: Column(
         children: [
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.04,
-          ),
-          Expanded(
-            child: GridView.builder(
-              itemCount: products.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 2 / 2.5,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: MediaQuery.of(context).size.width * 0.04,
-              ),
-              itemBuilder: (context, index) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => DetailsScreen(
-                          product: products[index],
+          widget.showText == true
+              ? Padding(
+                  padding: EdgeInsets.only(
+                    left: screenWidth * 0.03,
+                    right: screenWidth * 0.03,
+                    bottom: screenWidth * 0.03,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(context, MaterialPageRoute(
+                            builder: (context) {
+                              return const MostSellingScreen();
+                            },
+                          ));
+                        },
+                        child: Text(
+                          'المزيد',
+                          style: TextStyle(
+                            color: const Color(0xff949D9E),
+                            fontWeight: FontWeight.w500,
+                            fontSize: (MediaQuery.of(context).size.width *
+                                        0.04 +
+                                    MediaQuery.of(context).size.height * 0.02) /
+                                2,
+                            // Responsive font size calculated as an average of width and height percentages
+                          ),
                         ),
                       ),
-                    );
-                  },
-                  child: ProductCard(
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                    product: products[index],
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          'الأكثر مبيعًا',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.w700,
+                            fontSize: screenWidth * 0.050,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                );
-              },
+                )
+              : const SizedBox(),
+          Expanded(
+            child: Row(
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.04,
+                ),
+                Expanded(
+                  child: GridView.builder(
+                    itemCount: widget.products.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 2 / 2.5,
+                      mainAxisSpacing: 8,
+                      crossAxisSpacing:
+                          MediaQuery.of(context).size.width * 0.04,
+                    ),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => DetailsScreen(
+                                product: widget.products[index],
+                              ),
+                            ),
+                          );
+                        },
+                        child: ProductCard(
+                          screenWidth: MediaQuery.of(context).size.width,
+                          screenHeight: MediaQuery.of(context).size.height,
+                          product: widget.products[index],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.04,
+                ),
+              ],
             ),
-          ),
-          SizedBox(
-            width: MediaQuery.of(context).size.width * 0.04,
           ),
         ],
       ),

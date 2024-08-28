@@ -5,10 +5,16 @@ class MyTextField extends StatefulWidget {
     super.key,
     required this.hint,
     required this.showSuffixIcon,
+    this.inputType,
+    this.controller,
+    required this.align,
   });
 
   final String hint;
   final bool showSuffixIcon;
+  final TextInputType? inputType;
+  final TextEditingController? controller;
+  final TextAlign align;
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -20,8 +26,10 @@ class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      controller: widget.controller,
       obscureText: widget.showSuffixIcon ? _isHidden : false,
-      textAlign: TextAlign.right,
+      textAlign: widget.align,
+      keyboardType: widget.inputType ?? TextInputType.text,
       textDirection: TextDirection.rtl,
       decoration: InputDecoration(
         filled: true,
