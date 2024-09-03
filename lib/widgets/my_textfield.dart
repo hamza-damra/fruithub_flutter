@@ -8,6 +8,7 @@ class MyTextField extends StatefulWidget {
     this.inputType,
     this.controller,
     required this.align,
+    this.errorText,
   });
 
   final String hint;
@@ -15,6 +16,7 @@ class MyTextField extends StatefulWidget {
   final TextInputType? inputType;
   final TextEditingController? controller;
   final TextAlign align;
+  final String? errorText;
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -32,6 +34,10 @@ class _MyTextFieldState extends State<MyTextField> {
       keyboardType: widget.inputType ?? TextInputType.text,
       textDirection: TextDirection.rtl,
       decoration: InputDecoration(
+        errorText: widget.errorText,
+        errorStyle: const TextStyle(
+          fontFamily: 'Cairo',
+        ),
         filled: true,
         fillColor: const Color(0xffF9FAFA),
         focusedBorder: const OutlineInputBorder(

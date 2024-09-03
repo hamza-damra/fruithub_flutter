@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:fruitshub/models/product.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
 import 'package:fruitshub/widgets/search_delegate.dart';
@@ -16,82 +16,8 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedOption;
   String sort = 'name'; // Default sort order
 
-  List<Product> products = [
-    Product(
-      id: 1,
-      name: 'فواكه',
-      description: 'fruits description',
-      price: 20,
-      quantity: 1,
-      imageUrl:
-          'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
-      categoryId: 2,
-      totalRating: 3.5,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-    ),
-    Product(
-      id: 1,
-      name: 'سلطه فواكه',
-      description: 'fruit salad description',
-      price: 30,
-      quantity: 1,
-      imageUrl:
-          'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
-      categoryId: 2,
-      totalRating: 3.5,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-    ),
-    Product(
-      id: 1,
-      name: 'مانجا',
-      description: 'mango description',
-      price: 25,
-      quantity: 1,
-      imageUrl:
-          'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
-      categoryId: 2,
-      totalRating: 3.5,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-    ),
-    Product(
-      id: 1,
-      name: 'كريز',
-      description: 'Cherries description',
-      price: 40,
-      quantity: 1,
-      imageUrl:
-          'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
-      categoryId: 2,
-      totalRating: 3.5,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-    ),
-  ];
-
-  void _sortProducts() {
-    if (sort == 'asc') {
-      products.sort((a, b) => a.price.compareTo(b.price));
-    } else if (sort == 'desc') {
-      products.sort((a, b) => b.price.compareTo(a.price));
-    } else if (sort == 'name') {
-      products.sort((a, b) => a.name.compareTo(b.name));
-    }
-    setState(() {}); // Trigger rebuild to reflect changes
+  void reBuild() {
+    setState(() {});
   }
 
   @override
@@ -283,7 +209,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    _sortProducts(); // Call sort function
+                                    reBuild(); // Call sort function
                                   },
                                   child: const Text(
                                     'تصفيه',
@@ -307,7 +233,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           MostSelling(
-            products: products, // Pass sorted products
+            products: mostSellingProducts,
             sorting: sort,
             showText: false,
           ),

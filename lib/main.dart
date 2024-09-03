@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/cubit/filter_products_cubit.dart';
-import 'package:fruitshub/widgets/app_controller.dart';
+import 'package:fruitshub/auth/screens/signin_screen.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: BlocProvider(
         create: (context) => ProductsCubit(),
-        child: const AppController(),
+        child: const SignInScreen(),
       ),
     );
   }

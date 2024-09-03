@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/models/product.dart';
 
-Widget? products;
+// filter vars
+int maxNum = 0;
+int minNum = 0;
+TextEditingController start = TextEditingController();
+TextEditingController end = TextEditingController();
 
+// same list for both الرئيسيه and المنتجات and المنتجات الأكثر مبيعًا screens
 List<Product> mostSellingProducts = [
   Product(
     id: 1,
@@ -19,6 +24,8 @@ List<Product> mostSellingProducts = [
     counterThreeStars: 7,
     counterTwoStars: 3,
     counterOneStars: 2,
+    caloriesPer100Gram: 50,
+    expiryMonths: 6,
   ),
   Product(
     id: 1,
@@ -35,6 +42,8 @@ List<Product> mostSellingProducts = [
     counterThreeStars: 7,
     counterTwoStars: 3,
     counterOneStars: 2,
+    caloriesPer100Gram: 80,
+    expiryMonths: 6,
   ),
   Product(
     id: 1,
@@ -51,6 +60,8 @@ List<Product> mostSellingProducts = [
     counterThreeStars: 7,
     counterTwoStars: 3,
     counterOneStars: 2,
+    caloriesPer100Gram: 40,
+    expiryMonths: 6,
   ),
   Product(
     id: 1,
@@ -67,5 +78,7 @@ List<Product> mostSellingProducts = [
     counterThreeStars: 7,
     counterTwoStars: 3,
     counterOneStars: 2,
+    caloriesPer100Gram: 30,
+    expiryMonths: 6,
   ),
 ];

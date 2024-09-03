@@ -19,6 +19,8 @@ class Searchdelegate extends SearchDelegate {
       counterThreeStars: 7,
       counterTwoStars: 3,
       counterOneStars: 2,
+      caloriesPer100Gram: 50,
+      expiryMonths: 6,
     ),
     Product(
       id: 1,
@@ -35,6 +37,8 @@ class Searchdelegate extends SearchDelegate {
       counterThreeStars: 7,
       counterTwoStars: 3,
       counterOneStars: 2,
+      caloriesPer100Gram: 80,
+      expiryMonths: 6,
     ),
     Product(
       id: 1,
@@ -51,6 +55,8 @@ class Searchdelegate extends SearchDelegate {
       counterThreeStars: 7,
       counterTwoStars: 3,
       counterOneStars: 2,
+      caloriesPer100Gram: 40,
+      expiryMonths: 6,
     ),
     Product(
       id: 1,
@@ -67,6 +73,8 @@ class Searchdelegate extends SearchDelegate {
       counterThreeStars: 7,
       counterTwoStars: 3,
       counterOneStars: 2,
+      caloriesPer100Gram: 30,
+      expiryMonths: 6,
     ),
   ];
   List<Product> filter = [];

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
@@ -50,7 +51,9 @@ class _MostSellingState extends State<MostSelling> {
                         onTap: () {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
-                              return const MostSellingScreen();
+                              return MostSellingScreen(
+                                mostSellingProducts: mostSellingProducts,
+                              );
                             },
                           ));
                         },

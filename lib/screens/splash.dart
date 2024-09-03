@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:fruitshub/screens/main_screens/signin_screen.dart';
+import 'package:fruitshub/auth/screens/signin_screen.dart';
 
 class Splash extends StatefulWidget {
   const Splash({super.key});

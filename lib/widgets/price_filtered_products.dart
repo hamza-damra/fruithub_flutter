@@ -61,6 +61,10 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                         context
                             .read<ProductsCubit>()
                             .showProductState(state: 'most');
+                        minNum = 0;
+                        maxNum = 0;
+                        start.clear();
+                        end.clear();
                       },
                       icon: const Icon(
                         Icons.cancel_outlined,
