@@ -4,7 +4,6 @@ import 'package:fruitshub/cubit/filter_products_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
-import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
 
 class PriceFilteredProducts extends StatefulWidget {

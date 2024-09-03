@@ -50,15 +50,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailController.text,
         passwordController.text,
       );
-      print(signUpResponse.body);
-      print(signUpResponse.statusCode);
 
       if (signUpResponse.statusCode == 200 ||
           signUpResponse.statusCode == 201) {
         // verify user
-        http.Response verifyUserResponse =
-            await user.verifyUser(emailController.text);
-        print(verifyUserResponse.toString());
+        await user.verifyUser(emailController.text);
 
         // Show OTP confirmation
         Navigator.pop(context);
@@ -74,10 +70,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               c4: c4,
               onPressed: () async {
                 String code = c1.text + c2.text + c3.text + c4.text;
-                if (c1.text.isNotEmpty &&
-                    c2.text.isNotEmpty &&
-                    c3.text.isNotEmpty &&
-                    c4.text.isNotEmpty) {
+                if (code.length == 4) {
                   showDialog(
                     context: context,
                     barrierDismissible: false,
@@ -89,7 +82,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   );
 
                   http.Response otpResponse = await user.confirmUser(code);
-                  print(otpResponse.toString());
                   Navigator.of(context).pop(); // Close the loading dialog
 
                   if (otpResponse.statusCode == 200 ||
@@ -142,6 +134,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     );
                   }
+                } else {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text(
+                          'خطأ',
+                          textAlign: TextAlign.right,
+                        ),
+                        content: const Text(
+                          'أكمل كتابة الكود المكون من أربع أرقام',
+                          textAlign: TextAlign.right,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('حاول مرة أخرى'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 }
               },
             ),

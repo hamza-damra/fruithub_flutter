@@ -38,6 +38,11 @@ class _MyTextFieldState extends State<MyTextField> {
         errorStyle: const TextStyle(
           fontFamily: 'Cairo',
         ),
+        errorBorder: const OutlineInputBorder(
+          borderSide: BorderSide(
+            color: Colors.red,
+          ),
+        ),
         filled: true,
         fillColor: const Color(0xffF9FAFA),
         focusedBorder: const OutlineInputBorder(
