@@ -134,6 +134,30 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       },
                     );
                   }
+                } else if (code.isEmpty) {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text(
+                          'خطأ',
+                          textAlign: TextAlign.right,
+                        ),
+                        content: const Text(
+                          'ادخل الكود المكون من أربع أرقام',
+                          textAlign: TextAlign.right,
+                        ),
+                        actions: <Widget>[
+                          TextButton(
+                            child: const Text('حاول مرة أخرى'),
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                          ),
+                        ],
+                      );
+                    },
+                  );
                 } else {
                   showDialog(
                     context: context,
