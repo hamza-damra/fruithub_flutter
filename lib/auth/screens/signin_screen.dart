@@ -1,10 +1,13 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:fruitshub/auth/helpers/SharedPrefManager.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/auth/screens/signup_screen.dart';
 import 'package:fruitshub/auth/screens/send_reset_password_email.dart';
+import 'package:fruitshub/widgets/app_controller.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -37,28 +40,23 @@ class _SignInScreenState extends State<SignInScreen> {
       ),
     );
 
-    http.Response response = await ManageUsers()
+    http.Response signInResponse = await ManageUsers()
         .signinUser(emailController.text, passwordController.text);
     Navigator.pop(context);
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('سجل هنا', textAlign: TextAlign.right),
-            content: const Text('سجل هنا', textAlign: TextAlign.right),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('سجل'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+    if (signInResponse.statusCode == 200 || signInResponse.statusCode == 201) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AppController(),
+        ),
       );
-    } else if (response.statusCode == 400 || response.statusCode == 401) {
+      final sharedPrefs = SharedPrefManager();
+      final Map<String, dynamic> responseData = jsonDecode(signInResponse.body);
+      String tocken = responseData['token'];
+      await sharedPrefs.saveData('token', tocken);
+      print(tocken);
+    } else if (signInResponse.statusCode == 400 ||
+        signInResponse.statusCode == 401) {
       showDialog(
         context: context,
         builder: (BuildContext context) {
