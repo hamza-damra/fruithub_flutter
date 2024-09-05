@@ -1,13 +1,11 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fruitshub/auth/helpers/SharedPrefManager.dart';
-import 'package:fruitshub/auth/helpers/manage_users.dart';
-import 'package:fruitshub/auth/screens/signup_screen.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/send_reset_password_email.dart';
-import 'package:fruitshub/widgets/app_controller.dart';
+import 'package:fruitshub/auth/screens/signup_screen.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import '../bloc/cubit/auth_cubit.dart';
+import '../bloc/state/auth_state.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -27,56 +25,6 @@ class _SignInScreenState extends State<SignInScreen> {
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     return emailRegex.hasMatch(email);
-  }
-
-  Future<void> logIn() async {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) => const Center(
-        child: CircularProgressIndicator(
-          color: Colors.black,
-        ),
-      ),
-    );
-
-    http.Response signInResponse = await ManageUsers()
-        .signinUser(emailController.text, passwordController.text);
-    Navigator.pop(context);
-    if (signInResponse.statusCode == 200 || signInResponse.statusCode == 201) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const AppController(),
-        ),
-      );
-      final sharedPrefs = SharedPrefManager();
-      final Map<String, dynamic> responseData = jsonDecode(signInResponse.body);
-      String tocken = responseData['token'];
-      await sharedPrefs.saveData('token', tocken);
-      print(tocken);
-    } else if (signInResponse.statusCode == 400 ||
-        signInResponse.statusCode == 401) {
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('خطا', textAlign: TextAlign.right),
-            content: const Text(
-                'هذا المستخدم غير موجود او البيانات المدخله غير صحيحه',
-                textAlign: TextAlign.right),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('حاول مره اخري'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-    }
   }
 
   @override
@@ -145,56 +93,77 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (emailController.text.isEmpty ||
-                        !isValidEmail(emailController.text) ||
-                        passwordController.text.isEmpty) {
-                      ////
-                      if (emailController.text.isEmpty) {
-                        setState(() {
-                          emailErrorText = 'هذا الحقل مطلوب';
-                        });
-                      } else if (!isValidEmail(emailController.text)) {
-                        setState(() {
-                          emailErrorText = 'البريد الالكتروني غير صحيح';
-                        });
-                      } else {
-                        setState(() {
-                          emailErrorText = null;
-                        });
-                      }
-                      ////
-
-                      if (passwordController.text.isEmpty) {
-                        setState(() {
-                          passwordErrorText = 'هذا الحقل مطلوب';
-                        });
-                      } else {
-                        setState(() {
-                          passwordErrorText = null;
-                        });
-                      }
-                    } else {
-                      setState(() {
-                        emailErrorText = null;
-                        passwordErrorText = null;
-                      });
-
-                      await logIn();
+                BlocConsumer<AuthCubit, AuthState>(
+                  listener: (context, state) {
+                    if (state is AuthError) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(state.message),
+                        ),
+                      );
+                    } else if (state is AuthSuccess) {
+                      Navigator.pushReplacementNamed(context, '/home');
                     }
                   },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF1B5E37),
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    'تسجيل دخول',
-                    style: TextStyle(fontSize: 18, color: Colors.white),
-                  ),
+                  builder: (context, state) {
+                    if (state is AuthLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
+                    return ElevatedButton(
+                      onPressed: () {
+                        if (emailController.text.isEmpty ||
+                            !isValidEmail(emailController.text) ||
+                            passwordController.text.isEmpty) {
+                          if (emailController.text.isEmpty) {
+                            setState(() {
+                              emailErrorText = 'هذا الحقل مطلوب';
+                            });
+                          } else if (!isValidEmail(emailController.text)) {
+                            setState(() {
+                              emailErrorText = 'البريد الالكتروني غير صحيح';
+                            });
+                          } else {
+                            setState(() {
+                              emailErrorText = null;
+                            });
+                          }
+
+                          if (passwordController.text.isEmpty) {
+                            setState(() {
+                              passwordErrorText = 'هذا الحقل مطلوب';
+                            });
+                          } else {
+                            setState(() {
+                              passwordErrorText = null;
+                            });
+                          }
+                        } else {
+                          setState(() {
+                            emailErrorText = null;
+                            passwordErrorText = null;
+                          });
+
+                          context.read<AuthCubit>().signIn(
+                            emailController.text,
+                            passwordController.text,
+                          );
+                        }
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1B5E37),
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: const Text(
+                        'تسجيل دخول',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                      ),
+                    );
+                  },
                 ),
                 const SizedBox(height: 20),
                 Center(

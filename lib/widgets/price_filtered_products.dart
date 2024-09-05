@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/cubit/filter_products_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
+import '../auth/bloc/cubit/filter_products_cubit.dart';
 
 class PriceFilteredProducts extends StatefulWidget {
   const PriceFilteredProducts({
@@ -28,7 +28,6 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
   @override
   void initState() {
     super.initState();
-    // Filter the products and store the result in filteredProducts
     filteredProducts = widget.products.where((product) {
       return product.price >= widget.start && product.price <= widget.end;
     }).toList();
@@ -55,11 +54,7 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        ///////////// cubit ////////////////
-                        ///context
-                        context
-                            .read<ProductsCubit>()
-                            .showProductState(state: 'most');
+                        context.read<ProductsCubit>().loadProducts(sortingOrder: 'most');
                         minNum = 0;
                         maxNum = 0;
                         start.clear();

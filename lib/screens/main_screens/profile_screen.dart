@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fruitshub/auth/helpers/SharedPrefManager.dart';
+import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
 
 class ProfileScreen extends StatefulWidget {

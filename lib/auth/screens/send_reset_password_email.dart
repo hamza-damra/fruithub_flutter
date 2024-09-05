@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fruitshub/auth/helpers/manage_users.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/reset_password.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-import 'package:http/http.dart' as http;
+
+import '../bloc/cubit/auth_cubit.dart';
+import '../bloc/state/auth_state.dart';
 
 class SendResetPasswordEmail extends StatefulWidget {
   const SendResetPasswordEmail({super.key});
@@ -12,20 +14,15 @@ class SendResetPasswordEmail extends StatefulWidget {
 }
 
 class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
-  final TextEditingController c1 = TextEditingController();
-  final TextEditingController c2 = TextEditingController();
-  final TextEditingController c3 = TextEditingController();
-  final TextEditingController c4 = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   String? emailErrorText;
+
   bool isValidEmail(String email) {
     final RegExp emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
     );
     return emailRegex.hasMatch(email);
   }
-
-  final ManageUsers user = ManageUsers();
 
   @override
   Widget build(BuildContext context) {
@@ -82,85 +79,85 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
             ),
             SizedBox(
               width: screenWidth * 0.9,
-              child: ElevatedButton(
-                onPressed: () async {
-                  if (emailController.text.isEmpty ||
-                      !isValidEmail(emailController.text)) {
-                    if (emailController.text.isEmpty) {
-                      setState(() {
-                        emailErrorText = 'هذا الحقل مطلوب';
-                      });
-                    } else if (!isValidEmail(emailController.text)) {
-                      setState(() {
-                        emailErrorText = 'البريد الالكتروني غير صحيح';
-                      });
-                    } else {
-                      setState(() {
-                        emailErrorText = null;
-                      });
-                    }
-                  } else {
-                    setState(() {
-                      emailErrorText = null;
-                    });
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => const Center(
-                        child: CircularProgressIndicator(
-                          color: Colors.black,
-                        ),
+              child: BlocConsumer<AuthCubit, AuthState>(
+                listener: (context, state) {
+                  if (state is PasswordResetEmailSent) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const ResetPassword(),
                       ),
                     );
-
-                    http.Response verificationResponse =
-                        await user.sendResetPasswordEmail(emailController.text);
-
-                    Navigator.pop(context);
-
-                    if (verificationResponse.statusCode == 200 ||
-                        verificationResponse.statusCode == 201) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const ResetPassword(),
-                        ),
-                      );
-                    } else {
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title:
-                                const Text('خطا', textAlign: TextAlign.right),
-                            content: const Text(
-                                'البريد الذي ادخلته غير موجود او تم حذفه',
-                                textAlign: TextAlign.right),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('حاول مره اخري'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    }
+                  } else if (state is AuthError) {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text('خطا', textAlign: TextAlign.right),
+                          content: Text(
+                            state.message,
+                            textAlign: TextAlign.right,
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('حاول مره اخري'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
                   }
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1B5E37),
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  'نسيت كلمة المرور',
-                  style: TextStyle(fontSize: 14, color: Colors.white),
-                ),
+                builder: (context, state) {
+                  if (state is AuthLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    );
+                  }
+                  return ElevatedButton(
+                    onPressed: () {
+                      if (emailController.text.isEmpty ||
+                          !isValidEmail(emailController.text)) {
+                        if (emailController.text.isEmpty) {
+                          setState(() {
+                            emailErrorText = 'هذا الحقل مطلوب';
+                          });
+                        } else if (!isValidEmail(emailController.text)) {
+                          setState(() {
+                            emailErrorText = 'البريد الالكتروني غير صحيح';
+                          });
+                        } else {
+                          setState(() {
+                            emailErrorText = null;
+                          });
+                        }
+                      } else {
+                        setState(() {
+                          emailErrorText = null;
+                        });
+
+                        context.read<AuthCubit>()
+                            .sendResetPasswordEmail(emailController.text);
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1B5E37),
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'نسيت كلمة المرور',
+                      style: TextStyle(fontSize: 14, color: Colors.white),
+                    ),
+                  );
+                },
               ),
             ),
           ],
