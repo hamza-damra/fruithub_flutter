@@ -64,8 +64,6 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await manageUsers.verifyResetPasswordByOtp(otp, password, confirm);
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(PasswordResetSuccess());
-      } else {
-        emit(AuthError('حدث خطأ أثناء التحقق من إعادة تعيين كلمة المرور. يرجى المحاولة مرة أخرى.'));
       }
     } catch (e) {
       emit(AuthError('حدث خطأ أثناء إعادة تعيين كلمة المرور. ${e.toString()}'));

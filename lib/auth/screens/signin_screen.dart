@@ -2,10 +2,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/send_reset_password_email.dart';
-import 'package:fruitshub/auth/screens/signup_screen.dart';
+import 'package:fruitshub/auth/screens/signup_screen.dart'; // Add SignUp screen import
 import 'package:fruitshub/widgets/my_textfield.dart';
-import '../bloc/cubit/auth_cubit.dart';
-import '../bloc/state/auth_state.dart';
+import '../../bloc/cubit/auth_cubit.dart';
+import '../../bloc/state/auth_state.dart';
+import '../../utils/error_handler.dart'; // Import the centralized error handler
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
@@ -95,13 +96,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 const SizedBox(height: 20),
                 BlocConsumer<AuthCubit, AuthState>(
                   listener: (context, state) {
-                    if (state is AuthError) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(state.message),
-                        ),
-                      );
-                    } else if (state is AuthSuccess) {
+                    ErrorHandler.handleAuthError(context, state);
+                    if (state is AuthSuccess) {
                       Navigator.pushReplacementNamed(context, '/home');
                     }
                   },
@@ -169,20 +165,25 @@ class _SignInScreenState extends State<SignInScreen> {
                 Center(
                   child: Text.rich(
                     TextSpan(
-                      text: 'لا تمتلك حساب؟ ',
+                      text: 'لا يوجد لديك حساب؟ ',
                       style: const TextStyle(
-                          fontSize: 16, color: Color(0xFF949D9E)),
+                        fontSize: 16,
+                        color: Color(0xFF949D9E),
+                      ),
                       children: [
                         TextSpan(
-                          text: 'قم بإنشاء حساب',
+                          text: 'قم بالتسجيل الآن',
                           style: const TextStyle(
-                              color: Color(0xFF1B5E37), fontSize: 16),
+                            color: Color(0xFF1B5E37),
+                            fontSize: 16,
+                          ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.pushReplacement(
+                              Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const SignUpScreen()),
+                                  builder: (context) => const SignUpScreen(),
+                                ),
                               );
                             },
                         ),

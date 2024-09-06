@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/reset_password.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-
-import '../bloc/cubit/auth_cubit.dart';
-import '../bloc/state/auth_state.dart';
+import '../../bloc/cubit/auth_cubit.dart';
+import '../../bloc/state/auth_state.dart';
+import '../../utils/error_handler.dart'; // Import the centralized error handler
 
 class SendResetPasswordEmail extends StatefulWidget {
   const SendResetPasswordEmail({super.key});
@@ -81,33 +81,13 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
               width: screenWidth * 0.9,
               child: BlocConsumer<AuthCubit, AuthState>(
                 listener: (context, state) {
+                  ErrorHandler.handleAuthError(context, state);
                   if (state is PasswordResetEmailSent) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
                         builder: (context) => const ResetPassword(),
                       ),
-                    );
-                  } else if (state is AuthError) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('خطا', textAlign: TextAlign.right),
-                          content: Text(
-                            state.message,
-                            textAlign: TextAlign.right,
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('حاول مره اخري'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
                     );
                   }
                 },
@@ -123,25 +103,18 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                     onPressed: () {
                       if (emailController.text.isEmpty ||
                           !isValidEmail(emailController.text)) {
-                        if (emailController.text.isEmpty) {
-                          setState(() {
-                            emailErrorText = 'هذا الحقل مطلوب';
-                          });
-                        } else if (!isValidEmail(emailController.text)) {
-                          setState(() {
-                            emailErrorText = 'البريد الالكتروني غير صحيح';
-                          });
-                        } else {
-                          setState(() {
-                            emailErrorText = null;
-                          });
-                        }
+                        setState(() {
+                          emailErrorText = emailController.text.isEmpty
+                              ? 'هذا الحقل مطلوب'
+                              : 'البريد الالكتروني غير صحيح';
+                        });
                       } else {
                         setState(() {
                           emailErrorText = null;
                         });
 
-                        context.read<AuthCubit>()
+                        context
+                            .read<AuthCubit>()
                             .sendResetPasswordEmail(emailController.text);
                       }
                     },

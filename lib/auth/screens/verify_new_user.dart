@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bloc/cubit/auth_cubit.dart';
-import '../bloc/state/auth_state.dart';
+import '../../bloc/cubit/auth_cubit.dart';
+import '../../bloc/state/auth_state.dart';
 import '../helpers/app_routes.dart';
 
 class VerifyNewUser extends StatefulWidget {

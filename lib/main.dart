@@ -3,11 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
-import 'auth/bloc/cubit/auth_cubit.dart';
-import 'auth/bloc/cubit/filter_products_cubit.dart';
 import 'auth/helpers/shared_pref_manager.dart';
 import 'auth/helpers/app_routes.dart';
 import 'auth/screens/signin_screen.dart';
+import 'bloc/cubit/auth_cubit.dart';
+import 'bloc/cubit/filter_products_cubit.dart';
 
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -23,7 +23,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<Widget> _initialScreenFuture;
   bool _isUserLoggedIn = false;
   bool _isLoading = true;
 

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/verify_new_user.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-import '../bloc/cubit/auth_cubit.dart';
-import '../bloc/state/auth_state.dart';
+import '../../bloc/cubit/auth_cubit.dart';
+import '../../bloc/state/auth_state.dart';
+import '../../utils/error_handler.dart'; // Import the centralized error handler
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({super.key});
@@ -46,8 +47,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
       ),
       body: BlocConsumer<AuthCubit, AuthState>(
         listener: (context, state) {
+          ErrorHandler.handleAuthError(context, state);
           if (state is AuthSuccess) {
-            // Navigate to the VerifyNewUser screen with appropriate arguments
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
@@ -61,10 +62,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   c4: TextEditingController(),
                 ),
               ),
-            );
-          } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
             );
           }
         },
@@ -110,9 +107,15 @@ class _SignUpScreenState extends State<SignUpScreen> {
                             emailController.text.isEmpty ||
                             passwordController.text.isEmpty) {
                           setState(() {
-                            nameErrorText = nameController.text.isEmpty ? 'هذا الحقل مطلوب' : null;
-                            emailErrorText = emailController.text.isEmpty ? 'هذا الحقل مطلوب' : null;
-                            passwordErrorText = passwordController.text.isEmpty ? 'هذا الحقل مطلوب' : null;
+                            nameErrorText = nameController.text.isEmpty
+                                ? 'هذا الحقل مطلوب'
+                                : null;
+                            emailErrorText = emailController.text.isEmpty
+                                ? 'هذا الحقل مطلوب'
+                                : null;
+                            passwordErrorText = passwordController.text.isEmpty
+                                ? 'هذا الحقل مطلوب'
+                                : null;
                           });
                         } else {
                           setState(() {

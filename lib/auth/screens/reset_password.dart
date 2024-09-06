@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-
-import '../bloc/cubit/auth_cubit.dart';
-import '../bloc/state/auth_state.dart';
+import '../../bloc/cubit/auth_cubit.dart';
+import '../../bloc/state/auth_state.dart';
+import '../../utils/error_handler.dart'; // Import the centralized error handler
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -133,8 +133,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     hasError = true;
                   } else if (passwordController.text.length < 8) {
                     setState(() {
-                      passwordErrorText =
-                      'كلمة السر يجب أن تكون على الأقل 8 حروف';
+                      passwordErrorText = 'كلمة السر يجب أن تكون على الأقل 8 حروف';
                     });
                     hasError = true;
                   }
@@ -154,8 +153,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                   if (passwordController.text.length >= 8 &&
                       confirmPasswordController.text.length >= 8 &&
-                      passwordController.text !=
-                          confirmPasswordController.text) {
+                      passwordController.text != confirmPasswordController.text) {
                     setState(() {
                       passwordErrorText =
                           confirmPasswordErrorText = 'كلمة السر غير متطابقة';
@@ -242,6 +240,7 @@ class _ResetPasswordState extends State<ResetPassword> {
             ),
             BlocConsumer<AuthCubit, AuthState>(
               listener: (context, state) {
+                ErrorHandler.handleAuthError(context, state);
                 if (state is PasswordResetSuccess) {
                   showDialog(
                     context: context,
@@ -261,30 +260,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                             onPressed: () {
                               Navigator.of(context).pop();
                               Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else if (state is AuthError) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'خطأ',
-                          textAlign: TextAlign.right,
-                        ),
-                        content: Text(
-                          state.message,
-                          textAlign: TextAlign.right,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('حسنًا'),
-                            onPressed: () {
                               Navigator.of(context).pop();
                             },
                           ),

@@ -8,7 +8,8 @@ import 'package:fruitshub/widgets/our_product_card.dart';
 import 'package:fruitshub/widgets/price_filtered_products.dart';
 import 'package:fruitshub/widgets/search.dart';
 import 'package:fruitshub/widgets/search_delegate.dart';
-import '../../auth/bloc/cubit/filter_products_cubit.dart';
+
+import '../../bloc/cubit/filter_products_cubit.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
