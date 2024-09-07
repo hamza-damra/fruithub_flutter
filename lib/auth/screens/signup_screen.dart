@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
@@ -15,10 +17,10 @@ class SignUpScreen extends StatefulWidget {
 
 class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController nameController = TextEditingController();
-  String? nameErrorText;
   final TextEditingController emailController = TextEditingController();
-  String? emailErrorText;
   final TextEditingController passwordController = TextEditingController();
+  String? nameErrorText;
+  String? emailErrorText;
   String? passwordErrorText;
   final TextEditingController c1 = TextEditingController();
   final TextEditingController c2 = TextEditingController();
@@ -33,8 +35,40 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return emailRegex.hasMatch(email);
   }
 
+  void showCustomDialog(
+    BuildContext context,
+    String title,
+    String content,
+    String buttonChild,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            textAlign: TextAlign.right,
+          ),
+          content: Text(
+            content,
+            textAlign: TextAlign.right,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(buttonChild),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   Future<void> signUP() async {
     try {
+      // show loading dialog
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -44,189 +78,49 @@ class _SignUpScreenState extends State<SignUpScreen> {
           ),
         ),
       );
-      // Register
+
+      // signUp request
       http.Response signUpResponse = await user.signUP(
         nameController.text,
         emailController.text,
         passwordController.text,
       );
+      Navigator.pop(context);
 
+      // request success
       if (signUpResponse.statusCode == 200 ||
           signUpResponse.statusCode == 201) {
         // verify user
-        await user.verifyUser(emailController.text);
-
-        // Show OTP confirmation
-        Navigator.pop(context);
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => VerifyNewUser(
-              title: 'لقد ارسلنا كود تفعيل حسابك',
-              subTitle: 'يرجي التحقق من الايميل وكتابه الكود المرسل',
-              c1: c1,
-              c2: c2,
-              c3: c3,
-              c4: c4,
-              onPressed: () async {
-                String code = c1.text + c2.text + c3.text + c4.text;
-                if (code.length == 4) {
-                  showDialog(
-                    context: context,
-                    barrierDismissible: false,
-                    builder: (context) => const Center(
-                      child: CircularProgressIndicator(
-                        color: Colors.black,
-                      ),
-                    ),
-                  );
-
-                  http.Response otpResponse = await user.confirmUser(code);
-                  Navigator.of(context).pop(); // Close the loading dialog
-
-                  if (otpResponse.statusCode == 200 ||
-                      otpResponse.statusCode == 201) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('حساب جديد',
-                              textAlign: TextAlign.right),
-                          content: const Text(
-                              'تم تسجيل حسابك بنجاح ، يمكنك تسجيل الدخول الان',
-                              textAlign: TextAlign.right),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('تسجيل الدخول'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => const SignInScreen(),
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  } else if (otpResponse.statusCode == 400) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text('كود تفعيل خاطئ',
-                              textAlign: TextAlign.right),
-                          content: const Text(
-                              'يرجي التاكد من الكود المرسل واعاده المحاوله',
-                              textAlign: TextAlign.right),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('اعاده المحاوله'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                } else if (code.isEmpty) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'خطأ',
-                          textAlign: TextAlign.right,
-                        ),
-                        content: const Text(
-                          'ادخل الكود المكون من أربع أرقام',
-                          textAlign: TextAlign.right,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('حاول مرة أخرى'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'خطأ',
-                          textAlign: TextAlign.right,
-                        ),
-                        content: const Text(
-                          'أكمل كتابة الكود المكون من أربع أرقام',
-                          textAlign: TextAlign.right,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('حاول مرة أخرى'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
+              email: emailController.text,
+              password: passwordController.text,
             ),
           ),
         );
-      } else if (signUpResponse.statusCode == 400) {
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('خطا', textAlign: TextAlign.right),
-              content: const Text('هذا الايميل مستخدم بالفعل',
-                  textAlign: TextAlign.right),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('حاول مره اخري'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
+      }
+
+      // email error
+      else if (signUpResponse.statusCode == 400) {
+        showCustomDialog(
+          context,
+          'title',
+          'هذا الايميل مستخدم بالفعل',
+          'حاول مره اخري',
         );
       }
-    } catch (e) {
-      // Handle error
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('خطأ في الشبكة', textAlign: TextAlign.right),
-            content: const Text('حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
-                textAlign: TextAlign.right),
-            actions: <Widget>[
-              TextButton(
-                child: const Text('حاول مره اخري'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+    }
+
+    // unexpected error
+    catch (e) {
+      Navigator.of(context).pop();
+      showCustomDialog(
+        context,
+        'خطأ في الشبكة',
+        'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
+        'حاول مره اخري',
       );
     }
   }

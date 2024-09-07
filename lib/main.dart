@@ -7,6 +7,7 @@ import 'package:fruitshub/auth/screens/signin_screen.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 
 void main() {
+  // SharedPrefManager().deleteData('token');
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
@@ -20,98 +21,92 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  late Future<Widget> _initialScreen;
+  bool _isUserLoggedIn = false;
+  bool _isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _initialScreen = _getInitialScreen();
+    _checkLoginStatus();
     FlutterNativeSplash.remove();
   }
 
-  Future<Widget> _getInitialScreen() async {
-    String token = await SharedPrefManager().getData('token');
-    if (token.isEmpty) {
-      return const SignInScreen();
-    } else {
-      return const AppController();
-    }
+  Future<void> _checkLoginStatus() async {
+    String? token = await SharedPrefManager().getData('token');
+
+    setState(() {
+      _isUserLoggedIn = (token != null && token.isNotEmpty);
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<Widget>(
-      future: _initialScreen,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          // While waiting for the future to resolve, show a loading indicator
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          // Handle any errors
-          return const Center(child: Text('An error occurred'));
-        } else {
-          // Once the future completes, show the appropriate screen
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            theme: ThemeData(
-              fontFamily: 'Cairo',
-              textTheme: const TextTheme(
-                bodyLarge: TextStyle(fontFamily: 'Cairo', fontSize: 16),
-                bodyMedium: TextStyle(fontFamily: 'Cairo', fontSize: 14),
-                displayLarge: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-                displayMedium: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 22,
-                  fontWeight: FontWeight.bold,
-                ),
-                displaySmall: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-                headlineMedium: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-                headlineSmall: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                titleLarge: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                ),
-                titleMedium: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 16,
-                  fontWeight: FontWeight.normal,
-                ),
-                titleSmall: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                ),
-                labelLarge: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            home: BlocProvider(
-              create: (context) => ProductsCubit(),
-              child: snapshot.data!,
-            ),
-          );
-        }
-      },
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Cairo',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontFamily: 'Cairo', fontSize: 16),
+          bodyMedium: TextStyle(fontFamily: 'Cairo', fontSize: 14),
+          displayLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          displayMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+          displaySmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineSmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+          labelLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      home: BlocProvider(
+        create: (context) => ProductsCubit(),
+        child: _isLoading
+            ? const Scaffold(
+                backgroundColor: Colors.white,
+                body: SizedBox(),
+              )
+            : _isUserLoggedIn
+                ? const AppController()
+                : const SignInScreen(),
+      ),
     );
   }
 }

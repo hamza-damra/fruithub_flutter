@@ -316,35 +316,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   }
 
                   // Validate OTP Code
-                  if (code.length < 4 && code.isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text(
-                            'خطأ',
-                            textAlign: TextAlign.right,
-                          ),
-                          content: const Text(
-                            'أكمل كتابة الكود المكون من أربع أرقام',
-                            textAlign: TextAlign.right,
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('حاول مرة أخرى'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    hasError = true;
-                  }
-
-                  // Validate OTP Code
-                  if (code.isEmpty) {
+                  if (code.length < 4) {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

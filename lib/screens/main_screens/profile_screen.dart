@@ -4,7 +4,6 @@ import 'package:fruitshub/auth/screens/signin_screen.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
-
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
@@ -27,21 +26,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('تأكيد تسجيل الخروج'),
-          content: const Text('هل أنت متأكد أنك تريد تسجيل الخروج؟'),
+          title: const Text(
+            'تسجيل الخروج',
+            textAlign: TextAlign.right,
+          ),
+          content: const Text(
+            'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+            textAlign: TextAlign.right,
+          ),
           actions: [
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
               },
-              child: const Text('إلغاء'),
+              child: const Text(
+                'إلغاء',
+                textAlign: TextAlign.right,
+              ),
             ),
             TextButton(
               onPressed: () {
                 Navigator.of(context).pop(); // Close the dialog
                 _logOut(); // Log out after confirmation
               },
-              child: const Text('تأكيد'),
+              child: const Text(
+                'تأكيد',
+                textAlign: TextAlign.right,
+              ),
             ),
           ],
         );
