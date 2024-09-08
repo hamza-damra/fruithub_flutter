@@ -1,18 +1,11 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-<<<<<<< HEAD
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../bloc/cubit/auth_cubit.dart';
-import '../../bloc/state/auth_state.dart';
-import '../helpers/app_routes.dart';
-=======
-import 'package:fruitshub/auth/helpers/SharedPrefManager.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'package:http/http.dart' as http;
->>>>>>> fix-login
+
+import '../helpers/shared_pref_manager.dart';
 
 class VerifyNewUser extends StatefulWidget {
   const VerifyNewUser({
@@ -72,56 +65,61 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
         Map<String, dynamic> response = jsonDecode(signinResponse.body);
         SharedPrefManager().saveData('token', response['token']);
 
-        // ahow success dialog
-        Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('حساب جديد', textAlign: TextAlign.right),
-              content: const Text(
-                  'تم تسجيل حسابك بنجاح ، يمكنك الان تصفح منتجاتنا',
-                  textAlign: TextAlign.right),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('تصفح المنتجات'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const AppController(),
-                      ),
-                    );
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        if(mounted){
+          Navigator.of(context).pop();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('حساب جديد', textAlign: TextAlign.right),
+                content: const Text(
+                    'تم تسجيل حسابك بنجاح ، يمكنك الان تصفح منتجاتنا',
+                    textAlign: TextAlign.right),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('تصفح المنتجات'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AppController(),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+
       }
 
       // wrong otp
       else if (otpResponse.statusCode == 400) {
-        Navigator.of(context).pop();
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('كود تفعيل خاطئ', textAlign: TextAlign.right),
-              content: const Text('يرجي التاكد من الكود المرسل واعاده المحاوله',
-                  textAlign: TextAlign.right),
-              actions: <Widget>[
-                TextButton(
-                  child: const Text('اعاده المحاوله'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            );
-          },
-        );
+        if(mounted){
+          Navigator.of(context).pop();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('كود تفعيل خاطئ', textAlign: TextAlign.right),
+                content: const Text('يرجي التاكد من الكود المرسل واعاده المحاوله',
+                    textAlign: TextAlign.right),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('اعاده المحاوله'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        }
+
       }
     }
 
@@ -198,12 +196,6 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-<<<<<<< HEAD
-                  buildOtpTextField(widget.c1),
-                  buildOtpTextField(widget.c2),
-                  buildOtpTextField(widget.c3),
-                  buildOtpTextField(widget.c4),
-=======
                   SizedBox(
                     width: screenWidth * 0.17,
                     child: TextField(
@@ -357,7 +349,6 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
                       ),
                     ),
                   ),
->>>>>>> fix-login
                 ],
               ),
             ),
@@ -366,40 +357,8 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
           SizedBox(
             width: screenWidth * 0.90,
             child: ElevatedButton(
-<<<<<<< HEAD
-              onPressed: () {
-                String code = widget.c1.text + widget.c2.text + widget.c3.text + widget.c4.text;
-                if (code.length == 4) {
-                  context.read<AuthCubit>().confirmUser(code);
-                } else {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'خطأ',
-                          textAlign: TextAlign.right,
-                        ),
-                        content: const Text(
-                          'ادخل الكود المكون من أربع أرقام',
-                          textAlign: TextAlign.right,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('حاول مرة أخرى'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-=======
               onPressed: () async {
                 await confirmUser();
->>>>>>> fix-login
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF1B5E37),
@@ -414,80 +373,7 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
               ),
             ),
           ),
-          BlocConsumer<AuthCubit, AuthState>(
-            listener: (context, state) {
-              if (state is UserVerificationSuccess) {
-                Navigator.pushReplacementNamed(context, AppRoutes.home);
-              } else if (state is AuthError) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('خطأ', textAlign: TextAlign.right),
-                      content: Text(state.message, textAlign: TextAlign.right),
-                      actions: <Widget>[
-                        TextButton(
-                          child: const Text('حسنًا'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-            builder: (context, state) {
-              if (state is AuthLoading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return const SizedBox.shrink();
-            },
-          ),
         ],
-      ),
-    );
-  }
-
-  Widget buildOtpTextField(TextEditingController controller) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.17,
-      child: TextField(
-        controller: controller,
-        style: const TextStyle(
-          fontFamily: 'Cairo',
-          fontWeight: FontWeight.bold,
-        ),
-        onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          } else {
-            FocusScope.of(context).previousFocus();
-          }
-        },
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        decoration: InputDecoration(
-          fillColor: const Color(0xffF9FAFA),
-          filled: true,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              color: Colors.amber,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-        ),
       ),
     );
   }

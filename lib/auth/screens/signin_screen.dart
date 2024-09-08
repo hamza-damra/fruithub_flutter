@@ -1,17 +1,15 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/auth/helpers/manage_users.dart';
+import 'package:fruitshub/auth/screens/signup_screen.dart';
 import 'package:fruitshub/auth/screens/send_reset_password_email.dart';
-<<<<<<< HEAD
-import 'package:fruitshub/auth/screens/signup_screen.dart'; // Add SignUp screen import
-=======
 import 'package:fruitshub/auth/screens/verify_new_user.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
->>>>>>> fix-login
 import 'package:fruitshub/widgets/my_textfield.dart';
-import '../../bloc/cubit/auth_cubit.dart';
-import '../../bloc/state/auth_state.dart';
-import '../../utils/error_handler.dart'; // Import the centralized error handler
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import '../helpers/shared_pref_manager.dart';
 
 class SignInScreen extends StatefulWidget {
   const SignInScreen({
@@ -34,14 +32,12 @@ class _SignInScreenState extends State<SignInScreen> {
     return emailRegex.hasMatch(email);
   }
 
-<<<<<<< HEAD
-=======
   void showCustomDialog(
-    BuildContext context,
-    String title,
-    String content,
-    String buttonChild,
-  ) {
+      BuildContext context,
+      String title,
+      String content,
+      String buttonChild,
+      ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -91,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
       if (signInResponse.statusCode == 200 ||
           signInResponse.statusCode == 201) {
         final Map<String, dynamic> responseData =
-            jsonDecode(signInResponse.body);
+        jsonDecode(signInResponse.body);
         SharedPrefManager().saveData('token', responseData['token']);
         Navigator.pushReplacement(
           context,
@@ -142,7 +138,6 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
->>>>>>> fix-login
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -209,96 +204,75 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                BlocConsumer<AuthCubit, AuthState>(
-                  listener: (context, state) {
-                    ErrorHandler.handleAuthError(context, state);
-                    if (state is AuthSuccess) {
-                      Navigator.pushReplacementNamed(context, '/home');
+                ElevatedButton(
+                  onPressed: () async {
+                    if (emailController.text.isEmpty ||
+                        !isValidEmail(emailController.text) ||
+                        passwordController.text.isEmpty) {
+                      ////
+                      if (emailController.text.isEmpty) {
+                        setState(() {
+                          emailErrorText = 'هذا الحقل مطلوب';
+                        });
+                      } else if (!isValidEmail(emailController.text)) {
+                        setState(() {
+                          emailErrorText = 'البريد الالكتروني غير صحيح';
+                        });
+                      } else {
+                        setState(() {
+                          emailErrorText = null;
+                        });
+                      }
+                      ////
+
+                      if (passwordController.text.isEmpty) {
+                        setState(() {
+                          passwordErrorText = 'هذا الحقل مطلوب';
+                        });
+                      } else {
+                        setState(() {
+                          passwordErrorText = null;
+                        });
+                      }
+                    } else {
+                      setState(() {
+                        emailErrorText = null;
+                        passwordErrorText = null;
+                      });
+
+                      await logIn();
                     }
                   },
-                  builder: (context, state) {
-                    if (state is AuthLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-                    return ElevatedButton(
-                      onPressed: () {
-                        if (emailController.text.isEmpty ||
-                            !isValidEmail(emailController.text) ||
-                            passwordController.text.isEmpty) {
-                          if (emailController.text.isEmpty) {
-                            setState(() {
-                              emailErrorText = 'هذا الحقل مطلوب';
-                            });
-                          } else if (!isValidEmail(emailController.text)) {
-                            setState(() {
-                              emailErrorText = 'البريد الالكتروني غير صحيح';
-                            });
-                          } else {
-                            setState(() {
-                              emailErrorText = null;
-                            });
-                          }
-
-                          if (passwordController.text.isEmpty) {
-                            setState(() {
-                              passwordErrorText = 'هذا الحقل مطلوب';
-                            });
-                          } else {
-                            setState(() {
-                              passwordErrorText = null;
-                            });
-                          }
-                        } else {
-                          setState(() {
-                            emailErrorText = null;
-                            passwordErrorText = null;
-                          });
-
-                          context.read<AuthCubit>().signIn(
-                            emailController.text,
-                            passwordController.text,
-                          );
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1B5E37),
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: const Text(
-                        'تسجيل دخول',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                    );
-                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF1B5E37),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                  child: const Text(
+                    'تسجيل دخول',
+                    style: TextStyle(fontSize: 18, color: Colors.white),
+                  ),
                 ),
                 const SizedBox(height: 20),
                 Center(
                   child: Text.rich(
                     TextSpan(
-                      text: 'لا يوجد لديك حساب؟ ',
+                      text: 'لا تمتلك حساب؟ ',
                       style: const TextStyle(
-                        fontSize: 16,
-                        color: Color(0xFF949D9E),
-                      ),
+                          fontSize: 16, color: Color(0xFF949D9E)),
                       children: [
                         TextSpan(
-                          text: 'قم بالتسجيل الآن',
+                          text: 'قم بإنشاء حساب',
                           style: const TextStyle(
-                            color: Color(0xFF1B5E37),
-                            fontSize: 16,
-                          ),
+                              color: Color(0xFF1B5E37), fontSize: 16),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
-                              Navigator.push(
+                              Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => const SignUpScreen(),
-                                ),
+                                    builder: (context) => const SignUpScreen()),
                               );
                             },
                         ),

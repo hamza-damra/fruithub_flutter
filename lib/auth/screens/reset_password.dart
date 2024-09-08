@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-import '../../bloc/cubit/auth_cubit.dart';
-import '../../bloc/state/auth_state.dart';
-import '../../utils/error_handler.dart'; // Import the centralized error handler
+import 'package:http/http.dart' as http;
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -24,6 +22,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController c3 = TextEditingController();
   TextEditingController c4 = TextEditingController();
   late String code;
+  final user = ManageUsers();
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +39,7 @@ class _ResetPasswordState extends State<ResetPassword> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Responsive text
+            // responsive text
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Align(
@@ -65,10 +64,159 @@ class _ResetPasswordState extends State<ResetPassword> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    buildOtpTextField(c1),
-                    buildOtpTextField(c2),
-                    buildOtpTextField(c3),
-                    buildOtpTextField(c4),
+                    SizedBox(
+                      width: screenWidth * 0.17,
+                      child: TextField(
+                        controller: c1,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onChanged: (value) {
+                          if (value.length == 1) {
+                            FocusScope.of(context).nextFocus();
+                          }
+                        },
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: InputDecoration(
+                          fillColor: const Color(0xffF9FAFA),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: const BorderSide(
+                              color: Colors.amber,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.17,
+                      child: TextField(
+                        controller: c2,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onChanged: (value) {
+                          if (value.length == 1) {
+                            FocusScope.of(context).nextFocus();
+                          } else {
+                            FocusScope.of(context).previousFocus();
+                          }
+                        },
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: InputDecoration(
+                          fillColor: const Color(0xffF9FAFA),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: const BorderSide(
+                              color: Colors.amber,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.17,
+                      child: TextField(
+                        controller: c3,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onChanged: (value) {
+                          if (value.length == 1) {
+                            FocusScope.of(context).nextFocus();
+                          } else {
+                            FocusScope.of(context).previousFocus();
+                          }
+                        },
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: InputDecoration(
+                          fillColor: const Color(0xffF9FAFA),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: const BorderSide(
+                              color: Colors.amber,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.17,
+                      child: TextField(
+                        controller: c4,
+                        style: const TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                        onChanged: (value) {
+                          if (value.length == 1) {
+                          } else {
+                            FocusScope.of(context).previousFocus();
+                          }
+                        },
+                        textAlign: TextAlign.center,
+                        keyboardType: TextInputType.number,
+                        inputFormatters: [
+                          LengthLimitingTextInputFormatter(1),
+                          FilteringTextInputFormatter.digitsOnly,
+                        ],
+                        decoration: InputDecoration(
+                          fillColor: const Color(0xffF9FAFA),
+                          filled: true,
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                            borderSide: const BorderSide(
+                              color: Colors.amber,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(6.0),
+                            borderSide: const BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -121,11 +269,13 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                   bool hasError = false;
 
+                  // Reset error texts
                   setState(() {
                     passwordErrorText = null;
                     confirmPasswordErrorText = null;
                   });
 
+                  // Validate Password
                   if (passwordController.text.isEmpty) {
                     setState(() {
                       passwordErrorText = 'هذا الحقل مطلوب';
@@ -133,11 +283,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                     hasError = true;
                   } else if (passwordController.text.length < 8) {
                     setState(() {
-                      passwordErrorText = 'كلمة السر يجب أن تكون على الأقل 8 حروف';
+                      passwordErrorText =
+                      'كلمة السر يجب أن تكون على الأقل 8 حروف';
                     });
                     hasError = true;
                   }
 
+                  // Validate Confirm Password
                   if (confirmPasswordController.text.isEmpty) {
                     setState(() {
                       confirmPasswordErrorText = 'هذا الحقل مطلوب';
@@ -151,9 +303,11 @@ class _ResetPasswordState extends State<ResetPassword> {
                     hasError = true;
                   }
 
+                  // Check if passwords match
                   if (passwordController.text.length >= 8 &&
                       confirmPasswordController.text.length >= 8 &&
-                      passwordController.text != confirmPasswordController.text) {
+                      passwordController.text !=
+                          confirmPasswordController.text) {
                     setState(() {
                       passwordErrorText =
                           confirmPasswordErrorText = 'كلمة السر غير متطابقة';
@@ -161,39 +315,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                     hasError = true;
                   }
 
-<<<<<<< HEAD
-                  if (code.length < 4 && code.isNotEmpty) {
-                    showDialog(
-                      context: context,
-                      builder: (BuildContext context) {
-                        return AlertDialog(
-                          title: const Text(
-                            'خطأ',
-                            textAlign: TextAlign.right,
-                          ),
-                          content: const Text(
-                            'أكمل كتابة الكود المكون من أربع أرقام',
-                            textAlign: TextAlign.right,
-                          ),
-                          actions: <Widget>[
-                            TextButton(
-                              child: const Text('حاول مرة أخرى'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    hasError = true;
-                  }
-
-                  if (code.isEmpty) {
-=======
                   // Validate OTP Code
                   if (code.length < 4) {
->>>>>>> fix-login
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
@@ -221,14 +344,135 @@ class _ResetPasswordState extends State<ResetPassword> {
                   }
 
                   if (hasError) {
-                    return;
+                    return; // Stop further execution if there are errors
                   }
 
-                  context.read<AuthCubit>().verifyResetPassword(
-                    code,
-                    passwordController.text,
-                    confirmPasswordController.text,
+                  // Proceed with resetting password
+                  showDialog(
+                    context: context,
+                    barrierDismissible: false,
+                    builder: (context) => const Center(
+                      child: CircularProgressIndicator(
+                        color: Colors.black,
+                      ),
+                    ),
                   );
+
+                  try {
+                    http.Response verificationResponse =
+                    await user.verifyResetPasswordByOtp(
+                      code,
+                      passwordController.text,
+                      confirmPasswordController.text,
+                    );
+                    Navigator.pop(context);
+                    print(verificationResponse.body);
+
+                    if (verificationResponse.statusCode == 200 ||
+                        verificationResponse.statusCode == 201) {
+                      // success
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'نجاح',
+                              textAlign: TextAlign.right,
+                            ),
+                            content: const Text(
+                              'تم إعادة تعيين كلمة المرور بنجاح',
+                              textAlign: TextAlign.right,
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('العودة لتسجيل الدخول'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else if (verificationResponse.statusCode == 417) {
+                      // Invalid OTP Code
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'كود تفعيل خاطئ',
+                              textAlign: TextAlign.right,
+                            ),
+                            content: const Text(
+                              'يرجي التأكد من الكود المرسل وإعادة المحاولة',
+                              textAlign: TextAlign.right,
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('إعادة المحاولة'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      // Handle other status codes
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text(
+                              'خطأ',
+                              textAlign: TextAlign.right,
+                            ),
+                            content: const Text(
+                              'حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى لاحقًا.',
+                              textAlign: TextAlign.right,
+                            ),
+                            actions: <Widget>[
+                              TextButton(
+                                child: const Text('حسنًا'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    }
+                  } catch (e) {
+                    Navigator.pop(context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+                          title: const Text(
+                            'خطأ',
+                            textAlign: TextAlign.right,
+                          ),
+                          content: const Text(
+                            'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.',
+                            textAlign: TextAlign.right,
+                          ),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('حسنًا'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF1B5E37),
@@ -243,87 +487,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                 ),
               ),
             ),
-            BlocConsumer<AuthCubit, AuthState>(
-              listener: (context, state) {
-                ErrorHandler.handleAuthError(context, state);
-                if (state is PasswordResetSuccess) {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: const Text(
-                          'نجاح',
-                          textAlign: TextAlign.right,
-                        ),
-                        content: const Text(
-                          'تم إعادة تعيين كلمة المرور بنجاح',
-                          textAlign: TextAlign.right,
-                        ),
-                        actions: <Widget>[
-                          TextButton(
-                            child: const Text('العودة لتسجيل الدخول'),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  );
-                }
-              },
-              builder: (context, state) {
-                if (state is AuthLoading) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-                return const SizedBox.shrink();
-              },
-            ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget buildOtpTextField(TextEditingController controller) {
-    return SizedBox(
-      width: MediaQuery.of(context).size.width * 0.17,
-      child: TextField(
-        controller: controller,
-        style: const TextStyle(
-          fontFamily: 'Cairo',
-          fontWeight: FontWeight.bold,
-        ),
-        onChanged: (value) {
-          if (value.length == 1) {
-            FocusScope.of(context).nextFocus();
-          } else {
-            FocusScope.of(context).previousFocus();
-          }
-        },
-        textAlign: TextAlign.center,
-        keyboardType: TextInputType.number,
-        inputFormatters: [
-          LengthLimitingTextInputFormatter(1),
-          FilteringTextInputFormatter.digitsOnly,
-        ],
-        decoration: InputDecoration(
-          fillColor: const Color(0xffF9FAFA),
-          filled: true,
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12.0),
-            borderSide: const BorderSide(
-              color: Colors.amber,
-            ),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(6.0),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-            ),
-          ),
         ),
       ),
     );
