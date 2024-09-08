@@ -10,6 +10,7 @@ import 'bloc/cubit/auth_cubit.dart';
 import 'bloc/cubit/filter_products_cubit.dart';
 
 void main() {
+  // SharedPrefManager().deleteData('token');
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   runApp(const MyApp());
@@ -35,14 +36,21 @@ class _MyAppState extends State<MyApp> {
 
   Future<void> _checkLoginStatus() async {
     String? token = await SharedPrefManager().getData('token');
+<<<<<<< HEAD
     setState(() {
       _isUserLoggedIn = (token != null) && (token.isNotEmpty);
+=======
+
+    setState(() {
+      _isUserLoggedIn = (token != null && token.isNotEmpty);
+>>>>>>> fix-login
       _isLoading = false;
     });
   }
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return MultiBlocProvider(
       providers: [
         BlocProvider<AuthCubit>(
@@ -112,6 +120,72 @@ class _MyAppState extends State<MyApp> {
             ? const AppController()
             : const SignInScreen(),
         onGenerateRoute: generateRoute,
+=======
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        fontFamily: 'Cairo',
+        textTheme: const TextTheme(
+          bodyLarge: TextStyle(fontFamily: 'Cairo', fontSize: 16),
+          bodyMedium: TextStyle(fontFamily: 'Cairo', fontSize: 14),
+          displayLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+          displayMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+          displaySmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+          headlineSmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ),
+          labelLarge: TextStyle(
+            fontFamily: 'Cairo',
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      home: BlocProvider(
+        create: (context) => ProductsCubit(),
+        child: _isLoading
+            ? const Scaffold(
+                backgroundColor: Colors.white,
+                body: SizedBox(),
+              )
+            : _isUserLoggedIn
+                ? const AppController()
+                : const SignInScreen(),
+>>>>>>> fix-login
       ),
     );
   }

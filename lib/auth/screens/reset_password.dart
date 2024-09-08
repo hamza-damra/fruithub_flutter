@@ -161,6 +161,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     hasError = true;
                   }
 
+<<<<<<< HEAD
                   if (code.length < 4 && code.isNotEmpty) {
                     showDialog(
                       context: context,
@@ -189,6 +190,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                   }
 
                   if (code.isEmpty) {
+=======
+                  // Validate OTP Code
+                  if (code.length < 4) {
+>>>>>>> fix-login
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {

@@ -2,14 +2,21 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/send_reset_password_email.dart';
+<<<<<<< HEAD
 import 'package:fruitshub/auth/screens/signup_screen.dart'; // Add SignUp screen import
+=======
+import 'package:fruitshub/auth/screens/verify_new_user.dart';
+import 'package:fruitshub/widgets/app_controller.dart';
+>>>>>>> fix-login
 import 'package:fruitshub/widgets/my_textfield.dart';
 import '../../bloc/cubit/auth_cubit.dart';
 import '../../bloc/state/auth_state.dart';
 import '../../utils/error_handler.dart'; // Import the centralized error handler
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  const SignInScreen({
+    super.key,
+  });
 
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -17,10 +24,9 @@ class SignInScreen extends StatefulWidget {
 
 class _SignInScreenState extends State<SignInScreen> {
   TextEditingController emailController = TextEditingController();
-  String? emailErrorText;
   TextEditingController passwordController = TextEditingController();
+  String? emailErrorText;
   String? passwordErrorText;
-
   bool isValidEmail(String email) {
     final RegExp emailRegex = RegExp(
       r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -28,6 +34,115 @@ class _SignInScreenState extends State<SignInScreen> {
     return emailRegex.hasMatch(email);
   }
 
+<<<<<<< HEAD
+=======
+  void showCustomDialog(
+    BuildContext context,
+    String title,
+    String content,
+    String buttonChild,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            textAlign: TextAlign.right,
+          ),
+          content: Text(
+            content,
+            textAlign: TextAlign.right,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(buttonChild),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> logIn() async {
+    // show loading dialog
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (context) => const Center(
+        child: CircularProgressIndicator(
+          color: Colors.black,
+        ),
+      ),
+    );
+
+    try {
+      // sign in request
+      http.Response signInResponse = await ManageUsers().signinUser(
+        emailController.text,
+        passwordController.text,
+      );
+      Navigator.pop(context);
+
+      // request success
+      if (signInResponse.statusCode == 200 ||
+          signInResponse.statusCode == 201) {
+        final Map<String, dynamic> responseData =
+            jsonDecode(signInResponse.body);
+        SharedPrefManager().saveData('token', responseData['token']);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => const AppController(),
+          ),
+        );
+      }
+
+      // user not verified
+      else if (signInResponse.statusCode == 400) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyNewUser(
+              email: emailController.text,
+              password: passwordController.text,
+            ),
+          ),
+        );
+      }
+
+      // wrong data error
+      else if (signInResponse.statusCode == 500) {
+        showCustomDialog(
+          context,
+          'خطأ',
+          'هذا المستخدم غير موجود او تم حذفه',
+          'حسنا',
+        );
+      }
+    }
+
+    // unexpected error
+    on Exception catch (e) {
+      if (Navigator.canPop(context)) {
+        Navigator.pop(context);
+      }
+
+      Future.delayed(const Duration(milliseconds: 100), () {
+        showCustomDialog(
+          context,
+          'خطأ',
+          'حدث خطأ غير متوقع الرجاء المحاولة مرة أخرى لاحقًا',
+          'حسنا',
+        );
+      });
+    }
+  }
+
+>>>>>>> fix-login
   @override
   Widget build(BuildContext context) {
     return Scaffold(

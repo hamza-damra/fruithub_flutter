@@ -1,3 +1,9 @@
+<<<<<<< HEAD
+=======
+import 'dart:convert';
+
+import 'package:flutter/gestures.dart';
+>>>>>>> fix-login
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/auth/screens/verify_new_user.dart';
@@ -17,7 +23,10 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+<<<<<<< HEAD
 
+=======
+>>>>>>> fix-login
   String? nameErrorText;
   String? emailErrorText;
   String? passwordErrorText;
@@ -29,6 +38,99 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return emailRegex.hasMatch(email);
   }
 
+<<<<<<< HEAD
+=======
+  void showCustomDialog(
+    BuildContext context,
+    String title,
+    String content,
+    String buttonChild,
+  ) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            title,
+            textAlign: TextAlign.right,
+          ),
+          content: Text(
+            content,
+            textAlign: TextAlign.right,
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(buttonChild),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Future<void> signUP() async {
+    try {
+      // show loading dialog
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(
+            color: Colors.black,
+          ),
+        ),
+      );
+
+      // signUp request
+      http.Response signUpResponse = await user.signUP(
+        nameController.text,
+        emailController.text,
+        passwordController.text,
+      );
+      Navigator.pop(context);
+
+      // request success
+      if (signUpResponse.statusCode == 200 ||
+          signUpResponse.statusCode == 201) {
+        // verify user
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyNewUser(
+              email: emailController.text,
+              password: passwordController.text,
+            ),
+          ),
+        );
+      }
+
+      // email error
+      else if (signUpResponse.statusCode == 400) {
+        showCustomDialog(
+          context,
+          'title',
+          'هذا الايميل مستخدم بالفعل',
+          'حاول مره اخري',
+        );
+      }
+    }
+
+    // unexpected error
+    catch (e) {
+      Navigator.of(context).pop();
+      showCustomDialog(
+        context,
+        'خطأ في الشبكة',
+        'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
+        'حاول مره اخري',
+      );
+    }
+  }
+
+>>>>>>> fix-login
   @override
   Widget build(BuildContext context) {
     return Scaffold(
