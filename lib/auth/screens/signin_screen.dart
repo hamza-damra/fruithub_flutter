@@ -122,7 +122,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     // unexpected error
-    on Exception catch (e) {
+    on Exception  {
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }

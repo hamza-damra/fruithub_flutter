@@ -28,7 +28,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       price: 20,
       quantity: 1,
       imageUrl:
-      'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
+          'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
       categoryId: 2,
       totalRating: 3.5,
       counterFiveStars: 3,
@@ -46,7 +46,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       price: 30,
       quantity: 1,
       imageUrl:
-      'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
+          'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
       categoryId: 2,
       totalRating: 3.5,
       counterFiveStars: 3,
@@ -64,7 +64,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       price: 25,
       quantity: 1,
       imageUrl:
-      'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
+          'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
       categoryId: 2,
       totalRating: 3.5,
       counterFiveStars: 3,
@@ -82,7 +82,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
       price: 40,
       quantity: 1,
       imageUrl:
-      'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
+          'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
       categoryId: 2,
       totalRating: 3.5,
       counterFiveStars: 3,
@@ -99,7 +99,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void initState() {
-    context.read<ProductsCubit>().showProductState(state: 'most');
+    BlocProvider.of<ProductsCubit>(context).showProductState(state: 'most');
     super.initState();
   }
 
@@ -410,7 +410,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   child: Container(
                     width: screenWidth * 0.10,
                     height:
-                    screenWidth * 0.10, // Square container for the arrow
+                        screenWidth * 0.10, // Square container for the arrow
                     decoration: BoxDecoration(
                       color: Colors.white,
                       border: Border.all(

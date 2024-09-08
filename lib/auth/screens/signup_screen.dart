@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
@@ -36,11 +34,11 @@ class _SignUpScreenState extends State<SignUpScreen> {
   }
 
   void showCustomDialog(
-      BuildContext context,
-      String title,
-      String content,
-      String buttonChild,
-      ) {
+    BuildContext context,
+    String title,
+    String content,
+    String buttonChild,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -114,7 +112,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
     }
 
     // unexpected error
-    catch (e) {
+    on Exception {
       Navigator.of(context).pop();
       showCustomDialog(
         context,
@@ -219,7 +217,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       } else if (nameController.text.length < 3) {
                         setState(() {
                           nameErrorText =
-                          'يجب ان يتكون الاسم علي الاقل من ثلاث حروف';
+                              'يجب ان يتكون الاسم علي الاقل من ثلاث حروف';
                         });
                       } else {
                         setState(() {
@@ -248,7 +246,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       } else if (passwordController.text.length < 8) {
                         setState(() {
                           passwordErrorText =
-                          'كلمه السر يجب ان تكون علي الاقل 8 حروف';
+                              'كلمه السر يجب ان تكون علي الاقل 8 حروف';
                         });
                       } else {
                         setState(() {
@@ -309,4 +307,3 @@ class _SignUpScreenState extends State<SignUpScreen> {
     );
   }
 }
-
