@@ -2,20 +2,35 @@ import 'package:flutter/material.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends StatefulWidget {
   const ProductCard({
     super.key,
-    required this.screenWidth,
-    required this.screenHeight,
     required this.product,
   });
 
-  final double screenWidth;
-  final double screenHeight;
   final Product product;
 
   @override
+  State<ProductCard> createState() => _ProductCardState();
+}
+
+class _ProductCardState extends State<ProductCard> {
+  @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    Icon icon = widget.product.isfavourite
+        ? Icon(
+            Icons.favorite_rounded,
+            color: Colors.red,
+            size: screenWidth * 0.06,
+          )
+        : Icon(
+            Icons.favorite_border_rounded,
+            color: Colors.red,
+            size: screenWidth * 0.06,
+          );
+
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
@@ -26,9 +41,14 @@ class ProductCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          Icon(
-            Icons.favorite_border_rounded,
-            size: screenWidth * 0.06,
+          GestureDetector(
+            // isfavourite end point
+            onTap: () {
+              setState(() {
+                widget.product.isfavourite = !widget.product.isfavourite;
+              });
+            },
+            child: icon,
           ),
           Expanded(
             child: Row(
@@ -36,7 +56,7 @@ class ProductCard extends StatelessWidget {
               children: [
                 Flexible(
                   child: FancyShimmerImage(
-                    imageUrl: product.imageUrl,
+                    imageUrl: widget.product.imageUrl,
                     shimmerBaseColor: Colors.grey[300],
                     shimmerHighlightColor: Colors.white,
                     boxFit: BoxFit.contain,
@@ -50,7 +70,7 @@ class ProductCard extends StatelessWidget {
               fit: BoxFit.scaleDown,
               alignment: Alignment.centerRight,
               child: Text(
-                product.name,
+                widget.product.name,
                 style: TextStyle(
                   fontFamily: 'Cairo',
                   fontWeight: FontWeight.w700,
@@ -63,18 +83,23 @@ class ProductCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Container(
-                width: screenWidth * 0.08,
-                height: screenHeight * 0.08,
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Color(0xff1B5E37),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                    size: screenWidth * 0.05,
+              GestureDetector(
+                onTap: () {
+                  // add to cart end point
+                },
+                child: Container(
+                  width: screenWidth * 0.08,
+                  height: screenHeight * 0.08,
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Color(0xff1B5E37),
+                  ),
+                  child: Center(
+                    child: Icon(
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: screenWidth * 0.05,
+                    ),
                   ),
                 ),
               ),
@@ -112,7 +137,7 @@ class ProductCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        product.price.toString(),
+                        widget.product.price.toString(),
                         style: TextStyle(
                           color: const Color(0xffF4A91F),
                           fontWeight: FontWeight.w700,

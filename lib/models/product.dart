@@ -3,7 +3,7 @@ class Product {
   final String name;
   final String description;
   final double price;
-  final int quantity;
+  final int stockQuantity;
   final String imageUrl;
   final int categoryId;
   final double totalRating;
@@ -14,13 +14,15 @@ class Product {
   final int counterOneStars;
   final int expiryMonths;
   final int caloriesPer100Gram;
+  bool isfavourite = false;
 
   Product({
     required this.id,
     required this.name,
     required this.description,
     required this.price,
-    required this.quantity,
+    required this.stockQuantity,
+    required this.isfavourite,
     required this.imageUrl,
     required this.categoryId,
     required this.totalRating,

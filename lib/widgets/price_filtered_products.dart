@@ -128,8 +128,6 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                           );
                         },
                         child: ProductCard(
-                          screenWidth: screenWidth,
-                          screenHeight: MediaQuery.of(context).size.height,
                           product: filteredProducts[index],
                         ),
                       );

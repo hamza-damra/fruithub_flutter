@@ -114,8 +114,6 @@ class _MostSellingState extends State<MostSelling> {
                           );
                         },
                         child: ProductCard(
-                          screenWidth: MediaQuery.of(context).size.width,
-                          screenHeight: MediaQuery.of(context).size.height,
                           product: widget.products[index],
                         ),
                       );

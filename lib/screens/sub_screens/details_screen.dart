@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
-class DetailsScreen extends StatelessWidget {
+class DetailsScreen extends StatefulWidget {
   const DetailsScreen({
     super.key,
     required this.product,
@@ -12,6 +13,12 @@ class DetailsScreen extends StatelessWidget {
 
   final Product product;
 
+  @override
+  State<DetailsScreen> createState() => _DetailsScreenState();
+}
+
+class _DetailsScreenState extends State<DetailsScreen> {
+  int userQuantity = 1;
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -43,44 +50,48 @@ class DetailsScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: SingleChildScrollView(
-        // Ensures scrollability on smaller screens
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Stack(
+      body: ListView(
+        children: [
+          Stack(
+            children: [
+              Container(
+                width: screenWidth,
+                height: screenHeight * 0.30,
+                decoration: const BoxDecoration(
+                  color: Color(0xffF3F5F7),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(200),
+                    bottomRight: Radius.circular(200),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.bottomCenter,
+                child: Image.network(
+                  widget.product.imageUrl,
+                  width: screenWidth * 0.45,
+                  height: screenHeight * 0.25,
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: screenHeight * 0.02),
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
-                  width: screenWidth,
-                  height: screenHeight * 0.30,
-                  decoration: const BoxDecoration(
-                    color: Color(0xffF3F5F7),
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(200),
-                      bottomRight: Radius.circular(200),
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Image.network(
-                    product.imageUrl,
-                    width: screenWidth * 0.45,
-                    height: screenHeight * 0.25,
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(height: screenHeight * 0.02),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      Container(
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        if (userQuantity > 1) {
+                          userQuantity--;
+                          setState(() {});
+                        }
+                      },
+                      child: Container(
                         width: screenWidth * 0.11,
                         height: screenWidth * 0.11,
                         decoration: const BoxDecoration(
@@ -103,16 +114,37 @@ class DetailsScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(width: screenWidth * 0.04),
-                      Text(
-                        product.quantity.toString(),
-                        style: TextStyle(
-                          fontSize: screenWidth * 0.045,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    ),
+                    SizedBox(width: screenWidth * 0.04),
+                    Text(
+                      userQuantity.toString(),
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.045,
+                        fontWeight: FontWeight.bold,
                       ),
-                      SizedBox(width: screenWidth * 0.04),
-                      Container(
+                    ),
+                    SizedBox(width: screenWidth * 0.04),
+                    GestureDetector(
+                      onTap: () {
+                        if (userQuantity < widget.product.stockQuantity) {
+                          userQuantity++;
+                          setState(() {});
+                        } else {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            const CustomSnackBar.info(
+                              message: "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                              textAlign: TextAlign.center,
+                              textStyle: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        }
+                      },
+                      child: Container(
                         width: screenWidth * 0.11,
                         height: screenWidth * 0.11,
                         decoration: const BoxDecoration(
@@ -125,183 +157,176 @@ class DetailsScreen extends StatelessWidget {
                           size: screenWidth * 0.05, // Adjust icon size
                         ),
                       ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        product.name,
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontWeight: FontWeight.w700,
-                          color: const Color(0xff0C0D0D),
-                          fontSize: screenWidth * 0.045,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Text(
-                            'الكيلو',
-                            style: TextStyle(
-                              color: const Color(0xffF8C76D),
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Cairo',
-                              fontSize: screenWidth * 0.04,
-                            ),
-                          ),
-                          Text(
-                            '/',
-                            style: TextStyle(
-                              color: const Color(0xffF8C76D),
-                              fontWeight: FontWeight.w600,
-                              fontFamily: 'Cairo',
-                              fontSize: screenWidth * 0.04,
-                            ),
-                          ),
-                          Text(
-                            'جنية',
-                            style: TextStyle(
-                              color: const Color(0xffF4A91F),
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Cairo',
-                              fontSize: screenWidth * 0.04,
-                            ),
-                          ),
-                          Text(
-                            product.price.toString(),
-                            style: TextStyle(
-                              color: const Color(0xffF4A91F),
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Cairo',
-                              fontSize: screenWidth * 0.04,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                right: screenWidth * 0.03,
-                top: screenHeight * 0.01,
-                bottom: screenHeight * 0.01,
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  const Spacer(flex: 500),
-                  GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => RatingScreen(
-                            product: product,
-                          ),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'المراجعه',
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.04,
-                        color: const Color(0xff1B5E37),
-                        fontWeight: FontWeight.w700,
-                        decoration: TextDecoration.underline,
-                        decorationColor: const Color(0xff1B5E37),
-                        decorationThickness: 2.0,
-                      ),
                     ),
-                  ),
-                  const Spacer(flex: 20),
-                  Text(
-                    '(${product.counterFiveStars + product.counterFourStars + product.counterThreeStars + product.counterTwoStars + product.counterOneStars})',
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      color: const Color(0xff9796A1),
-                      fontWeight: FontWeight.w400,
-                    ),
-                  ),
-                  const Spacer(flex: 20),
-                  Text(
-                    product.totalRating.toString(),
-                    style: TextStyle(
-                      fontSize: screenWidth * 0.045,
-                      color: Colors.black,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  const Spacer(flex: 20),
-                  SvgPicture.asset(
-                    'assets/images/ratingStar.svg',
-                    width: screenWidth * 0.05,
-                    height: screenWidth * 0.05,
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                right: screenWidth * 0.03,
-                left: screenWidth * 0.03,
-                bottom: screenHeight * 0.02,
-              ),
-              child: Text(
-                product.description,
-                textAlign: TextAlign.right,
-                style: TextStyle(
-                  color: const Color(0xff979899),
-                  fontWeight: FontWeight.w400,
-                  fontSize: screenWidth * 0.045,
+                  ],
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    const Expanded(
-                      child: ProductInfo(
-                        image: 'assets/images/organic.svg',
-                        title: Text(
-                          '100%',
-                          style: TextStyle(
-                            color: Color(0xff23AA49),
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                        subTitle: Text(
-                          'اوجانيك',
-                          style: TextStyle(
-                            color: Color(0xff979899),
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
+                    Text(
+                      widget.product.name,
+                      style: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.w700,
+                        color: const Color(0xff0C0D0D),
+                        fontSize: screenWidth * 0.045,
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ProductInfo(
-                        image: 'assets/images/calendar.svg',
-                        title: Expanded(
-                          child: Row(
+                    Row(
+                      children: [
+                        Text(
+                          'الكيلو',
+                          style: TextStyle(
+                            color: const Color(0xffF8C76D),
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Cairo',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                        Text(
+                          '/',
+                          style: TextStyle(
+                            color: const Color(0xffF8C76D),
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'Cairo',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                        Text(
+                          'جنية ',
+                          style: TextStyle(
+                            color: const Color(0xffF4A91F),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Cairo',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                        Text(
+                          widget.product.price.toString(),
+                          style: TextStyle(
+                            color: const Color(0xffF4A91F),
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Cairo',
+                            fontSize: screenWidth * 0.04,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      'الكميه المتوفره : ${widget.product.stockQuantity.toString()}',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.04, // Responsive font size
+                        fontWeight: FontWeight.bold,
+                        fontFamily: 'Cairo',
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          // Padding(
+          //   padding: EdgeInsets.only(
+          //     right: screenWidth * 0.03,
+          //     bottom: screenHeight * 0.01,
+          //   ),
+          //   child: Row(
+          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //     children: [
+          //       const Spacer(flex: 500),
+          //       GestureDetector(
+          //         onTap: () {
+          //           Navigator.push(
+          //             context,
+          //             MaterialPageRoute(
+          //               builder: (context) => RatingScreen(
+          //                 product: widget.product,
+          //               ),
+          //             ),
+          //           );
+          //         },
+          //         child: Text(
+          //           'المراجعه',
+          //           style: TextStyle(
+          //             fontSize: screenWidth * 0.04,
+          //             color: const Color(0xff1B5E37),
+          //             fontWeight: FontWeight.w700,
+          //             decoration: TextDecoration.underline,
+          //             decorationColor: const Color(0xff1B5E37),
+          //             decorationThickness: 2.0,
+          //           ),
+          //         ),
+          //       ),
+          //       const Spacer(flex: 20),
+          //       Text(
+          //         '(${widget.product.counterFiveStars + widget.product.counterFourStars + widget.product.counterThreeStars + widget.product.counterTwoStars + widget.product.counterOneStars})',
+          //         style: TextStyle(
+          //           fontSize: screenWidth * 0.045,
+          //           color: const Color(0xff9796A1),
+          //           fontWeight: FontWeight.w400,
+          //         ),
+          //       ),
+          //       const Spacer(flex: 20),
+          //       Text(
+          //         widget.product.totalRating.toString(),
+          //         style: TextStyle(
+          //           fontSize: screenWidth * 0.045,
+          //           color: Colors.black,
+          //           fontWeight: FontWeight.w600,
+          //         ),
+          //       ),
+          //       const Spacer(flex: 20),
+          //       SvgPicture.asset(
+          //         'assets/images/ratingStar.svg',
+          //         width: screenWidth * 0.05,
+          //         height: screenWidth * 0.05,
+          //       ),
+          //     ],
+          //   ),
+          // ),
+          Padding(
+            padding: EdgeInsets.only(
+              right: screenWidth * 0.03,
+              left: screenWidth * 0.03,
+              bottom: screenHeight * 0.02,
+            ),
+            child: Text(
+              widget.product.description,
+              textAlign: TextAlign.right,
+              style: TextStyle(
+                color: const Color(0xff979899),
+                fontWeight: FontWeight.w400,
+                fontSize: screenWidth * 0.045,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: ProductInfo(
+                      image: 'assets/images/calendar.svg',
+                      title: Row(
+                        children: [
+                          const Text(
+                            'اشهر',
+                            textAlign: TextAlign.right,
+                            style: TextStyle(
+                              color: Color(0xff23AA49),
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              const Text(
-                                'اشهر',
-                                textAlign: TextAlign.right,
-                                style: TextStyle(
-                                  color: Color(0xff23AA49),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
                               Text(
-                                ' ${product.expiryMonths}',
+                                ' ${widget.product.expiryMonths.toString()}',
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
                                   color: Color(0xff23AA49),
@@ -310,26 +335,18 @@ class DetailsScreen extends StatelessWidget {
                               ),
                             ],
                           ),
-                        ),
-                        subTitle: const Text(
-                          'الصلاحيه',
-                          style: TextStyle(
-                            color: Color(0xff979899),
-                            fontWeight: FontWeight.w600,
-                          ),
+                        ],
+                      ),
+                      subTitle: const Text(
+                        'الصلاحيه',
+                        style: TextStyle(
+                          color: Color(0xff979899),
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+                  ),
+                  const SizedBox(width: 8),
                   Expanded(
                     child: GestureDetector(
                       onTap: () {
@@ -337,7 +354,7 @@ class DetailsScreen extends StatelessWidget {
                           context,
                           MaterialPageRoute(
                             builder: (context) => RatingScreen(
-                              product: product,
+                              product: widget.product,
                             ),
                           ),
                         );
@@ -345,91 +362,122 @@ class DetailsScreen extends StatelessWidget {
                       child: ProductInfo(
                         image: 'assets/images/reviews.svg',
                         title: Text(
-                          '${product.totalRating} (${product.counterFiveStars + product.counterFourStars + product.counterThreeStars + product.counterTwoStars + product.counterOneStars})',
+                          '${widget.product.totalRating} (${widget.product.counterFiveStars + widget.product.counterFourStars + widget.product.counterThreeStars + widget.product.counterTwoStars + widget.product.counterOneStars})',
                           style: const TextStyle(
                             color: Color(0xff23AA49),
                             fontWeight: FontWeight.w700,
                           ),
                         ),
                         subTitle: const Text(
-                          'Reviews',
+                          'المراجعات',
                           style: TextStyle(
                             color: Color(0xff979899),
                             fontWeight: FontWeight.w600,
+                            decoration: TextDecoration.underline,
                           ),
                         ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ProductInfo(
-                      image: 'assets/images/cals.svg',
-                      title: Row(
-                        children: [
-                          const Text(
-                            'كالوري',
-                            style: TextStyle(
-                              color: Color(0xff23AA49),
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            ' ${product.caloriesPer100Gram}',
-                            style: const TextStyle(
-                              color: Color(0xff23AA49),
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                      subTitle: const Row(
-                        children: [
-                          Text(
-                            'جرام',
-                            style: TextStyle(
-                              color: Color(0xff979899),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            ' 100',
-                            style: TextStyle(
-                              color: Color(0xff979899),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-              child: SizedBox(
-                width: double.infinity,
-                height: 45,
-                child: ElevatedButton(
-                  style: const ButtonStyle(
-                    backgroundColor: WidgetStatePropertyAll(
-                      Color(0xff1B5E37),
+          ),
+          Padding(
+            padding:
+                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Expanded(
+                  child: ProductInfo(
+                    image: 'assets/images/organic.svg',
+                    title: Text(
+                      '100%',
+                      style: TextStyle(
+                        color: Color(0xff23AA49),
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    subTitle: Text(
+                      'اوجانيك',
+                      style: TextStyle(
+                        color: Color(0xff979899),
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                  onPressed: () {},
-                  child: const Text(
-                    'أضف الي السلة',
-                    style: TextStyle(color: Colors.white),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ProductInfo(
+                    image: 'assets/images/cals.svg',
+                    title: Row(
+                      children: [
+                        const Text(
+                          'كالوري',
+                          style: TextStyle(
+                            color: Color(0xff23AA49),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          ' ${widget.product.caloriesPer100Gram}',
+                          style: const TextStyle(
+                            color: Color(0xff23AA49),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subTitle: const Row(
+                      children: [
+                        Text(
+                          'جرام',
+                          style: TextStyle(
+                            color: Color(0xff979899),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        Text(
+                          ' 100',
+                          style: TextStyle(
+                            color: Color(0xff979899),
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+            child: SizedBox(
+              width: double.infinity,
+              height: 45,
+              child: ElevatedButton(
+                style: const ButtonStyle(
+                  backgroundColor: WidgetStatePropertyAll(
+                    Color(0xff1B5E37),
+                  ),
+                ),
+                onPressed: () {
+                  // add to cart end point
+                },
+                child: const Text(
+                  'أضف الي السلة',
+                  style: TextStyle(color: Colors.white),
                 ),
               ),
             ),
-            const SizedBox(
-              height: 4,
-            ),
-          ],
-        ),
+          ),
+          const SizedBox(
+            height: 4,
+          ),
+        ],
       ),
     );
   }

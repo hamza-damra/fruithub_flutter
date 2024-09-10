@@ -30,12 +30,12 @@ class ProductInfo extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(borderRadius),
         border: Border.all(
-          color: const Color.fromARGB(255, 210, 210, 212),
+          color: const Color.fromARGB(255, 231, 231, 233),
           width: borderWidth,
         ),
       ),
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Image section with responsive size
           Expanded(
@@ -60,11 +60,25 @@ class ProductInfo extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Flexible(child: title),
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        title,
+                      ],
+                    ),
+                  ),
                   SizedBox(
-                      height: screenHeight *
-                          0.01), // Add space between title and subtitle
-                  Flexible(child: subTitle),
+                    height: screenHeight * 0.01,
+                  ), // Add space between title and subtitle
+                  Flexible(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        subTitle,
+                      ],
+                    ),
+                  ),
                 ],
               ),
             ),
