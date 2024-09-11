@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
@@ -23,6 +25,22 @@ class _DetailsScreenState extends State<DetailsScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    int totalRating = widget.product.counterFiveStars +
+        widget.product.counterFourStars +
+        widget.product.counterThreeStars +
+        widget.product.counterTwoStars +
+        widget.product.counterOneStars;
+
+    double average = totalRating > 0
+        ? (widget.product.counterFiveStars * 5 +
+                widget.product.counterFourStars * 4 +
+                widget.product.counterThreeStars * 3 +
+                widget.product.counterTwoStars * 2 +
+                widget.product.counterOneStars * 1) /
+            totalRating
+        : 0;
+
+    String formattedAverage = average.toStringAsFixed(1);
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
@@ -228,65 +246,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ],
             ),
           ),
-          // Padding(
-          //   padding: EdgeInsets.only(
-          //     right: screenWidth * 0.03,
-          //     bottom: screenHeight * 0.01,
-          //   ),
-          //   child: Row(
-          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //     children: [
-          //       const Spacer(flex: 500),
-          //       GestureDetector(
-          //         onTap: () {
-          //           Navigator.push(
-          //             context,
-          //             MaterialPageRoute(
-          //               builder: (context) => RatingScreen(
-          //                 product: widget.product,
-          //               ),
-          //             ),
-          //           );
-          //         },
-          //         child: Text(
-          //           'المراجعه',
-          //           style: TextStyle(
-          //             fontSize: screenWidth * 0.04,
-          //             color: const Color(0xff1B5E37),
-          //             fontWeight: FontWeight.w700,
-          //             decoration: TextDecoration.underline,
-          //             decorationColor: const Color(0xff1B5E37),
-          //             decorationThickness: 2.0,
-          //           ),
-          //         ),
-          //       ),
-          //       const Spacer(flex: 20),
-          //       Text(
-          //         '(${widget.product.counterFiveStars + widget.product.counterFourStars + widget.product.counterThreeStars + widget.product.counterTwoStars + widget.product.counterOneStars})',
-          //         style: TextStyle(
-          //           fontSize: screenWidth * 0.045,
-          //           color: const Color(0xff9796A1),
-          //           fontWeight: FontWeight.w400,
-          //         ),
-          //       ),
-          //       const Spacer(flex: 20),
-          //       Text(
-          //         widget.product.totalRating.toString(),
-          //         style: TextStyle(
-          //           fontSize: screenWidth * 0.045,
-          //           color: Colors.black,
-          //           fontWeight: FontWeight.w600,
-          //         ),
-          //       ),
-          //       const Spacer(flex: 20),
-          //       SvgPicture.asset(
-          //         'assets/images/ratingStar.svg',
-          //         width: screenWidth * 0.05,
-          //         height: screenWidth * 0.05,
-          //       ),
-          //     ],
-          //   ),
-          // ),
           Padding(
             padding: EdgeInsets.only(
               right: screenWidth * 0.03,
@@ -362,7 +321,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       child: ProductInfo(
                         image: 'assets/images/reviews.svg',
                         title: Text(
-                          '${widget.product.totalRating} (${widget.product.counterFiveStars + widget.product.counterFourStars + widget.product.counterThreeStars + widget.product.counterTwoStars + widget.product.counterOneStars})',
+                          '$totalRating ($formattedAverage)',
                           style: const TextStyle(
                             color: Color(0xff23AA49),
                             fontWeight: FontWeight.w700,
@@ -455,22 +414,65 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-            child: SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: ElevatedButton(
-                style: const ButtonStyle(
-                  backgroundColor: WidgetStatePropertyAll(
-                    Color(0xff1B5E37),
-                  ),
-                ),
-                onPressed: () {
-                  // add to cart end point
+            /////// BlocProvider - BlocBuilder ///////
+            child: BlocProvider(
+              create: (context) => CartCubit(widget.product.isCartExist),
+              child: BlocBuilder<CartCubit, cart>(
+                builder: (context, state) {
+                  return SizedBox(
+                    width: double.infinity,
+                    height: 45,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            const Color(0xff1B5E37)),
+                      ),
+                      onPressed: () {
+                        context.read<CartCubit>().cartManagement(
+                              widget.product.isCartExist,
+                            );
+
+                        if (widget.product.isCartExist) {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            displayDuration: const Duration(milliseconds: 1000),
+                            const CustomSnackBar.info(
+                              message: "تم حذف المنتج من السله",
+                              textAlign: TextAlign.center,
+                              textStyle: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        } else {
+                          showTopSnackBar(
+                            Overlay.of(context),
+                            displayDuration: const Duration(milliseconds: 1000),
+                            const CustomSnackBar.info(
+                              message: "تم اضافه المنتج الي السله",
+                              textAlign: TextAlign.center,
+                              textStyle: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        }
+                        widget.product.isCartExist =
+                            !widget.product.isCartExist;
+                      },
+                      child: Text(
+                        state is cartExist ? 'حذف من السله' : 'اضافه الي السله',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
                 },
-                child: const Text(
-                  'أضف الي السلة',
-                  style: TextStyle(color: Colors.white),
-                ),
               ),
             ),
           ),

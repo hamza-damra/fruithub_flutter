@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
@@ -19,7 +23,8 @@ class _ProductCardState extends State<ProductCard> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-    Icon icon = widget.product.isfavourite
+
+    Icon favouriteIcon = widget.product.isfavourite
         ? Icon(
             Icons.favorite_rounded,
             color: Colors.red,
@@ -42,13 +47,42 @@ class _ProductCardState extends State<ProductCard> {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           GestureDetector(
-            // isfavourite end point
+            // Favourite logic
             onTap: () {
               setState(() {
+                if (widget.product.isfavourite) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    displayDuration: const Duration(milliseconds: 1000),
+                    const CustomSnackBar.info(
+                      message: "تم حذف المنتج من قائمه التمني",
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                } else {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    displayDuration: const Duration(milliseconds: 1000),
+                    const CustomSnackBar.info(
+                      message: "تم اضافه المنتج الي قائمه التمني",
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
+                    ),
+                  );
+                }
                 widget.product.isfavourite = !widget.product.isfavourite;
               });
             },
-            child: icon,
+            child: favouriteIcon,
           ),
           Expanded(
             child: Row(
@@ -84,8 +118,42 @@ class _ProductCardState extends State<ProductCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               GestureDetector(
+                // Cart management logic
                 onTap: () {
-                  // add to cart end point
+                  this
+                      .context
+                      .read<CartCubit>()
+                      .cartManagement(widget.product.isCartExist);
+                  if (widget.product.isCartExist) {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      displayDuration: const Duration(milliseconds: 1000),
+                      const CustomSnackBar.info(
+                        message: "تم حذف المنتج من السله",
+                        textAlign: TextAlign.center,
+                        textStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  } else {
+                    showTopSnackBar(
+                      Overlay.of(context),
+                      displayDuration: const Duration(milliseconds: 1000),
+                      const CustomSnackBar.info(
+                        message: "تم اضافه المنتج الي السله",
+                        textAlign: TextAlign.center,
+                        textStyle: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                    );
+                  }
+                  widget.product.isCartExist = !widget.product.isCartExist;
                 },
                 child: Container(
                   width: screenWidth * 0.08,
@@ -94,11 +162,24 @@ class _ProductCardState extends State<ProductCard> {
                     shape: BoxShape.circle,
                     color: Color(0xff1B5E37),
                   ),
+                  /////// BlocBuilder ///////
                   child: Center(
-                    child: Icon(
-                      Icons.add_rounded,
-                      color: Colors.white,
-                      size: screenWidth * 0.05,
+                    child: BlocBuilder<CartCubit, cart>(
+                      builder: (context, state) {
+                        if (state is cartExist) {
+                          return Icon(
+                            Icons.done_rounded,
+                            color: Colors.white,
+                            size: screenWidth * 0.05,
+                          );
+                        } else {
+                          return Icon(
+                            Icons.add_rounded,
+                            color: Colors.white,
+                            size: screenWidth * 0.05,
+                          );
+                        }
+                      },
                     ),
                   ),
                 ),

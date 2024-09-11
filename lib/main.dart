@@ -95,8 +95,12 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      home: BlocProvider(
-        create: (context) => ProductsCubit(),
+      home: MultiBlocProvider(
+        providers: [
+          BlocProvider<ProductsCubit>(
+            create: (context) => ProductsCubit(),
+          ),
+        ],
         child: _isLoading
             ? const Scaffold(
                 backgroundColor: Colors.white,

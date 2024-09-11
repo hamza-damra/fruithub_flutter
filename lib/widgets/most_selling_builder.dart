@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
 
-class MostSelling extends StatefulWidget {
-  const MostSelling({
+class MostSellingBuilder extends StatefulWidget {
+  const MostSellingBuilder({
     super.key,
     required this.products,
     this.sorting,
@@ -18,10 +20,10 @@ class MostSelling extends StatefulWidget {
   final bool showText;
 
   @override
-  State<MostSelling> createState() => _MostSellingState();
+  State<MostSellingBuilder> createState() => _MostSellingBuilderState();
 }
 
-class _MostSellingState extends State<MostSelling> {
+class _MostSellingBuilderState extends State<MostSellingBuilder> {
   @override
   Widget build(BuildContext context) {
     if (widget.sorting == 'asc') {
@@ -102,19 +104,25 @@ class _MostSellingState extends State<MostSelling> {
                           MediaQuery.of(context).size.width * 0.04,
                     ),
                     itemBuilder: (context, index) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => DetailsScreen(
-                                product: widget.products[index],
+                      /////// BlocProvider ///////
+                      return BlocProvider(
+                        create: (context) => CartCubit(
+                          widget.products[index].isCartExist,
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => DetailsScreen(
+                                  product: widget.products[index],
+                                ),
                               ),
-                            ),
-                          );
-                        },
-                        child: ProductCard(
-                          product: widget.products[index],
+                            );
+                          },
+                          child: ProductCard(
+                            product: widget.products[index],
+                          ),
                         ),
                       );
                     },

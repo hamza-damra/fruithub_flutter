@@ -104,7 +104,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
       else if (signUpResponse.statusCode == 400) {
         showCustomDialog(
           context,
-          'title',
+          'خطا',
           'هذا الايميل مستخدم بالفعل',
           'حاول مره اخري',
         );

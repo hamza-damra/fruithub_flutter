@@ -232,7 +232,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           const SizedBox(height: 7),
-          MostSelling(
+          MostSellingBuilder(
             products: mostSellingProducts,
             sorting: sort,
             showText: false,
