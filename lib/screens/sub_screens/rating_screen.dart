@@ -48,19 +48,16 @@ class _RatingScreenState extends State<RatingScreen> {
       ),
       body: ListView(
         children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: RatingSummary(
-                counter: counter,
-                average: average,
-                showAverage: true,
-                counterFiveStars: widget.product.counterFiveStars,
-                counterFourStars: widget.product.counterFourStars,
-                counterThreeStars: widget.product.counterThreeStars,
-                counterTwoStars: widget.product.counterTwoStars,
-                counterOneStars: widget.product.counterOneStars,
-              ),
+          Center(
+            child: RatingSummary(
+              counter: counter,
+              average: average,
+              showAverage: true,
+              counterFiveStars: widget.product.counterFiveStars,
+              counterFourStars: widget.product.counterFourStars,
+              counterThreeStars: widget.product.counterThreeStars,
+              counterTwoStars: widget.product.counterTwoStars,
+              counterOneStars: widget.product.counterOneStars,
             ),
           )
         ],

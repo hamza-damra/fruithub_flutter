@@ -63,8 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text('الملف الشخصي'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
       ),
       body: Center(
         child: ElevatedButton(

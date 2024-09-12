@@ -77,7 +77,7 @@ class _AppControllerState extends State<AppController> {
                   fontFamily: 'Cairo',
                   fontSize: fontSize,
                   color: Colors.green,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               GButton(
@@ -89,7 +89,7 @@ class _AppControllerState extends State<AppController> {
                   fontFamily: 'Cairo',
                   fontSize: fontSize,
                   color: Colors.green,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               GButton(
@@ -101,7 +101,7 @@ class _AppControllerState extends State<AppController> {
                   fontFamily: 'Cairo',
                   fontSize: fontSize,
                   color: Colors.green,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
               GButton(
@@ -113,7 +113,7 @@ class _AppControllerState extends State<AppController> {
                   fontFamily: 'Cairo',
                   fontSize: fontSize,
                   color: Colors.green,
-                  fontWeight: FontWeight.w600,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ],
