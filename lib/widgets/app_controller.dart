@@ -19,7 +19,7 @@ class _AppControllerState extends State<AppController> {
   final List<Widget> screens = [
     const ProfileScreen(),
     CartScreen(
-      products: mostSellingProducts,
+      products: cartProducts,
     ),
     const ProductsScreen(),
     const HomeScreen(),

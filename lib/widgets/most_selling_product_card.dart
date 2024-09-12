@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -125,6 +126,8 @@ class _ProductCardState extends State<ProductCard> {
                       .read<CartCubit>()
                       .cartManagement(widget.product.isCartExist);
                   if (widget.product.isCartExist) {
+                    cartProducts.remove(widget.product);
+
                     showTopSnackBar(
                       Overlay.of(context),
                       displayDuration: const Duration(milliseconds: 1000),
@@ -139,6 +142,7 @@ class _ProductCardState extends State<ProductCard> {
                       ),
                     );
                   } else {
+                    cartProducts.add(widget.product);
                     showTopSnackBar(
                       Overlay.of(context),
                       displayDuration: const Duration(milliseconds: 1000),

@@ -26,7 +26,7 @@ List<Product> mostSellingProducts = [
     userQuantity: 1,
     counterTwoStars: 3,
     counterOneStars: 2,
-    isCartExist: true,
+    isCartExist: false,
     caloriesPer100Gram: 50,
     myRating: null,
     expiryMonths: 6,
@@ -72,7 +72,7 @@ List<Product> mostSellingProducts = [
     userQuantity: 1,
     caloriesPer100Gram: 40,
     myRating: 'جيد',
-    isCartExist: true,
+    isCartExist: false,
     expiryMonths: 6,
   ),
   Product(
@@ -98,3 +98,5 @@ List<Product> mostSellingProducts = [
     expiryMonths: 6,
   ),
 ];
+
+List<Product> cartProducts = [];
