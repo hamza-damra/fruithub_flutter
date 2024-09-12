@@ -12,6 +12,7 @@ class Product {
   // product details
   final String description;
   final int stockQuantity;
+  int userQuantity = 1;
   final int expiryMonths;
   final int caloriesPer100Gram;
   bool isCartExist;
@@ -34,6 +35,7 @@ class Product {
     required this.isfavourite,
     required this.description,
     required this.stockQuantity,
+    required this.userQuantity,
     required this.expiryMonths,
     required this.caloriesPer100Gram,
     required this.isCartExist,
@@ -55,6 +57,7 @@ class Product {
       isfavourite: json['content']['favorite'],
       description: json['content']['description'],
       stockQuantity: json['content']['stockQuantity'],
+      userQuantity: json['content']['userQuantity'],
       expiryMonths: json[
           'content'], /////// don't know if it's date type if string or date time
       caloriesPer100Gram: json['content']['calories'],

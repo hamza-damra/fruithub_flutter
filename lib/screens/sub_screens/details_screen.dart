@@ -102,6 +102,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               children: [
                 Row(
                   children: [
+                    ////
                     GestureDetector(
                       onTap: () {
                         if (userQuantity > 1) {
@@ -176,6 +177,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         ),
                       ),
                     ),
+
+                    ///
                   ],
                 ),
                 Column(
