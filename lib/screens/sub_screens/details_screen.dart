@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_exist_cubit.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
@@ -317,18 +317,44 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           MaterialPageRoute(
                             builder: (context) => RatingScreen(
                               product: widget.product,
+                              average: Row(
+                                children: [
+                                  Text(
+                                    formattedAverage,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontWeight: FontWeight.w700,
+                                    ),
+                                  ),
+                                  const Icon(
+                                    Icons.star_outlined,
+                                    color: Color(0xffFFC529),
+                                    size: 19,
+                                  ),
+                                ],
+                              ),
+                              totalRating: totalRating,
                             ),
                           ),
                         );
                       },
                       child: ProductInfo(
                         image: 'assets/images/reviews.svg',
-                        title: Text(
-                          '$totalRating ($formattedAverage)',
-                          style: const TextStyle(
-                            color: Color(0xff23AA49),
-                            fontWeight: FontWeight.w700,
-                          ),
+                        title: Row(
+                          children: [
+                            Text(
+                              '($totalRating)  $formattedAverage',
+                              style: const TextStyle(
+                                color: Color(0xff23AA49),
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                            const Icon(
+                              Icons.star_outlined,
+                              color: Color(0xffFFC529),
+                              size: 19,
+                            ),
+                          ],
                         ),
                         subTitle: const Text(
                           'المراجعات',
@@ -419,8 +445,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
             /////// BlocProvider - BlocBuilder ///////
             child: BlocProvider(
-              create: (context) => CartCubit(widget.product.isCartExist),
-              child: BlocBuilder<CartCubit, cart>(
+              create: (context) => CartExistCubit(widget.product.isCartExist),
+              child: BlocBuilder<CartExistCubit, cart>(
                 builder: (context, state) {
                   return SizedBox(
                     width: double.infinity,
@@ -431,7 +457,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             const Color(0xff1B5E37)),
                       ),
                       onPressed: () {
-                        context.read<CartCubit>().cartManagement(
+                        context.read<CartExistCubit>().cartManagement(
                               widget.product.isCartExist,
                             );
 

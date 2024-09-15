@@ -244,7 +244,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               padding: const EdgeInsets.all(8.0),
               child: MyTextField(
                 hint: 'كلمة مرور جديدة',
-                showSuffixIcon: true,
+                showprefixIcon: true,
                 align: TextAlign.right,
                 controller: passwordController,
                 errorText: passwordErrorText,
@@ -254,7 +254,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               padding: const EdgeInsets.all(8.0),
               child: MyTextField(
                 hint: 'تأكيد كلمة المرور',
-                showSuffixIcon: true,
+                showprefixIcon: true,
                 align: TextAlign.right,
                 controller: confirmPasswordController,
                 errorText: confirmPasswordErrorText,
@@ -284,7 +284,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   } else if (passwordController.text.length < 8) {
                     setState(() {
                       passwordErrorText =
-                      'كلمة السر يجب أن تكون على الأقل 8 حروف';
+                          'كلمة السر يجب أن تكون على الأقل 8 حروف';
                     });
                     hasError = true;
                   }
@@ -298,7 +298,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   } else if (confirmPasswordController.text.length < 8) {
                     setState(() {
                       confirmPasswordErrorText =
-                      'كلمة السر يجب أن تكون على الأقل 8 حروف';
+                          'كلمة السر يجب أن تكون على الأقل 8 حروف';
                     });
                     hasError = true;
                   }
@@ -360,7 +360,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
                   try {
                     http.Response verificationResponse =
-                    await user.verifyResetPasswordByOtp(
+                        await user.verifyResetPasswordByOtp(
                       code,
                       passwordController.text,
                       confirmPasswordController.text,

@@ -33,7 +33,7 @@ class MostSellingScreen extends StatelessWidget {
       ),
       body: MostSellingBuilder(
         products: mostSellingProducts,
-        sorting: 'asc',
+        sorting: 'name',
         showText: false,
       ),
     );

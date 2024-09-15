@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_exist_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
@@ -54,7 +54,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                           Navigator.push(context, MaterialPageRoute(
                             builder: (context) {
                               return MostSellingScreen(
-                                mostSellingProducts: mostSellingProducts,
+                                mostSellingProducts: myProducts,
                               );
                             },
                           ));
@@ -106,7 +106,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                     itemBuilder: (context, index) {
                       /////// BlocProvider ///////
                       return BlocProvider(
-                        create: (context) => CartCubit(
+                        create: (context) => CartExistCubit(
                           widget.products[index].isCartExist,
                         ),
                         child: GestureDetector(

@@ -4,11 +4,11 @@ import 'package:fruitshub/models/product.dart';
 // filter vars
 int maxNum = 0;
 int minNum = 0;
-TextEditingController start = TextEditingController();
-TextEditingController end = TextEditingController();
+TextEditingController maxController = TextEditingController();
+TextEditingController minController = TextEditingController();
 
-// same list for both الرئيسيه and المنتجات and المنتجات الأكثر مبيعًا screens
-List<Product> mostSellingProducts = [
+// myProducts global list
+List<Product> myProducts = [
   Product(
     id: 1,
     name: 'فواكه',
@@ -27,6 +27,7 @@ List<Product> mostSellingProducts = [
     counterTwoStars: 3,
     counterOneStars: 2,
     isCartExist: false,
+    comments: [],
     caloriesPer100Gram: 50,
     myRating: null,
     expiryMonths: 6,
@@ -47,6 +48,7 @@ List<Product> mostSellingProducts = [
     counterFourStars: 6,
     counterThreeStars: 7,
     counterTwoStars: 3,
+    comments: [],
     counterOneStars: 2,
     isCartExist: false,
     caloriesPer100Gram: 80,
@@ -68,6 +70,7 @@ List<Product> mostSellingProducts = [
     counterFourStars: 6,
     counterThreeStars: 7,
     counterTwoStars: 3,
+    comments: [],
     counterOneStars: 2,
     userQuantity: 1,
     caloriesPer100Gram: 40,
@@ -90,6 +93,7 @@ List<Product> mostSellingProducts = [
     userQuantity: 1,
     counterFourStars: 6,
     counterThreeStars: 7,
+    comments: [],
     counterTwoStars: 3,
     counterOneStars: 2,
     caloriesPer100Gram: 30,

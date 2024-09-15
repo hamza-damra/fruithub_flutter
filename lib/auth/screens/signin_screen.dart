@@ -33,11 +33,11 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 
   void showCustomDialog(
-      BuildContext context,
-      String title,
-      String content,
-      String buttonChild,
-      ) {
+    BuildContext context,
+    String title,
+    String content,
+    String buttonChild,
+  ) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -87,7 +87,7 @@ class _SignInScreenState extends State<SignInScreen> {
       if (signInResponse.statusCode == 200 ||
           signInResponse.statusCode == 201) {
         final Map<String, dynamic> responseData =
-        jsonDecode(signInResponse.body);
+            jsonDecode(signInResponse.body);
         SharedPrefManager().saveData('token', responseData['token']);
         Navigator.pushReplacement(
           context,
@@ -122,7 +122,7 @@ class _SignInScreenState extends State<SignInScreen> {
     }
 
     // unexpected error
-    on Exception  {
+    on Exception {
       if (Navigator.canPop(context)) {
         Navigator.pop(context);
       }
@@ -172,7 +172,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 MyTextField(
                   align: TextAlign.right,
                   hint: 'البريد الالكتروني',
-                  showSuffixIcon: false,
+                  showprefixIcon: false,
                   controller: emailController,
                   errorText: emailErrorText,
                 ),
@@ -180,7 +180,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 MyTextField(
                   align: TextAlign.right,
                   hint: 'كلمه السر',
-                  showSuffixIcon: true,
+                  showprefixIcon: true,
                   controller: passwordController,
                   errorText: passwordErrorText,
                 ),

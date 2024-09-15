@@ -9,13 +9,13 @@ import 'package:fruitshub/widgets/most_selling_product_card.dart';
 class PriceFilteredProducts extends StatefulWidget {
   const PriceFilteredProducts({
     super.key,
-    required this.start,
-    required this.end,
+    required this.max,
+    required this.min,
     required this.products,
   });
 
-  final int start;
-  final int end;
+  final int max;
+  final int min;
   final List<Product> products;
 
   @override
@@ -28,9 +28,8 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
   @override
   void initState() {
     super.initState();
-    // Filter the products and store the result in filteredProducts
     filteredProducts = widget.products.where((product) {
-      return product.price >= widget.start && product.price <= widget.end;
+      return product.price >= widget.max && product.price <= widget.min;
     }).toList();
   }
 
@@ -55,15 +54,13 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        ///////////// cubit ////////////////
-                        ///context
                         context
                             .read<ProductsCubit>()
                             .showProductState(state: 'most');
                         minNum = 0;
                         maxNum = 0;
-                        start.clear();
-                        end.clear();
+                        maxController.clear();
+                        minController.clear();
                       },
                       icon: const Icon(
                         Icons.cancel_outlined,

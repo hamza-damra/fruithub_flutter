@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
 import 'package:fruitshub/widgets/search_delegate.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -79,14 +80,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 Icons.notifications_none_rounded,
               ),
               onPressed: () {
-                Fluttertoast.showToast(
-                  msg: "سيتم توفير الاشعارات قريبا",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.cyan[100],
-                  textColor: const Color.fromARGB(255, 129, 129, 129),
-                  fontSize: 16.0,
+                showTopSnackBar(
+                  Overlay.of(context),
+                  const CustomSnackBar.info(
+                    message: "سيتم توفير الاشعارات قريبا",
+                    textAlign: TextAlign.center,
+                    textStyle: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 );
               },
               color: const Color.fromARGB(255, 39, 139, 43),
@@ -233,9 +237,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           MostSellingBuilder(
-            products: mostSellingProducts,
+            products: myProducts,
             sorting: sort,
-            showText: false,
+            showText: true,
           ),
         ],
       ),

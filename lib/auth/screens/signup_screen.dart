@@ -156,7 +156,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MyTextField(
                   align: TextAlign.right,
                   hint: 'الاسم كامل',
-                  showSuffixIcon: false,
+                  showprefixIcon: false,
                   controller: nameController,
                   errorText: nameErrorText,
                 ),
@@ -164,7 +164,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MyTextField(
                   align: TextAlign.right,
                   hint: 'البريد الالكتروني',
-                  showSuffixIcon: false,
+                  showprefixIcon: false,
                   controller: emailController,
                   errorText: emailErrorText,
                 ),
@@ -172,7 +172,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 MyTextField(
                   align: TextAlign.right,
                   hint: 'كلمة المرور',
-                  showSuffixIcon: true,
+                  showprefixIcon: true,
                   controller: passwordController,
                   errorText: passwordErrorText,
                 ),
