@@ -74,7 +74,7 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
               padding: const EdgeInsets.all(15.0),
               child: MyTextField(
                 hint: 'البريد الالكتروني',
-                showSuffixIcon: false,
+                showprefixIcon: false,
                 align: TextAlign.right,
                 controller: emailController,
                 errorText: emailErrorText,
@@ -114,7 +114,7 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                     );
 
                     http.Response verificationResponse =
-                    await user.sendResetPasswordEmail(emailController.text);
+                        await user.sendResetPasswordEmail(emailController.text);
 
                     Navigator.pop(context);
 
@@ -132,7 +132,7 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                         builder: (BuildContext context) {
                           return AlertDialog(
                             title:
-                            const Text('خطا', textAlign: TextAlign.right),
+                                const Text('خطا', textAlign: TextAlign.right),
                             content: const Text(
                                 'البريد الذي ادخلته غير موجود او تم حذفه',
                                 textAlign: TextAlign.right),
@@ -169,4 +169,3 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
     );
   }
 }
-

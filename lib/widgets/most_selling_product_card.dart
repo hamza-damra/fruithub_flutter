@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_exist_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
@@ -123,7 +123,7 @@ class _ProductCardState extends State<ProductCard> {
                 onTap: () {
                   this
                       .context
-                      .read<CartCubit>()
+                      .read<CartExistCubit>()
                       .cartManagement(widget.product.isCartExist);
                   if (widget.product.isCartExist) {
                     cartProducts.remove(widget.product);
@@ -168,7 +168,7 @@ class _ProductCardState extends State<ProductCard> {
                   ),
                   /////// BlocBuilder ///////
                   child: Center(
-                    child: BlocBuilder<CartCubit, cart>(
+                    child: BlocBuilder<CartExistCubit, cart>(
                       builder: (context, state) {
                         if (state is cartExist) {
                           return Icon(

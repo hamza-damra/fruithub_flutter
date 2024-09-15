@@ -29,8 +29,7 @@ class _CartScreenState extends State<CartScreen> {
     setState(() {
       totalPrice = widget.products.fold(
         0.0,
-        (sum, product) =>
-            sum + (product.price ?? 0.0) * (product.userQuantity ?? 0),
+        (sum, product) => sum + (product.price) * (product.userQuantity),
       );
     });
   }

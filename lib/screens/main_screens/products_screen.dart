@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:fruitshub/bloc/filter_products_cubit.dart';
 import 'package:fruitshub/globals.dart';
-import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
@@ -11,6 +9,8 @@ import 'package:fruitshub/widgets/our_product_card.dart';
 import 'package:fruitshub/widgets/price_filtered_products.dart';
 import 'package:fruitshub/widgets/search.dart';
 import 'package:fruitshub/widgets/search_delegate.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProductsScreen extends StatefulWidget {
   const ProductsScreen({super.key});
@@ -20,103 +20,14 @@ class ProductsScreen extends StatefulWidget {
 }
 
 class _ProductsScreenState extends State<ProductsScreen> {
-  List<Product> ourProducts = [
-    Product(
-      id: 1,
-      name: 'فواكه',
-      description:
-          'الفواكه هي مجموعة من الأغذية الطبيعية التي تنمو على الأشجار أو النباتات وتتميز بطعمها الحلو أو الحامض تحتوي الفواكه على العديد من العناصر الغذائية المفيدة لصحة الجسم وتتنوع أشكالها وألوانها من الأحمر والأصفر إلى الأخضر والبنفسجي يمكن تناولها طازجة أو استخدامها في العصائر والحلويات والسلطات',
-      price: 20,
-      stockQuantity: 45,
-      isfavourite: true,
-      imageUrl:
-          'https://www.fruitsmith.com/pub/media/mageplaza/blog/post/s/e/seedless_fruits.jpg',
-      categoryId: 2,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      userQuantity: 1,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-      isCartExist: true,
-      caloriesPer100Gram: 50,
-      myRating: null,
-      expiryMonths: 6,
-    ),
-    Product(
-      id: 1,
-      name: 'سلطة فواكه',
-      description:
-          'سلطة الفواكه هي مزيج من عدة أنواع من الفواكه الطازجة مثل التفاح والموز والعنب والفراولة وغيرها تُقدم عادة كوجبة خفيفة صحية ومنعشة يمكن إضافة العسل أو عصير الليمون لتعزيز الطعم مما يجعلها خيارًا مثاليًا للتحلية أو كوجبة إفطار خفيفة',
-      price: 30,
-      stockQuantity: 40,
-      isfavourite: true,
-      imageUrl:
-          'https://images.healthshots.com/healthshots/en/uploads/2022/04/17151621/fruit-salad.jpg',
-      categoryId: 2,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-      isCartExist: false,
-      userQuantity: 1,
-      caloriesPer100Gram: 80,
-      myRating: null,
-      expiryMonths: 6,
-    ),
-    Product(
-      id: 1,
-      name: 'مانجا',
-      description:
-          'المانجا هي فاكهة استوائية شهيرة بطعمها الحلو والعصيري تتميز بلونها المتنوع بين الأخضر والأصفر والأحمر وقوامها الطري الغني بالعناصر الغذائية تُعتبر المانجا مثالية للاستخدام في العصائر والحلويات والسلطات مما يجعلها خيارًا صحيًا ولذيذًا في أي وقت',
-      price: 25,
-      stockQuantity: 90,
-      isfavourite: false,
-      imageUrl:
-          'https://hips.hearstapps.com/hmg-prod/images/mango-fruit-sugar-1530136260.jpg?crop=1xw:1xh;center,top&resize=640:*',
-      categoryId: 2,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      userQuantity: 1,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-      caloriesPer100Gram: 40,
-      myRating: 'جيد',
-      isCartExist: true,
-      expiryMonths: 6,
-    ),
-    Product(
-      id: 1,
-      name: 'كريز',
-      description:
-          'الكريز هو فاكهة صغيرة مستديرة ذات لون أحمر أو أسود لامع، تتميز بطعمها الحلو أو الحامض. يُعتبر الكريز غنيًا بمضادات الأكسدة وفيتامين سي ، مما يجعله مفيدًا لصحة القلب والجسم بشكل عام. يُستخدم الكريز في الحلويات، العصائر، أو يتم تناوله طازجًا كوجبة خفيفة لذيذة ومنعشة',
-      price: 40,
-      stockQuantity: 70,
-      isfavourite: false,
-      imageUrl:
-          'https://hips.hearstapps.com/hmg-prod/images/cherries-sugar-fruit-1530136329.jpg?crop=1xw:1xh;center,top&resize=640:*',
-      categoryId: 2,
-      counterFiveStars: 3,
-      counterFourStars: 6,
-      counterThreeStars: 7,
-      userQuantity: 1,
-      counterTwoStars: 3,
-      counterOneStars: 2,
-      caloriesPer100Gram: 30,
-      myRating: 'جيد',
-      isCartExist: false,
-      expiryMonths: 6,
-    ),
-  ];
   String sort = 'name'; // Default sort order
   String? selectedOption;
 
   @override
-  void initState() {
-    BlocProvider.of<ProductsCubit>(context).showProductState(state: 'most');
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final productsCubit = BlocProvider.of<ProductsCubit>(context);
+    productsCubit.showProductState(state: 'most');
   }
 
   void reBuild() {
@@ -158,14 +69,17 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 Icons.notifications_none_rounded,
               ),
               onPressed: () {
-                Fluttertoast.showToast(
-                  msg: "سيتم توفير الاشعارات قريبا",
-                  toastLength: Toast.LENGTH_SHORT,
-                  gravity: ToastGravity.TOP,
-                  timeInSecForIosWeb: 1,
-                  backgroundColor: Colors.cyan[100],
-                  textColor: const Color.fromARGB(255, 129, 129, 129),
-                  fontSize: 16.0,
+                showTopSnackBar(
+                  Overlay.of(context),
+                  const CustomSnackBar.info(
+                    message: "سيتم توفير الاشعارات قريبا",
+                    textAlign: TextAlign.center,
+                    textStyle: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
                 );
               },
               color: const Color.fromARGB(255, 39, 139, 43),
@@ -361,9 +275,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     child: MyTextField(
                                       align: TextAlign.center,
                                       hint: '0',
-                                      showSuffixIcon: false,
+                                      showprefixIcon: false,
                                       inputType: TextInputType.number,
-                                      controller: end,
+                                      controller: minController,
                                     ),
                                   ),
                                 ),
@@ -381,9 +295,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     child: MyTextField(
                                       align: TextAlign.center,
                                       hint: '0',
-                                      showSuffixIcon: false,
+                                      showprefixIcon: false,
                                       inputType: TextInputType.number,
-                                      controller: start,
+                                      controller: maxController,
                                     ),
                                   ),
                                 ),
@@ -402,8 +316,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
-                                    maxNum = int.parse(start.text);
-                                    minNum = int.parse(end.text);
+                                    maxNum = int.parse(maxController.text);
+                                    minNum = int.parse(minController.text);
                                     BlocProvider.of<ProductsCubit>(this.context)
                                         .showProductState(state: 'filter');
                                   },
@@ -465,7 +379,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
               ),
               child: ListView.builder(
                 reverse: true,
-                itemCount: ourProducts.length,
+                itemCount: myProducts.length,
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
                   return GestureDetector(
@@ -473,7 +387,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                       Navigator.push(context, MaterialPageRoute(
                         builder: (context) {
                           return DetailsScreen(
-                            product: ourProducts[index],
+                            product: myProducts[index],
                           );
                         },
                       ));
@@ -481,30 +395,33 @@ class _ProductsScreenState extends State<ProductsScreen> {
                     child: OurProductCard(
                       screenWidth: screenWidth,
                       screenHeight: screenHeight,
-                      product: ourProducts[index],
+                      product: myProducts[index],
                     ),
                   );
                 },
               ),
             ),
+
+
           ),
           SizedBox(height: screenHeight * 0.01), // Spacing between elements
           SizedBox(height: screenHeight * 0.01), // Spacing between elements
           SizedBox(height: screenHeight * 0.01), // Spacing between elements
 
+          ///////// cubit issue here
           BlocBuilder<ProductsCubit, Products>(
             builder: (context, state) {
               if (state is MostSellingProducts) {
                 return MostSellingBuilder(
-                  products: mostSellingProducts,
+                  products: myProducts,
                   showText: true,
                   sorting: sort,
                 );
               } else {
                 return PriceFilteredProducts(
-                  start: maxNum,
-                  end: minNum,
-                  products: mostSellingProducts,
+                  max: maxNum,
+                  min: minNum,
+                  products: myProducts,
                 );
               }
             },

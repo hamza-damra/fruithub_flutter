@@ -25,6 +25,7 @@ class Product {
   final int counterThreeStars;
   final int counterTwoStars;
   final int counterOneStars;
+  List<String> comments;
 
   Product({
     required this.id,
@@ -45,6 +46,7 @@ class Product {
     required this.counterThreeStars,
     required this.counterTwoStars,
     required this.counterOneStars,
+    required this.comments,
   });
 
   factory Product.fromJson(json) {
@@ -68,6 +70,7 @@ class Product {
       counterThreeStars: json['content']['counterThreeStars'],
       counterTwoStars: json['content']['counterTwoStars'],
       counterOneStars: json['content']['counterOneStars'],
+      comments: json['content']['comments'], /////// not added to backend yet
     );
   }
 }

@@ -4,19 +4,21 @@ class MyTextField extends StatefulWidget {
   const MyTextField({
     super.key,
     required this.hint,
-    required this.showSuffixIcon,
+    required this.showprefixIcon,
     this.inputType,
     this.controller,
     required this.align,
     this.errorText,
+    this.suffixIcon,
   });
 
   final String hint;
-  final bool showSuffixIcon;
+  final bool showprefixIcon;
   final TextInputType? inputType;
   final TextEditingController? controller;
   final TextAlign align;
   final String? errorText;
+  final Widget? suffixIcon;
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -29,7 +31,7 @@ class _MyTextFieldState extends State<MyTextField> {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: widget.controller,
-      obscureText: widget.showSuffixIcon ? _isHidden : false,
+      obscureText: widget.showprefixIcon ? _isHidden : false,
       textAlign: widget.align,
       keyboardType: widget.inputType ?? TextInputType.text,
       textDirection: TextDirection.rtl,
@@ -65,7 +67,8 @@ class _MyTextFieldState extends State<MyTextField> {
           color: Colors.grey,
         ),
         hintTextDirection: TextDirection.rtl,
-        prefixIcon: widget.showSuffixIcon
+        suffixIcon: widget.suffixIcon,
+        prefixIcon: widget.showprefixIcon
             ? IconButton(
                 icon: Icon(
                   _isHidden ? Icons.visibility : Icons.visibility_off,

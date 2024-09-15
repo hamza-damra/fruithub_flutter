@@ -6,8 +6,8 @@ class cartExist extends cart {}
 
 class notCartExist extends cart {}
 
-class CartCubit extends Cubit<cart> {
-  CartCubit(bool isCartExist)
+class CartExistCubit extends Cubit<cart> {
+  CartExistCubit(bool isCartExist)
       : super(isCartExist ? cartExist() : notCartExist());
 
   void cartManagement(bool isCartExist) {
