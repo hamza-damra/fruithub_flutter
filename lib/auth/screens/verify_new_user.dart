@@ -58,7 +58,7 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
       // request success
       if (otpResponse.statusCode == 200 || otpResponse.statusCode == 201) {
         // sign in and save user token
-        http.Response signinResponse = await user.signinUser(
+        http.Response signinResponse = await user.signInUser(
           widget.email,
           widget.password,
         );

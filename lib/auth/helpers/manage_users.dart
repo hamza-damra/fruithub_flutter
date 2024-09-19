@@ -37,7 +37,7 @@ class ManageUsers {
     return response;
   }
 
-  Future<http.Response> signinUser(String email, String password) async {
+  Future<http.Response> signInUser(String email, String password) async {
     final response = await http.post(
       Uri.parse('https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/users/login?email=$email&password=$password'),
     );

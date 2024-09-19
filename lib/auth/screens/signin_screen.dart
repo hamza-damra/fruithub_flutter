@@ -77,7 +77,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
     try {
       // sign in request
-      http.Response signInResponse = await ManageUsers().signinUser(
+      http.Response signInResponse = await ManageUsers().signInUser(
         emailController.text,
         passwordController.text,
       );
@@ -99,8 +99,7 @@ class _SignInScreenState extends State<SignInScreen> {
       }
 
       // user not verified
-      else if (signInResponse.statusCode == 400 ||
-          signInResponse.statusCode == 401) {
+      else if (signInResponse.statusCode == 400) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -110,17 +109,27 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         );
-      }
-
-      // wrong data error
-      else if (signInResponse.statusCode == 500 ||
-          signInResponse.statusCode == 501) {
+      }else if (signInResponse.statusCode == 401) {
         showCustomDialog(
           context,
           'خطأ',
           'هذا المستخدم غير موجود او تم حذفه',
           'حسنا',
         );
+      }
+
+      // wrong data error
+      else if (signInResponse.statusCode == 500 ||
+          signInResponse.statusCode == 501) {
+        if(mounted){
+          showCustomDialog(
+            context,
+            'خطأ',
+            'حدث خطأ غير معروف, الرجاء المحاولة لاحقا',
+            'حسنا',
+          );
+        }
+
       }
     }
 
