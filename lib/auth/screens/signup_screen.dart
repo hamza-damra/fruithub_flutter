@@ -83,43 +83,51 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailController.text,
         passwordController.text,
       );
-      Navigator.pop(context);
-
+      if(mounted) {
+        Navigator.pop(context);
+      }
       // request success
       if (signUpResponse.statusCode == 200 ||
           signUpResponse.statusCode == 201) {
         // verify user
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => VerifyNewUser(
-              email: emailController.text,
-              password: passwordController.text,
+        if(mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) =>
+                  VerifyNewUser(
+                    email: emailController.text,
+                    password: passwordController.text,
+                  ),
             ),
-          ),
-        );
+          );
+        }
       }
 
       // email error
       else if (signUpResponse.statusCode == 400) {
-        showCustomDialog(
-          context,
-          'خطا',
-          'هذا الايميل مستخدم بالفعل',
-          'حاول مره اخري',
-        );
+        if(mounted) {
+          showCustomDialog(
+            context,
+            'خطا',
+            'هذا الايميل مستخدم بالفعل',
+            'حاول مره اخري',
+          );
+        }
       }
     }
 
     // unexpected error
     on Exception {
-      Navigator.of(context).pop();
-      showCustomDialog(
-        context,
-        'خطأ في الشبكة',
-        'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
-        'حاول مره اخري',
-      );
+      if(mounted) {
+        Navigator.of(context).pop();
+        showCustomDialog(
+          context,
+          'خطأ في الشبكة',
+          'حدث خطأ في الشبكة. يرجى المحاولة مرة أخرى.',
+          'حاول مره اخري',
+        );
+      }
     }
   }
 

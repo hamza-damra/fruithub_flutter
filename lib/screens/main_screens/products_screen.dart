@@ -24,9 +24,10 @@ class _ProductsScreenState extends State<ProductsScreen> {
   String? selectedOption;
 
   @override
-  void initState() {
-    BlocProvider.of<ProductsCubit>(context).showProductState(state: 'most');
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final productsCubit = BlocProvider.of<ProductsCubit>(context);
+    productsCubit.showProductState(state: 'most');
   }
 
   void reBuild() {
@@ -399,6 +400,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                 },
               ),
             ),
+
+
           ),
           SizedBox(height: screenHeight * 0.01), // Spacing between elements
           SizedBox(height: screenHeight * 0.01), // Spacing between elements
