@@ -39,6 +39,7 @@ flutter:
     - assets/fonts/
     - assets/app/
     - assets/images/
+    - assets/profile/
 
   fonts:
     - family: Cairo

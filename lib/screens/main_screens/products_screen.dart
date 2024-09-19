@@ -45,14 +45,13 @@ class _ProductsScreenState extends State<ProductsScreen> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
         centerTitle: true,
-        title: FittedBox(
+        title: const FittedBox(
           fit: BoxFit.scaleDown,
           child: Text(
             'المنتجات',
             style: TextStyle(
               fontFamily: 'Cairo',
-              fontWeight: FontWeight.w700,
-              fontSize: screenWidth * 0.050,
+              fontWeight: FontWeight.bold,
             ),
           ),
         ),

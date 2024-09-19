@@ -82,6 +82,7 @@ class _SignInScreenState extends State<SignInScreen> {
         passwordController.text,
       );
       Navigator.pop(context);
+      print(signInResponse.statusCode);
 
       // request success
       if (signInResponse.statusCode == 200 ||
@@ -98,7 +99,8 @@ class _SignInScreenState extends State<SignInScreen> {
       }
 
       // user not verified
-      else if (signInResponse.statusCode == 400) {
+      else if (signInResponse.statusCode == 400 ||
+          signInResponse.statusCode == 401) {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -111,7 +113,8 @@ class _SignInScreenState extends State<SignInScreen> {
       }
 
       // wrong data error
-      else if (signInResponse.statusCode == 500) {
+      else if (signInResponse.statusCode == 500 ||
+          signInResponse.statusCode == 501) {
         showCustomDialog(
           context,
           'خطأ',
