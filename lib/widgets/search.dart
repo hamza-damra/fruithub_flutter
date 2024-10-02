@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fruitshub/widgets/search_delegate.dart';
+import 'package:fruitshub/search/search_delegate.dart';
 
-class Search extends StatelessWidget {
-  const Search({
+class SearchHeader extends StatelessWidget {
+  const SearchHeader({
     super.key,
     required this.screenWidth,
     required this.screenHeight,

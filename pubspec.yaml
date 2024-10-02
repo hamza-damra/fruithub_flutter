@@ -26,6 +26,7 @@ dependencies:
   jwt_decoder: ^2.0.1
   top_snackbar_flutter: ^3.1.0
   rating_summary: ^1.0.3+1
+  flutter_spinkit: ^5.2.1
   
 dev_dependencies:
   flutter_test:

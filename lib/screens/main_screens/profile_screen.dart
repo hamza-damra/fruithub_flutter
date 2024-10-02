@@ -2,7 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
+import 'package:fruitshub/screens/sub_screens/favourite_screen.dart';
 import 'package:fruitshub/widgets/profile_section.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -11,8 +15,20 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  String name = '';
+  String email = '';
+  void getUserName() async {
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(
+      await SharedPrefManager().getData('token'),
+    );
+
+    setState(() {
+      name = decodedToken['name'];
+      email = decodedToken['sub'];
+    });
+  }
+
   Future<void> _logOut() async {
-    // Asynchronously delete token and navigate to the sign-in screen
     await SharedPrefManager().deleteData('token');
     Navigator.pushReplacement(
       context,
@@ -70,6 +86,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -93,22 +115,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    'أحمد ياسر',
+                    name,
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.040,
+                      fontSize: screenWidth * 0.045,
                     ),
                   ),
                   Text(
-                    'mail@mail.com',
+                    email,
                     style: TextStyle(
                       color: const Color(0xff888FA0),
-                      fontSize: screenWidth * 0.035,
+                      fontSize: screenWidth * 0.037,
                     ),
                   ),
                 ],
               ),
-              const Spacer(flex: 1),
+              const Spacer(flex: 2),
               Stack(
                 clipBehavior: Clip.none,
                 children: [
@@ -122,7 +144,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                   Positioned(
                     top: screenWidth * 0.11,
-                    right: screenWidth * 0.03,
+                    right: screenWidth * 0.02,
                     child: IconButton(
                       icon: SvgPicture.asset(
                         'assets/profile/change-image.svg',
@@ -157,37 +179,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
             section: 'الملف الشخصي',
             onPressed: () {},
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           ProfileSection(
             icon: 'assets/profile/box.svg',
             section: 'طلباتي',
             onPressed: () {},
           ),
-          const SizedBox(height: 10),
-          ProfileSection(
-            icon: 'assets/profile/empty-wallet.svg',
-            section: 'المدفوعات',
-            onPressed: () {},
-          ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           ProfileSection(
             icon: 'assets/profile/heart.svg',
             section: 'المفضلة',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const FavouriteScreen(),
+                ),
+              );
+            },
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           ProfileSection(
             icon: 'assets/profile/notification.svg',
             section: 'الاشعارات',
-            onPressed: () {},
+            onPressed: () {
+              showTopSnackBar(
+                Overlay.of(context),
+                const CustomSnackBar.info(
+                  message: "سيتم توفير الاشعارات قريبا",
+                  textAlign: TextAlign.center,
+                  textStyle: TextStyle(
+                    fontFamily: 'Cairo',
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            },
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           ProfileSection(
             icon: 'assets/profile/global.svg',
             section: 'اللغة',
             onPressed: () {},
           ),
-          const SizedBox(height: 10),
+          const SizedBox(height: 5),
           ProfileSection(
             icon: 'assets/profile/magicpen.svg',
             section: 'الوضع',

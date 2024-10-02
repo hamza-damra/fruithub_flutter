@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_exist_cubit.dart';
-import 'package:fruitshub/globals.dart';
+import 'package:fruitshub/API/cart_management.dart';
+import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:http/http.dart' as http;
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
@@ -20,22 +20,39 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  late Widget favouriteIcon;
+  late Widget cartIcon;
+  @override
+  void initState() {
+    favouriteIcon = widget.product.isfavourite
+        ? const Icon(
+            Icons.favorite_rounded,
+            color: Colors.red,
+            size: 22,
+          )
+        : const Icon(
+            Icons.favorite_border_rounded,
+            color: Colors.red,
+            size: 22,
+          );
+    cartIcon = widget.product.isCartExist
+        ? const Icon(
+            Icons.done_rounded,
+            color: Colors.white,
+            size: 22,
+          )
+        : const Icon(
+            Icons.add_rounded,
+            color: Colors.white,
+            size: 22,
+          );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
-
-    Icon favouriteIcon = widget.product.isfavourite
-        ? Icon(
-            Icons.favorite_rounded,
-            color: Colors.red,
-            size: screenWidth * 0.06,
-          )
-        : Icon(
-            Icons.favorite_border_rounded,
-            color: Colors.red,
-            size: screenWidth * 0.06,
-          );
 
     return Container(
       padding: const EdgeInsets.all(5),
@@ -120,44 +137,114 @@ class _ProductCardState extends State<ProductCard> {
             children: [
               GestureDetector(
                 // Cart management logic
-                onTap: () {
-                  this
-                      .context
-                      .read<CartExistCubit>()
-                      .cartManagement(widget.product.isCartExist);
-                  if (widget.product.isCartExist) {
-                    cartProducts.remove(widget.product);
+                onTap: () async {
+                  final cartManagement = CartManagement();
+                  String token = await SharedPrefManager().getData('token');
 
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      displayDuration: const Duration(milliseconds: 1000),
-                      const CustomSnackBar.info(
-                        message: "تم حذف المنتج من السله",
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontWeight: FontWeight.bold,
+                  setState(() {
+                    cartIcon = const AspectRatio(
+                      aspectRatio: 1 / 1,
+                      child: Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: CircularProgressIndicator(
                           color: Colors.white,
+                          strokeWidth: 2.5,
                         ),
                       ),
                     );
+                  });
+
+                  if (widget.product.isCartExist) {
+                    http.Response deleteResponse =
+                        await cartManagement.deleteFromCart(
+                      token: token,
+                      id: widget.product.id,
+                    );
+                    if (deleteResponse.statusCode == 200 ||
+                        deleteResponse.statusCode == 201 ||
+                        deleteResponse.statusCode == 203 ||
+                        deleteResponse.statusCode == 204) {
+                      widget.product.isCartExist = false;
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 1000),
+                        const CustomSnackBar.info(
+                          message: "تم حذف المنتج من السله",
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 1000),
+                        const CustomSnackBar.error(
+                          message: 'فشل حذف المنتج من السله',
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }
                   } else {
-                    cartProducts.add(widget.product);
-                    showTopSnackBar(
-                      Overlay.of(context),
-                      displayDuration: const Duration(milliseconds: 1000),
-                      const CustomSnackBar.info(
-                        message: "تم اضافه المنتج الي السله",
-                        textAlign: TextAlign.center,
-                        textStyle: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
+                    http.Response addResponse = await cartManagement.addToCart(
+                      token: token,
+                      productId: widget.product.id,
                     );
+                    if (addResponse.statusCode == 200 ||
+                        addResponse.statusCode == 201) {
+                      widget.product.isCartExist = true;
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 1000),
+                        const CustomSnackBar.info(
+                          message: "تم اضافه المنتج الي السله",
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    } else {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 1000),
+                        const CustomSnackBar.error(
+                          message: 'فشل اضافه المنتج الي السله',
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    }
                   }
-                  widget.product.isCartExist = !widget.product.isCartExist;
+
+                  ////////
+                  setState(() {
+                    cartIcon = widget.product.isCartExist
+                        ? const Icon(
+                            Icons.done_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          )
+                        : const Icon(
+                            Icons.add_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          );
+                  });
                 },
                 child: Container(
                   width: screenWidth * 0.08,
@@ -166,25 +253,8 @@ class _ProductCardState extends State<ProductCard> {
                     shape: BoxShape.circle,
                     color: Color(0xff1B5E37),
                   ),
-                  /////// BlocBuilder ///////
                   child: Center(
-                    child: BlocBuilder<CartExistCubit, cart>(
-                      builder: (context, state) {
-                        if (state is cartExist) {
-                          return Icon(
-                            Icons.done_rounded,
-                            color: Colors.white,
-                            size: screenWidth * 0.05,
-                          );
-                        } else {
-                          return Icon(
-                            Icons.add_rounded,
-                            color: Colors.white,
-                            size: screenWidth * 0.05,
-                          );
-                        }
-                      },
-                    ),
+                    child: cartIcon,
                   ),
                 ),
               ),

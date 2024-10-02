@@ -4,7 +4,6 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'package:fruitshub/bloc/filter_products_cubit.dart';
-import 'package:fruitshub/bloc/cart_exist_cubit.dart'; // Assuming this is the cubit throwing ProviderNotFoundException
 import 'auth/helpers/shared_pref_manager.dart';
 
 void main() {
@@ -98,24 +97,14 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
-      home: MultiBlocProvider(
-        providers: [
-          BlocProvider<ProductsCubit>(
-            create: (context) => ProductsCubit(),
-          ),
-          BlocProvider<CartExistCubit>(
-            create: (context) => CartExistCubit(false),
-          ),
-        ],
-        child: _isLoading
-            ? const Scaffold(
-          backgroundColor: Colors.white,
-          body: SizedBox(),
-        )
-            : _isUserLoggedIn
-            ? const AppController()
-            : const SignInScreen(),
-      ),
+      home: _isLoading
+          ? const Scaffold(
+              backgroundColor: Colors.white,
+              body: SizedBox(),
+            )
+          : _isUserLoggedIn
+              ? const AppController()
+              : const SignInScreen(),
     );
   }
 }

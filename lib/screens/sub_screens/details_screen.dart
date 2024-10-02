@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_exist_cubit.dart';
+import 'package:fruitshub/API/cart_management.dart';
+import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
+import 'package:http/http.dart' as http;
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({
@@ -20,7 +21,18 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  int userQuantity = 1;
+  late Widget buttonChild;
+  @override
+  void initState() {
+    buttonChild = Text(
+      widget.product.isCartExist == true ? 'حذف من السله' : 'اضافه الي السله',
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+    );
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -102,20 +114,23 @@ class _DetailsScreenState extends State<DetailsScreen> {
               children: [
                 Row(
                   children: [
-                    ////
                     GestureDetector(
-                      onTap: () {
-                        if (userQuantity > 1) {
-                          userQuantity--;
-                          setState(() {});
-                        }
-                      },
+                      onTap: widget.product.isCartExist
+                          ? () {}
+                          : () {
+                              if (widget.product.myQuantity > 1) {
+                                widget.product.myQuantity--;
+                                setState(() {});
+                              }
+                            },
                       child: Container(
                         width: screenWidth * 0.11,
                         height: screenWidth * 0.11,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xffF3F5F7),
+                          color: widget.product.isCartExist
+                              ? const Color.fromARGB(111, 243, 245, 247)
+                              : const Color(0xffF3F5F7),
                         ),
                         child: Padding(
                           padding: EdgeInsets.symmetric(
@@ -136,7 +151,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.04),
                     Text(
-                      userQuantity.toString(),
+                      widget.product.myQuantity.toString(),
                       style: TextStyle(
                         fontSize: screenWidth * 0.045,
                         fontWeight: FontWeight.bold,
@@ -144,31 +159,37 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     ),
                     SizedBox(width: screenWidth * 0.04),
                     GestureDetector(
-                      onTap: () {
-                        if (userQuantity < widget.product.stockQuantity) {
-                          userQuantity++;
-                          setState(() {});
-                        } else {
-                          showTopSnackBar(
-                            Overlay.of(context),
-                            const CustomSnackBar.info(
-                              message: "لا يمكنك تجاوز الكميه المتوفره للمنتج",
-                              textAlign: TextAlign.center,
-                              textStyle: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        }
-                      },
+                      onTap: widget.product.isCartExist
+                          ? () {}
+                          : () {
+                              if (widget.product.myQuantity <
+                                  widget.product.stockQuantity) {
+                                widget.product.myQuantity++;
+                                setState(() {});
+                              } else {
+                                showTopSnackBar(
+                                  Overlay.of(context),
+                                  const CustomSnackBar.info(
+                                    message:
+                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                    textAlign: TextAlign.center,
+                                    textStyle: TextStyle(
+                                      fontFamily: 'Cairo',
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
                       child: Container(
                         width: screenWidth * 0.11,
                         height: screenWidth * 0.11,
-                        decoration: const BoxDecoration(
+                        decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Color(0xff1B5E37),
+                          color: widget.product.isCartExist
+                              ? const Color.fromARGB(255, 121, 160, 137)
+                              : const Color(0xff1B5E37),
                         ),
                         child: Icon(
                           Icons.add,
@@ -442,69 +463,115 @@ class _DetailsScreenState extends State<DetailsScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
-            /////// BlocProvider - BlocBuilder ///////
-            child: BlocProvider(
-              create: (context) => CartExistCubit(widget.product.isCartExist),
-              child: BlocBuilder<CartExistCubit, cart>(
-                builder: (context, state) {
-                  return SizedBox(
-                    width: double.infinity,
-                    height: 45,
-                    child: ElevatedButton(
-                      style: ButtonStyle(
-                        backgroundColor: WidgetStateProperty.all<Color>(
-                            const Color(0xff1B5E37)),
-                      ),
-                      onPressed: () {
-                        context.read<CartExistCubit>().cartManagement(
-                              widget.product.isCartExist,
-                            );
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 9),
+              child: SizedBox(
+                width: double.infinity,
+                height: 45,
+                child: ElevatedButton(
+                  style: ButtonStyle(
+                    backgroundColor:
+                        WidgetStateProperty.all<Color>(const Color(0xff1B5E37)),
+                  ),
+                  onPressed: () async {
+                    setState(() {
+                      buttonChild = const CircularProgressIndicator(
+                        color: Colors.white,
+                      );
+                    });
 
-                        if (widget.product.isCartExist) {
-                          showTopSnackBar(
-                            Overlay.of(context),
-                            displayDuration: const Duration(milliseconds: 1000),
-                            const CustomSnackBar.info(
-                              message: "تم حذف المنتج من السله",
-                              textAlign: TextAlign.center,
-                              textStyle: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                    if (widget.product.isCartExist) {
+                      http.Response response =
+                          await CartManagement().deleteFromCart(
+                        token: await SharedPrefManager().getData('token'),
+                        id: widget.product.id,
+                      );
+
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201 ||
+                          response.statusCode == 203 ||
+                          response.statusCode == 204) {
+                        widget.product.isCartExist = false;
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 1000),
+                          const CustomSnackBar.info(
+                            message: "تم حذف المنتج من السله",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                          );
-                        } else {
-                          showTopSnackBar(
-                            Overlay.of(context),
-                            displayDuration: const Duration(milliseconds: 1000),
-                            const CustomSnackBar.info(
-                              message: "تم اضافه المنتج الي السله",
-                              textAlign: TextAlign.center,
-                              textStyle: TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
+                          ),
+                        );
+                      } else {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 1000),
+                          const CustomSnackBar.error(
+                            message: "فشل حذف المنتج من السله",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
                             ),
-                          );
-                        }
-                        widget.product.isCartExist =
-                            !widget.product.isCartExist;
-                      },
-                      child: Text(
-                        state is cartExist ? 'حذف من السله' : 'اضافه الي السله',
+                          ),
+                        );
+                      }
+                    } else {
+                      http.Response response = await CartManagement().addToCart(
+                        token: await SharedPrefManager().getData('token'),
+                        productId: widget.product.id,
+                        quantity: widget.product.myQuantity,
+                      );
+
+                      if (response.statusCode == 200 ||
+                          response.statusCode == 201) {
+                        widget.product.isCartExist = true;
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 1000),
+                          const CustomSnackBar.info(
+                            message: "تم اضافه المنتج الي السله",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      } else {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 1000),
+                          const CustomSnackBar.error(
+                            message: "فشل اضافه المنتج الي السله",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }
+                    }
+                    setState(() {
+                      buttonChild = Text(
+                        widget.product.isCartExist == true
+                            ? 'حذف من السله'
+                            : 'اضافه الي السله',
                         style: const TextStyle(
                           color: Colors.white,
                         ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-          ),
+                      );
+                    });
+                  },
+                  child: buttonChild,
+                ),
+              )),
           const SizedBox(
             height: 4,
           ),

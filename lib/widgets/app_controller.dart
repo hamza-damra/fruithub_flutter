@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/screens/main_screens/cart_screen.dart';
 import 'package:fruitshub/screens/main_screens/home_screen.dart';
 import 'package:fruitshub/screens/main_screens/products_screen.dart';
@@ -18,9 +17,7 @@ class _AppControllerState extends State<AppController> {
   int myIndex = 3;
   final List<Widget> screens = [
     const ProfileScreen(),
-    CartScreen(
-      products: cartProducts,
-    ),
+    const CartScreen(),
     const ProductsScreen(),
     const HomeScreen(),
   ];

@@ -2,8 +2,8 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/models/product.dart';
 
-class OurProductCard extends StatelessWidget {
-  const OurProductCard({
+class LastAddedProductCard extends StatelessWidget {
+  const LastAddedProductCard({
     super.key,
     required this.screenWidth,
     required this.screenHeight,

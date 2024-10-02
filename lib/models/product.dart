@@ -10,22 +10,21 @@ class Product {
   bool isfavourite;
 
   // product details
+  int myQuantity = 1;
   final String description;
   final int stockQuantity;
-  int userQuantity = 1;
-  final int expiryMonths;
+  int quantityInCart;
+  final String expiryMonths;
   final int caloriesPer100Gram;
   bool isCartExist;
+  int orderCount;
 
   // rating
-  final String?
-      myRating; // add (null defult value if user has no rating to product)
   final int counterFiveStars;
   final int counterFourStars;
   final int counterThreeStars;
   final int counterTwoStars;
   final int counterOneStars;
-  List<String> comments;
 
   Product({
     required this.id,
@@ -36,41 +35,40 @@ class Product {
     required this.isfavourite,
     required this.description,
     required this.stockQuantity,
-    required this.userQuantity,
+    required this.orderCount,
+    required this.quantityInCart,
     required this.expiryMonths,
     required this.caloriesPer100Gram,
     required this.isCartExist,
-    required this.myRating,
     required this.counterFiveStars,
     required this.counterFourStars,
     required this.counterThreeStars,
     required this.counterTwoStars,
     required this.counterOneStars,
-    required this.comments,
   });
 
-  factory Product.fromJson(json) {
+  // myRating - comments
+
+  factory Product.fromJson(Map<String, dynamic> json) {
     return Product(
-      id: json['content'],
-      categoryId: json['content'],
-      name: json['content']['name'],
-      price: json['content']['price'],
-      imageUrl: json['content']['imageUrl'],
-      isfavourite: json['content']['favorite'],
-      description: json['content']['description'],
-      stockQuantity: json['content']['stockQuantity'],
-      userQuantity: json['content']['userQuantity'],
-      expiryMonths: json[
-          'content'], /////// don't know if it's date type if string or date time
-      caloriesPer100Gram: json['content']['calories'],
-      isCartExist: json['content']['inCart'],
-      myRating: json['content'], /////// not added to backend yet
-      counterFiveStars: json['content']['counterFiveStars'],
-      counterFourStars: json['content']['counterFourStars'],
-      counterThreeStars: json['content']['counterThreeStars'],
-      counterTwoStars: json['content']['counterTwoStars'],
-      counterOneStars: json['content']['counterOneStars'],
-      comments: json['content']['comments'], /////// not added to backend yet
+      id: json['id'],
+      categoryId: json['categoryId'],
+      name: json['name'],
+      price: json['price'],
+      orderCount: json['orderCount'],
+      imageUrl: json['imageUrl'],
+      isfavourite: json['isFavorite'],
+      description: json['description'],
+      stockQuantity: json['stockQuantity'],
+      quantityInCart: json['quantityInCart'],
+      expiryMonths: json['expirationDate'],
+      caloriesPer100Gram: json['caloriesPer100Grams'],
+      isCartExist: json['isInCart'],
+      counterFiveStars: json['counterFiveStars'],
+      counterFourStars: json['counterFourStars'],
+      counterThreeStars: json['counterThreeStars'],
+      counterTwoStars: json['counterTwoStars'],
+      counterOneStars: json['counterOneStars'],
     );
   }
 }

@@ -5,10 +5,7 @@ import 'package:fruitshub/widgets/most_selling_builder.dart';
 class MostSellingScreen extends StatelessWidget {
   const MostSellingScreen({
     super.key,
-    required this.mostSellingProducts,
   });
-
-  final List<Product> mostSellingProducts;
 
   @override
   Widget build(BuildContext context) {
@@ -31,9 +28,8 @@ class MostSellingScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: MostSellingBuilder(
-        products: mostSellingProducts,
-        sorting: 'name',
+      body: const MostSellingBuilder(
+        sortDirection: 'name',
         showText: false,
       ),
     );

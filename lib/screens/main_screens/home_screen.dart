@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:fruitshub/globals.dart';
+import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
-import 'package:fruitshub/widgets/search_delegate.dart';
+import 'package:fruitshub/search/search_delegate.dart';
+import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -21,9 +22,25 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {});
   }
 
+  String name = '';
+  void getUserName() async {
+    Map<String, dynamic> decodedToken = JwtDecoder.decode(
+      await SharedPrefManager().getData('token'),
+    );
+
+    setState(() {
+      name = decodedToken['name'];
+    });
+  }
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Get the screen width and height for responsive design
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     final textScaleFactor = MediaQuery.of(context).textScaleFactor;
@@ -46,15 +63,15 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontFamily: 'Cairo',
                     color: Colors.grey.shade500,
                     fontWeight: FontWeight.w400,
-                    fontSize: 14 * textScaleFactor,
+                    fontSize: .05 * screenWidth,
                   ),
                 ),
                 Text(
-                  'أحمد مصطفي',
+                  name,
                   style: TextStyle(
                     fontFamily: 'Cairo',
                     fontWeight: FontWeight.bold,
-                    fontSize: 16 * textScaleFactor,
+                    fontSize: .05 * screenWidth,
                   ),
                 ),
               ],
@@ -109,7 +126,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 delegate: Searchdelegate(),
               );
             },
-            child: Search(
+            child: SearchHeader(
               screenWidth: screenWidth,
               screenHeight: screenHeight,
               textScaleFactor: textScaleFactor,
@@ -237,8 +254,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           MostSellingBuilder(
-            products: myProducts,
-            sorting: sort,
+            sortDirection: sort,
             showText: true,
           ),
         ],
