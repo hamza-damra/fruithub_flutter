@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/models/product.dart';
@@ -52,13 +53,13 @@ class LastAddedProductCard extends StatelessWidget {
             Flexible(
               child: FittedBox(
                 fit: BoxFit.scaleDown,
-                child: Text(
+                child: AutoSizeText(
                   product.name,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontFamily: 'Cairo',
                     fontWeight: FontWeight.w700,
-                    fontSize: screenWidth * 0.048,
                   ),
+                  maxLines: 1,
                 ),
               ),
             ),

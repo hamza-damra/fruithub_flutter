@@ -26,26 +26,26 @@ class _ProductCardState extends State<ProductCard> {
   void initState() {
     favouriteIcon = widget.product.isfavourite
         ? const Icon(
-            Icons.favorite_rounded,
-            color: Colors.red,
-            size: 22,
-          )
+      Icons.favorite_rounded,
+      color: Colors.red,
+      size: 22,
+    )
         : const Icon(
-            Icons.favorite_border_rounded,
-            color: Colors.red,
-            size: 22,
-          );
+      Icons.favorite_border_rounded,
+      color: Colors.red,
+      size: 22,
+    );
     cartIcon = widget.product.isCartExist
         ? const Icon(
-            Icons.done_rounded,
-            color: Colors.white,
-            size: 22,
-          )
+      Icons.done_rounded,
+      color: Colors.white,
+      size: 22,
+    )
         : const Icon(
-            Icons.add_rounded,
-            color: Colors.white,
-            size: 22,
-          );
+      Icons.add_rounded,
+      color: Colors.white,
+      size: 22,
+    );
     super.initState();
   }
 
@@ -156,7 +156,7 @@ class _ProductCardState extends State<ProductCard> {
 
                   if (widget.product.isCartExist) {
                     http.Response deleteResponse =
-                        await cartManagement.deleteFromCart(
+                    await cartManagement.deleteFromCart(
                       token: token,
                       id: widget.product.id,
                     );
@@ -235,15 +235,15 @@ class _ProductCardState extends State<ProductCard> {
                   setState(() {
                     cartIcon = widget.product.isCartExist
                         ? const Icon(
-                            Icons.done_rounded,
-                            color: Colors.white,
-                            size: 22,
-                          )
+                      Icons.done_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    )
                         : const Icon(
-                            Icons.add_rounded,
-                            color: Colors.white,
-                            size: 22,
-                          );
+                      Icons.add_rounded,
+                      color: Colors.white,
+                      size: 22,
+                    );
                   });
                 },
                 child: Container(
