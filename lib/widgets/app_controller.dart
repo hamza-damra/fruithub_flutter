@@ -57,8 +57,8 @@ class _AppControllerState extends State<AppController> {
               vertical: tabPadding,
               horizontal: screenWidth * 0.04,
             ),
-
-            gap: screenWidth * 0.02, // space between icon and text
+            gap: screenWidth * 0.02,
+            // space between icon and text
             onTabChange: (index) {
               setState(() {
                 myIndex = index;

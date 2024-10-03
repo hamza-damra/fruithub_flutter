@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/search/search_delegate.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
-import 'package:fruitshub/search/search_delegate.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   String name = '';
+
   void getUserName() async {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(
       await SharedPrefManager().getData('token'),
@@ -66,12 +67,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     fontSize: .05 * screenWidth,
                   ),
                 ),
-                Text(
-                  name,
-                  style: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontWeight: FontWeight.bold,
-                    fontSize: .05 * screenWidth,
+                Expanded(
+                  child: Text(
+                    name,
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                      fontSize: .05 * screenWidth,
+                    ),
                   ),
                 ),
               ],

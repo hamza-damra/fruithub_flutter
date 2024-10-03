@@ -4,9 +4,9 @@ import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
+import 'package:http/http.dart' as http;
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:http/http.dart' as http;
 
 class DetailsScreen extends StatefulWidget {
   const DetailsScreen({
@@ -22,6 +22,7 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   late Widget buttonChild;
+
   @override
   void initState() {
     buttonChild = Text(
@@ -309,7 +310,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               Text(
-                                ' ${widget.product.expiryMonths.toString()}',
+                                ' ${getMonthsUntilExpiry(widget.product.expiryMonths.toString())}',
                                 textAlign: TextAlign.right,
                                 style: const TextStyle(
                                   color: Color(0xff23AA49),
@@ -578,5 +579,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
         ],
       ),
     );
+  }
+
+  int getMonthsUntilExpiry(String expiryDate) {
+    DateTime expiry = DateTime.parse(expiryDate);
+    DateTime now = DateTime.now();
+    int months = ((expiry.year - now.year) * 12) + expiry.month - now.month;
+    return months < 0 ? 0 : months;
   }
 }
