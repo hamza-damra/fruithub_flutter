@@ -16,7 +16,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? _selectedOption;
-  String sort = 'name'; // Default sort order
+  String sortDirection = 'dasc';
+  String sortBy = 'name';
 
   void reBuild() {
     setState(() {});
@@ -182,7 +183,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               onChanged: (String? value) {
                                 setState(() {
                                   _selectedOption = value;
-                                  sort = 'asc';
+                                  sortDirection = 'asc';
+                                  sortBy = 'price';
                                 });
                               },
                             ),
@@ -199,7 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               onChanged: (String? value) {
                                 setState(() {
                                   _selectedOption = value;
-                                  sort = 'desc';
+                                  sortDirection = 'desc';
+                                  sortBy = 'price';
                                 });
                               },
                             ),
@@ -216,7 +219,8 @@ class _HomeScreenState extends State<HomeScreen> {
                               onChanged: (String? value) {
                                 setState(() {
                                   _selectedOption = value;
-                                  sort = 'name';
+                                  sortDirection = 'desc';
+                                  sortBy = 'name';
                                 });
                               },
                             ),
@@ -257,8 +261,9 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           MostSellingBuilder(
-            sortDirection: sort,
             showText: true,
+            sortDirection: sortDirection,
+            sortBy: sortBy,
           ),
         ],
       ),

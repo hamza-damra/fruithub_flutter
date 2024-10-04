@@ -26,7 +26,7 @@ class SearchManagement {
       } else {
         throw Exception('فشل تحميل البيانات');
       }
-    } on Exception catch (e) {
+    } on Exception {
       throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');
     }
   }

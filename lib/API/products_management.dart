@@ -14,7 +14,7 @@ class ProductsManagement {
     try {
       http.Response response = await http.get(
         Uri.parse(
-          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/products/all?pageSize=$pageSize&pageNumber=$pageNumber&sortBy=$sortBy&sortDirection=$sortDirection',
+          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/products/all?pageSize=$pageSize&pageNumber=$pageNumber&sortBy=$sortBy&sortDir=$sortDirection',
         ),
         headers: {
           'Authorization': 'Bearer $token',
@@ -51,6 +51,9 @@ class ProductsManagement {
           'Authorization': 'Bearer $token',
         },
       );
+
+      print('response.body');
+      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = jsonDecode(response.body);

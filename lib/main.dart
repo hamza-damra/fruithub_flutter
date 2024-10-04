@@ -5,7 +5,6 @@ import 'package:fruitshub/auth/screens/signin_screen.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'package:hydrated_bloc/hydrated_bloc.dart';
 import 'package:path_provider/path_provider.dart';
-
 import 'auth/helpers/shared_pref_manager.dart';
 import 'bloc/filter_products_cubit.dart';
 
@@ -13,10 +12,10 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  // Initialize HydratedBloc storage
-  HydratedBloc.storage = await HydratedStorage.build(
-    storageDirectory: await getApplicationDocumentsDirectory(),
-  );
+  // // Initialize HydratedBloc storage
+  // HydratedBloc.storage = await HydratedStorage.build(
+  //   storageDirectory: await getApplicationDocumentsDirectory(),
+  // );
 
   runApp(const MyApp());
 }

@@ -11,10 +11,12 @@ class MostSellingBuilder extends StatefulWidget {
   const MostSellingBuilder({
     super.key,
     required this.sortDirection,
+    required this.sortBy,
     required this.showText,
   });
 
   final String sortDirection;
+  final String sortBy;
   final bool showText;
 
   @override
@@ -27,8 +29,8 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
       token: await SharedPrefManager().getData('token'),
       pageSize: '10',
       pageNumber: '0',
-      sortDirection: widget.sortDirection,
-      sortBy: 'orderCount',
+      sortDirection: widget.sortBy == 'name' ? 'desc' : widget.sortDirection,
+      sortBy: widget.sortBy,
     );
   }
 

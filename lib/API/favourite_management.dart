@@ -6,8 +6,11 @@ class FavouriteManagement {
     try {
       final http.Response response = await http.delete(
         Uri.parse(
-            'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/favourites/remove?productId=$productId'),
-        headers: {'Authorization': 'Bearer $token'},
+          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/wishlist/remove?productId=$productId',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       );
 
       if (response.statusCode == 500) {

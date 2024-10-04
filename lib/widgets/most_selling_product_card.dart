@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/API/cart_management.dart';
+import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
@@ -20,33 +21,159 @@ class ProductCard extends StatefulWidget {
 }
 
 class _ProductCardState extends State<ProductCard> {
+  final favourite = FavouriteManagement();
+
   late Widget favouriteIcon;
   late Widget cartIcon;
+
   @override
   void initState() {
+    super.initState();
+
     favouriteIcon = widget.product.isfavourite
-        ? const Icon(
-      Icons.favorite_rounded,
-      color: Colors.red,
-      size: 22,
-    )
-        : const Icon(
-      Icons.favorite_border_rounded,
-      color: Colors.red,
-      size: 22,
-    );
+        ? IconButton(
+            icon: const Icon(
+              Icons.favorite_rounded,
+              color: Colors.red,
+              size: 22,
+            ),
+            onPressed: _toggleFavourite,
+          )
+        : IconButton(
+            icon: const Icon(
+              Icons.favorite_border_rounded,
+              color: Colors.red,
+              size: 22,
+            ),
+            onPressed: _toggleFavourite,
+          );
+
     cartIcon = widget.product.isCartExist
         ? const Icon(
-      Icons.done_rounded,
-      color: Colors.white,
-      size: 22,
-    )
+            Icons.done_rounded,
+            color: Colors.white,
+            size: 22,
+          )
         : const Icon(
-      Icons.add_rounded,
-      color: Colors.white,
-      size: 22,
-    );
-    super.initState();
+            Icons.add_rounded,
+            color: Colors.white,
+            size: 22,
+          );
+  }
+
+  Future<void> _toggleFavourite() async {
+    setState(() {
+      favouriteIcon = const IconButton(
+        icon: Padding(
+          padding: EdgeInsets.all(4),
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2.5,
+              color: Colors.red,
+            ),
+          ),
+        ),
+        onPressed: null,
+      );
+    });
+
+    if (widget.product.isfavourite) {
+      http.Response response = await favourite.removeFromFavourite(
+        productId: widget.product.id,
+        token: await SharedPrefManager().getData('token'),
+      );
+
+      if (response.statusCode == 200 ||
+          response.statusCode == 201 ||
+          response.statusCode == 203 ||
+          response.statusCode == 204) {
+        widget.product.isfavourite = false;
+        showTopSnackBar(
+          Overlay.of(context),
+          displayDuration: const Duration(milliseconds: 1000),
+          const CustomSnackBar.info(
+            message: "تم حذف المنتج من قائمه التمني",
+            textAlign: TextAlign.center,
+            textStyle: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        );
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          displayDuration: const Duration(milliseconds: 1000),
+          const CustomSnackBar.error(
+            message: "فشل حذف المنتج من قائمه التمني",
+            textAlign: TextAlign.center,
+            textStyle: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        );
+      }
+    } else {
+      http.Response response = await favourite.addToFavourite(
+        productId: widget.product.id,
+        token: await SharedPrefManager().getData('token'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        widget.product.isfavourite = true;
+        showTopSnackBar(
+          Overlay.of(context),
+          displayDuration: const Duration(milliseconds: 1000),
+          const CustomSnackBar.info(
+            message: "تم اضافه المنتج الي قائمه التمني",
+            textAlign: TextAlign.center,
+            textStyle: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        );
+      } else {
+        showTopSnackBar(
+          Overlay.of(context),
+          displayDuration: const Duration(milliseconds: 1000),
+          const CustomSnackBar.error(
+            message: "فشل اضافه المنتج الي قائمه التمني",
+            textAlign: TextAlign.center,
+            textStyle: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        );
+      }
+    }
+
+    setState(() {
+      favouriteIcon = widget.product.isfavourite
+          ? IconButton(
+              icon: const Icon(
+                Icons.favorite_rounded,
+                color: Colors.red,
+                size: 22,
+              ),
+              onPressed: _toggleFavourite,
+            )
+          : IconButton(
+              icon: const Icon(
+                Icons.favorite_border_rounded,
+                color: Colors.red,
+                size: 22,
+              ),
+              onPressed: _toggleFavourite,
+            );
+    });
   }
 
   @override
@@ -156,7 +283,7 @@ class _ProductCardState extends State<ProductCard> {
 
                   if (widget.product.isCartExist) {
                     http.Response deleteResponse =
-                    await cartManagement.deleteFromCart(
+                        await cartManagement.deleteFromCart(
                       token: token,
                       id: widget.product.id,
                     );
@@ -235,15 +362,15 @@ class _ProductCardState extends State<ProductCard> {
                   setState(() {
                     cartIcon = widget.product.isCartExist
                         ? const Icon(
-                      Icons.done_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    )
+                            Icons.done_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          )
                         : const Icon(
-                      Icons.add_rounded,
-                      color: Colors.white,
-                      size: 22,
-                    );
+                            Icons.add_rounded,
+                            color: Colors.white,
+                            size: 22,
+                          );
                   });
                 },
                 child: Container(
