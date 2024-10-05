@@ -38,6 +38,12 @@ class LastAddedProductCard extends StatelessWidget {
                   padding: EdgeInsets.all(screenWidth *
                       0.02), // Responsive padding inside the circle
                   child: FancyShimmerImage(
+                    errorWidget: ClipRRect(
+                      borderRadius: const BorderRadius.all(Radius.circular(35)),
+                      child: Image.asset(
+                        'assets/images/image-error-placeHolder.png',
+                      ),
+                    ),
                     imageUrl: product.imageUrl,
                     shimmerBaseColor: Colors.grey[300],
                     shimmerHighlightColor: Colors.white,

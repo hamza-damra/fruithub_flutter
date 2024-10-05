@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
@@ -98,11 +99,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
               ),
               Align(
                 alignment: Alignment.bottomCenter,
-                child: Image.network(
-                  widget.product.imageUrl,
+                child: FancyShimmerImage(
+                  errorWidget: ClipRRect(
+                    borderRadius: const BorderRadius.all(Radius.circular(35)),
+                    child: Image.asset(
+                      'assets/images/image-error-placeHolder.png',
+                    ),
+                  ),
+                  imageUrl: widget.product.imageUrl,
                   width: screenWidth * 0.45,
                   height: screenHeight * 0.25,
-                  fit: BoxFit.contain,
+                  //  fit: BoxFit.contain,
                 ),
               ),
             ],

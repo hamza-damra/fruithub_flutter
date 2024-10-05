@@ -237,104 +237,132 @@ class _ProductsScreenState extends State<ProductsScreen> {
                   onTap: () {
                     showModalBottomSheet(
                       context: context,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
                       builder: (context) {
-                        return Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const SizedBox(height: 5),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Container(
-                                  width: 70,
-                                  height: 4,
-                                  decoration: BoxDecoration(
-                                    color: Colors.grey[400],
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                ),
+                        return Container(
+                          decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                              colors: [
+                                Color.fromARGB(255, 235, 235, 235),
+                                Color(0xFFF8F9FA),
+                                Color.fromARGB(255, 205, 208, 211),
                               ],
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
                             ),
-                            const SizedBox(height: 17),
-                            const Padding(
-                              padding: EdgeInsets.only(right: 13.0),
-                              child: Text(
-                                ': تصنيف حسب السعر',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  fontSize: 16,
-                                ),
-                              ),
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(20),
                             ),
-                            const SizedBox(height: 10),
-                            Row(
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                              bottom: MediaQuery.of(context).viewInsets.bottom,
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              mainAxisSize: MainAxisSize.min,
                               children: [
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16),
-                                    child: MyTextField(
-                                      align: TextAlign.center,
-                                      hint: '0',
-                                      showprefixIcon: false,
-                                      inputType: TextInputType.number,
-                                      controller: minController,
+                                const SizedBox(height: 5),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Container(
+                                      width: 70,
+                                      height: 4,
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[400],
+                                        borderRadius: BorderRadius.circular(20),
+                                      ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                                const Text(
-                                  'الي',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 16, right: 16),
-                                    child: MyTextField(
-                                      align: TextAlign.center,
-                                      hint: '0',
-                                      showprefixIcon: false,
-                                      inputType: TextInputType.number,
-                                      controller: maxController,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 9),
-                            Center(
-                              child: SizedBox(
-                                width: screenWidth * 0.90,
-                                height: 40,
-                                child: ElevatedButton(
-                                  style: const ButtonStyle(
-                                    backgroundColor: WidgetStatePropertyAll(
-                                      Color(0xff1B5E37),
-                                    ),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    maxNum = double.parse(maxController.text);
-                                    minNum = double.parse(minController.text);
-                                    BlocProvider.of<ProductsCubit>(this.context)
-                                        .showProductState(myState: 'filtered');
-                                  },
-                                  child: const Text(
-                                    'تصفيه',
+                                const SizedBox(height: 17),
+                                const Padding(
+                                  padding: EdgeInsets.only(right: 13.0),
+                                  child: Text(
+                                    ': تصنيف حسب السعر',
                                     style: TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                      color: Colors.white,
+                                      fontWeight: FontWeight.w900,
+                                      fontSize: 16,
                                     ),
                                   ),
                                 ),
-                              ),
+                                const SizedBox(height: 10),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 16),
+                                        child: MyTextField(
+                                          align: TextAlign.center,
+                                          hint: '0',
+                                          showprefixIcon: false,
+                                          inputType: TextInputType.number,
+                                          controller: minController,
+                                        ),
+                                      ),
+                                    ),
+                                    const Text(
+                                      'الي',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 16, right: 16),
+                                        child: MyTextField(
+                                          align: TextAlign.center,
+                                          hint: '0',
+                                          showprefixIcon: false,
+                                          inputType: TextInputType.number,
+                                          controller: maxController,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                const SizedBox(height: 9),
+                                Center(
+                                  child: SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.90,
+                                    height: 40,
+                                    child: ElevatedButton(
+                                      style: const ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                          Color(0xff1B5E37),
+                                        ),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        maxNum =
+                                            double.parse(maxController.text);
+                                        minNum =
+                                            double.parse(minController.text);
+                                        BlocProvider.of<ProductsCubit>(
+                                                this.context)
+                                            .showProductState(
+                                                myState: 'filtered');
+                                      },
+                                      child: const Text(
+                                        'تصفيه',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                              ],
                             ),
-                            const SizedBox(height: 12),
-                          ],
+                          ),
                         );
                       },
                     );

@@ -129,7 +129,6 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                          left: screenWidth * 0.03,
                           right: screenWidth * 0.03,
                           bottom: screenWidth * 0.03,
                         ),
@@ -212,7 +211,6 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                     children: [
                       Padding(
                         padding: EdgeInsets.only(
-                          left: screenWidth * 0.03,
                           right: screenWidth * 0.03,
                           bottom: screenWidth * 0.03,
                         ),
