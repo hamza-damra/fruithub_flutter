@@ -1,5 +1,7 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
@@ -12,9 +14,11 @@ class CartItemWidget extends StatefulWidget {
   const CartItemWidget({
     super.key,
     required this.product,
+    required this.childButton,
   });
 
   final Cartitem product;
+  final Widget childButton;
 
   @override
   State<CartItemWidget> createState() => _CartItemWidgetState();
@@ -24,7 +28,6 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   Widget deleteButtonChlild = SvgPicture.asset(
     'assets/images/trash.svg',
   );
-
   final cart = CartManagement();
 
   @override
@@ -51,54 +54,11 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: deleteButtonChlild,
+                      icon: widget.childButton,
                       onPressed: () async {
-                        setState(() {
-                          deleteButtonChlild = SizedBox(
-                            width: screenWidth * 0.07,
-                            height: screenWidth * 0.07,
-                            child: const CircularProgressIndicator(
-                              color: Color.fromARGB(255, 132, 139, 139),
-                            ),
-                          );
-                        });
-                        http.Response response = await cart.deleteFromCart(
-                          token: await SharedPrefManager().getData('token'),
-                          id: widget.product.productId,
+                        BlocProvider.of<CartCubit>(this.context).deleteFromCart(
+                          widget.product.productId,
                         );
-                        setState(() {
-                          deleteButtonChlild = SvgPicture.asset(
-                            'assets/images/trash.svg',
-                          );
-                        });
-                        if (response.statusCode == 200 ||
-                            response.statusCode == 204) {
-                          showTopSnackBar(
-                            Overlay.of(context),
-                            CustomSnackBar.info(
-                              message: "تم حذف ${widget.product.productName}",
-                              textAlign: TextAlign.center,
-                              textStyle: const TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        } else {
-                          showTopSnackBar(
-                            Overlay.of(context),
-                            CustomSnackBar.error(
-                              message: "فشل حذف ${widget.product.productName}",
-                              textAlign: TextAlign.center,
-                              textStyle: const TextStyle(
-                                fontFamily: 'Cairo',
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                              ),
-                            ),
-                          );
-                        }
                       },
                     ),
                     Column(

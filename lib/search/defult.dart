@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/search/search_bloc.dart';
 
+// ignore: must_be_immutable
 class Defult extends StatefulWidget {
   Defult({
     super.key,

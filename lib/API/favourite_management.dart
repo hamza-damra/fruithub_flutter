@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:fruitshub/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class FavouriteManagement {
@@ -51,6 +54,35 @@ class FavouriteManagement {
       return response;
     } catch (e) {
       throw Exception('Failed to add to favourites: $e');
+    }
+  }
+
+  Future<List<Product>> getFavourites({
+    required String token,
+  }) async {
+    try {
+      http.Response response = await http.get(
+        Uri.parse(
+          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/wishlist/user',
+        ),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
+        List<Product> items = jsonResponse
+            .map((json) => Product.fromJson(json as Map<String, dynamic>))
+            .toList();
+        jsonResponse.clear();
+        return items;
+      } else {
+        throw Exception('فشل تحميل البيانات');
+      }
+    } on Exception catch (e) {
+      print(e.toString());
+      throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');
     }
   }
 }

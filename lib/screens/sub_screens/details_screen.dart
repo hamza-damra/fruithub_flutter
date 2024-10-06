@@ -101,7 +101,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 alignment: Alignment.bottomCenter,
                 child: FancyShimmerImage(
                   errorWidget: ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(35)),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(35),
+                    ),
                     child: Image.asset(
                       'assets/images/image-error-placeHolder.png',
                     ),
@@ -109,7 +111,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   imageUrl: widget.product.imageUrl,
                   width: screenWidth * 0.45,
                   height: screenHeight * 0.25,
-                  //  fit: BoxFit.contain,
+                  boxFit: BoxFit.contain,
                 ),
               ),
             ],

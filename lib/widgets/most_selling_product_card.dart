@@ -4,6 +4,8 @@ import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
+import 'package:fruitshub/widgets/cart_container_and_sizedbox.dart';
+import 'package:fruitshub/widgets/heart_loader.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 import 'package:http/http.dart' as http;
@@ -12,9 +14,11 @@ class ProductCard extends StatefulWidget {
   const ProductCard({
     super.key,
     required this.product,
+    this.screen,
   });
 
   final Product product;
+  final String? screen;
 
   @override
   State<ProductCard> createState() => _ProductCardState();
@@ -52,6 +56,7 @@ class _ProductCardState extends State<ProductCard> {
           textStyle: const TextStyle(
             fontFamily: 'Cairo',
             fontWeight: FontWeight.bold,
+            color: Colors.white,
           ),
         ),
       );
@@ -81,49 +86,65 @@ class _ProductCardState extends State<ProductCard> {
           );
 
     cartIcon = widget.product.isCartExist
-        ? Container(
-            width: 22,
-            height: 22,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xff1B5E37),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.done_rounded,
-                color: Colors.white,
-                size: 22,
+        ? GestureDetector(
+            onTap: () {
+              _toggleCart();
+            },
+            child: const CartContainer(
+              child: Center(
+                child: Icon(
+                  Icons.done_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
               ),
             ),
           )
-        : Container(
-            width: 22,
-            height: 22,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              color: Color(0xff1B5E37),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.add_rounded,
-                color: Colors.white,
-                size: 22,
+        : GestureDetector(
+            onTap: () {
+              _toggleCart();
+            },
+            child: const CartContainer(
+              child: Center(
+                child: Icon(
+                  Icons.add_rounded,
+                  color: Colors.white,
+                  size: 22,
+                ),
               ),
             ),
           );
   }
 
   Future<void> _toggleFavourite() async {
+    // // Circular loading
+    // setState(() {
+    //   favouriteIcon = const IconButton(
+    //     icon: Padding(
+    //       padding: EdgeInsets.all(4),
+    //       child: SizedBox(
+    //         width: 20,
+    //         height: 20,
+    //         child: CircularProgressIndicator(
+    //           strokeWidth: 2.5,
+    //           color: Colors.red,
+    //         ),
+    //       ),
+    //     ),
+    //     onPressed: null,
+    //   );
+    // });
+
+    // heart loading
     setState(() {
-      favouriteIcon = const IconButton(
+      favouriteIcon = IconButton(
         icon: Padding(
-          padding: EdgeInsets.all(4),
+          padding: const EdgeInsets.all(4),
           child: SizedBox(
             width: 20,
             height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2.5,
-              color: Colors.red,
+            child: HeartLoader(
+              isFavorite: widget.product.isfavourite,
             ),
           ),
         ),
@@ -133,7 +154,9 @@ class _ProductCardState extends State<ProductCard> {
 
     if (widget.product.isfavourite) {
       http.Response response = await favouriteManagement.removeFromFavourite(
-        productId: widget.product.id,
+        productId: widget.screen == 'fav'
+            ? widget.product.productId
+            : widget.product.id,
         token: await SharedPrefManager().getData('token'),
       );
 
@@ -179,17 +202,11 @@ class _ProductCardState extends State<ProductCard> {
 
   Future<void> _toggleCart() async {
     setState(() {
-      cartIcon = Container(
-        width: 22,
-        height: 22,
-        decoration: const BoxDecoration(
-          shape: BoxShape.circle,
-          color: Color(0xff1B5E37),
-        ),
-        child: const AspectRatio(
-          aspectRatio: 1 / 1,
-          child: Padding(
-            padding: EdgeInsets.all(8.0),
+      cartIcon = const CartContainer(
+        child: Center(
+          child: SizedBox(
+            width: 19, // Ensure it fits inside the CartContainer
+            height: 19, // Keep it square to maintain circular shape
             child: CircularProgressIndicator(
               color: Colors.white,
               strokeWidth: 2.5,
@@ -203,8 +220,11 @@ class _ProductCardState extends State<ProductCard> {
     if (widget.product.isCartExist) {
       http.Response response = await cartManagement.deleteFromCart(
         token: token,
-        id: widget.product.id,
+        id: widget.screen == 'fav'
+            ? widget.product.productId
+            : widget.product.id,
       );
+      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         widget.product.isCartExist = false;
@@ -215,8 +235,11 @@ class _ProductCardState extends State<ProductCard> {
     } else {
       http.Response response = await cartManagement.addToCart(
         token: token,
-        productId: widget.product.id,
+        productId: widget.screen == 'fav'
+            ? widget.product.productId
+            : widget.product.id,
       );
+      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         widget.product.isCartExist = true;
@@ -228,34 +251,31 @@ class _ProductCardState extends State<ProductCard> {
 
     setState(() {
       cartIcon = widget.product.isCartExist
-          ? Container(
-              // screenWidth * 0.08
-              width: 22,
-              height: 22,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xff1B5E37),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.done_rounded,
-                  color: Colors.white,
-                  size: 22,
+          ? GestureDetector(
+              onTap: () {
+                _toggleCart();
+              },
+              child: const CartContainer(
+                child: Center(
+                  child: Icon(
+                    Icons.done_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
               ),
             )
-          : Container(
-              width: 22,
-              height: 22,
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: Color(0xff1B5E37),
-              ),
-              child: const Center(
-                child: Icon(
-                  Icons.add_rounded,
-                  color: Colors.white,
-                  size: 22,
+          : GestureDetector(
+              onTap: () {
+                _toggleCart();
+              },
+              child: const CartContainer(
+                child: Center(
+                  child: Icon(
+                    Icons.add_rounded,
+                    color: Colors.white,
+                    size: 22,
+                  ),
                 ),
               ),
             );
@@ -323,11 +343,8 @@ class _ProductCardState extends State<ProductCard> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Cart Icon
-              IconButton(
-                icon: cartIcon,
-                onPressed: _toggleCart,
-              ),
+              // Cart Section
+              cartIcon,
 
               // Price Display
               Flexible(
