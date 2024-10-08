@@ -297,6 +297,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                             left: 16, right: 16),
                                         child: MyTextField(
                                           align: TextAlign.center,
+                                          readOnly: false,
                                           hint: '0',
                                           showprefixIcon: false,
                                           inputType: TextInputType.number,
@@ -318,6 +319,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         child: MyTextField(
                                           align: TextAlign.center,
                                           hint: '0',
+                                          readOnly: false,
                                           showprefixIcon: false,
                                           inputType: TextInputType.number,
                                           controller: maxController,

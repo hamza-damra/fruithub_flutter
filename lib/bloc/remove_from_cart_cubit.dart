@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:http/http.dart' as http;
 
 class CartState {}
@@ -24,6 +25,9 @@ class CartCubit extends Cubit<CartState> {
     );
     if (response.statusCode == 200 || response.statusCode == 204) {
       emit(CartSuccess());
+      mostSelling = [];
+      cart = [];
+      favourite = [];
     } else {
       emit(CartError());
     }

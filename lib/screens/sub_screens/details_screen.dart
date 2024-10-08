@@ -2,6 +2,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
@@ -179,7 +180,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                               } else {
                                 showTopSnackBar(
                                   Overlay.of(context),
-                                  const CustomSnackBar.info(
+                                  const CustomSnackBar.error(
                                     message:
                                         "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                     textAlign: TextAlign.center,
@@ -483,6 +484,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         WidgetStateProperty.all<Color>(const Color(0xff1B5E37)),
                   ),
                   onPressed: () async {
+                    cart = [];
+                    lastAdded = [];
+                    favourite = [];
+                    //  mostSelling = []; >> state management
+
                     setState(() {
                       buttonChild = const CircularProgressIndicator(
                         color: Colors.white,
@@ -501,6 +507,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           response.statusCode == 203 ||
                           response.statusCode == 204) {
                         widget.product.isCartExist = false;
+
                         showTopSnackBar(
                           Overlay.of(context),
                           displayDuration: const Duration(milliseconds: 1000),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
+import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'auth/helpers/shared_pref_manager.dart';
 import 'bloc/filter_products_cubit.dart';
@@ -51,7 +52,12 @@ class _MyAppState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => ProductsCubit()),
+        BlocProvider(
+          create: (_) => ProductsCubit(),
+        ),
+        BlocProvider(
+          create: (_) => FavouriteCubit(),
+        ),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

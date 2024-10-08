@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/products_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/widgets/last_added_product_card.dart';
 
-class LastAddedProducts extends StatelessWidget {
+class LastAddedProducts extends StatefulWidget {
   const LastAddedProducts({super.key});
 
+  @override
+  State<LastAddedProducts> createState() => _LastAddedProductsState();
+}
+
+class _LastAddedProductsState extends State<LastAddedProducts> {
   Future<List<Product>> getProducts() async {
     return await ProductsManagement().getAllProducts(
       token: await SharedPrefManager().getData('token'),
@@ -17,6 +23,15 @@ class LastAddedProducts extends StatelessWidget {
       sortDirection: 'desc',
       sortBy: 'createdAt',
     );
+  }
+
+  Future<List<Product>> requestData() async {
+    if (lastAdded.isEmpty) {
+      lastAdded = await getProducts();
+      return lastAdded;
+    } else {
+      return lastAdded;
+    }
   }
 
   @override
@@ -31,7 +46,7 @@ class LastAddedProducts extends StatelessWidget {
           right: screenWidth * 0.02, // 2% of screen width
         ),
         child: FutureBuilder<List<Product>>(
-          future: getProducts(),
+          future: requestData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const SpinKitThreeBounce(

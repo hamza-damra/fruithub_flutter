@@ -83,22 +83,21 @@ class _SignUpScreenState extends State<SignUpScreen> {
         emailController.text,
         passwordController.text,
       );
-      if(mounted) {
+      if (mounted) {
         Navigator.pop(context);
       }
       // request success
       if (signUpResponse.statusCode == 200 ||
           signUpResponse.statusCode == 201) {
         // verify user
-        if(mounted) {
+        if (mounted) {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) =>
-                  VerifyNewUser(
-                    email: emailController.text,
-                    password: passwordController.text,
-                  ),
+              builder: (context) => VerifyNewUser(
+                email: emailController.text,
+                password: passwordController.text,
+              ),
             ),
           );
         }
@@ -106,7 +105,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
       // email error
       else if (signUpResponse.statusCode == 400) {
-        if(mounted) {
+        if (mounted) {
           showCustomDialog(
             context,
             'خطا',
@@ -119,7 +118,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
     // unexpected error
     on Exception {
-      if(mounted) {
+      if (mounted) {
         Navigator.of(context).pop();
         showCustomDialog(
           context,
@@ -162,6 +161,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 40),
                 MyTextField(
+                  readOnly: false,
                   align: TextAlign.right,
                   hint: 'الاسم كامل',
                   showprefixIcon: false,
@@ -170,6 +170,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 20),
                 MyTextField(
+                  readOnly: false,
                   align: TextAlign.right,
                   hint: 'البريد الالكتروني',
                   showprefixIcon: false,
@@ -178,6 +179,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 ),
                 const SizedBox(height: 20),
                 MyTextField(
+                  readOnly: false,
                   align: TextAlign.right,
                   hint: 'كلمة المرور',
                   showprefixIcon: true,

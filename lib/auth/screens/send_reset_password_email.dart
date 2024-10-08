@@ -73,6 +73,7 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
             Padding(
               padding: const EdgeInsets.all(15.0),
               child: MyTextField(
+                readOnly: false,
                 hint: 'البريد الالكتروني',
                 showprefixIcon: false,
                 align: TextAlign.right,
@@ -114,7 +115,9 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                     );
 
                     http.Response verificationResponse =
-                        await user.sendResetPasswordEmail(emailController.text);
+                        await user.sendResetPasswordEmail(
+                      emailController.text,
+                    );
 
                     Navigator.pop(context);
 

@@ -4,23 +4,38 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:fruitshub/widgets/cart_item.dart';
 
-class Cart extends StatelessWidget {
-  const Cart({super.key});
+class Cart extends StatefulWidget {
+  const Cart({
+    super.key,
+  });
 
+  @override
+  State<Cart> createState() => _CartState();
+}
+
+class _CartState extends State<Cart> {
   Future<List<Cartitem>> getProducts() async {
     return await CartManagement().getCartItems(
       token: await SharedPrefManager().getData('token'),
     );
   }
 
+  Future<List<Cartitem>> requestData() async {
+    if (cart.isEmpty) {
+      cart = await getProducts();
+      return cart;
+    } else {
+      return cart;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    double totalPrice = 0;
-
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
@@ -35,7 +50,7 @@ class Cart extends StatelessWidget {
         surfaceTintColor: Colors.white,
       ),
       body: FutureBuilder(
-        future: getProducts(),
+        future: requestData(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const SpinKitThreeBounce(
@@ -168,9 +183,9 @@ class Cart extends StatelessWidget {
                                   onPressed: () {
                                     // Add payment handling logic here
                                   },
-                                  child: Text(
-                                    'الدفع $totalPrice جنيه',
-                                    style: const TextStyle(
+                                  child: const Text(
+                                    'الدفع',
+                                    style: TextStyle(
                                       color: Colors.white,
                                     ),
                                   ),

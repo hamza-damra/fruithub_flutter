@@ -1,7 +1,8 @@
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
@@ -28,7 +29,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
   Widget deleteButtonChlild = SvgPicture.asset(
     'assets/images/trash.svg',
   );
-  final cart = CartManagement();
+  final cArt = CartManagement();
 
   @override
   Widget build(BuildContext context) {
@@ -56,6 +57,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                     IconButton(
                       icon: widget.childButton,
                       onPressed: () async {
+                        mostSelling = [];
+                        cart = [];
+                        favourite = [];
                         BlocProvider.of<CartCubit>(this.context).deleteFromCart(
                           widget.product.productId,
                         );
@@ -127,7 +131,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                               setState(() {
                                 widget.product.quantity--;
                               });
-                              await cart.decreaseProductQuantity(
+                              await cArt.decreaseProductQuantity(
                                 id: widget.product.productId,
                                 token:
                                     await SharedPrefManager().getData('token'),
@@ -172,7 +176,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                             });
                             if (widget.product.quantity <
                                 widget.product.stockQuantity) {
-                              await cart.increaseProductQuantity(
+                              await cArt.increaseProductQuantity(
                                 id: widget.product.productId,
                                 token:
                                     await SharedPrefManager().getData('token'),
@@ -180,7 +184,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                             } else {
                               showTopSnackBar(
                                 Overlay.of(context),
-                                const CustomSnackBar.info(
+                                const CustomSnackBar.error(
                                   message:
                                       "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                   textAlign: TextAlign.center,

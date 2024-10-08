@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'package:http/http.dart' as http;
+import 'package:lottie/lottie.dart';
 
 import '../helpers/shared_pref_manager.dart';
 
@@ -65,47 +66,81 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
         Map<String, dynamic> response = jsonDecode(signinResponse.body);
         SharedPrefManager().saveData('token', response['token']);
 
-        if(mounted){
+        if (mounted) {
           Navigator.of(context).pop();
+
+          // Show the first animation (bomb)
           showDialog(
             context: context,
             builder: (BuildContext context) {
-              return AlertDialog(
-                title: const Text('حساب جديد', textAlign: TextAlign.right),
-                content: const Text(
-                    'تم تسجيل حسابك بنجاح ، يمكنك الان تصفح منتجاتنا',
-                    textAlign: TextAlign.right),
-                actions: <Widget>[
-                  TextButton(
-                    child: const Text('تصفح المنتجات'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => const AppController(),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+              return Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  leading: const SizedBox(),
+                  surfaceTintColor: Colors.white,
+                  backgroundColor: Colors.white,
+                ),
+                body: Center(
+                  child: Lottie.asset('assets/animations/bomb.json'),
+                ),
               );
             },
           );
-        }
 
+          // Delay to show the second animation (success) after 3 seconds
+          Future.delayed(const Duration(milliseconds: 2200), () {
+            if (mounted) {
+              Navigator.of(context).pop(); // Close the first dialog (bomb)
+
+              // Show the second animation (success)
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return Scaffold(
+                    backgroundColor: Colors.white,
+                    appBar: AppBar(
+                      leading: const SizedBox(),
+                      surfaceTintColor: Colors.white,
+                      backgroundColor: Colors.white,
+                    ),
+                    body: Center(
+                      child: Lottie.asset('assets/animations/success.json'),
+                    ),
+                  );
+                },
+              );
+
+              // Delay the pushReplacement by 3 more seconds (for the success animation)
+              Future.delayed(
+                const Duration(milliseconds: 2200),
+                () {
+                  if (mounted) {
+                    Navigator.pop(context);
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const AppController(),
+                      ),
+                    );
+                  }
+                },
+              );
+            }
+          });
+        }
       }
 
       // wrong otp
       else if (otpResponse.statusCode == 400) {
-        if(mounted){
+        if (mounted) {
           Navigator.of(context).pop();
           showDialog(
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
                 title: const Text('كود تفعيل خاطئ', textAlign: TextAlign.right),
-                content: const Text('يرجي التاكد من الكود المرسل واعاده المحاوله',
+                content: const Text(
+                    'يرجي التاكد من الكود المرسل واعاده المحاوله',
                     textAlign: TextAlign.right),
                 actions: <Widget>[
                   TextButton(
@@ -119,7 +154,6 @@ class _VerifyNewUserState extends State<VerifyNewUser> {
             },
           );
         }
-
       }
     }
 

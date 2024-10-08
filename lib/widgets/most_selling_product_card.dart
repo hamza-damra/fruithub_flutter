@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fruitshub/widgets/cart_container_and_sizedbox.dart';
@@ -117,24 +120,6 @@ class _ProductCardState extends State<ProductCard> {
   }
 
   Future<void> _toggleFavourite() async {
-    // // Circular loading
-    // setState(() {
-    //   favouriteIcon = const IconButton(
-    //     icon: Padding(
-    //       padding: EdgeInsets.all(4),
-    //       child: SizedBox(
-    //         width: 20,
-    //         height: 20,
-    //         child: CircularProgressIndicator(
-    //           strokeWidth: 2.5,
-    //           color: Colors.red,
-    //         ),
-    //       ),
-    //     ),
-    //     onPressed: null,
-    //   );
-    // });
-
     // heart loading
     setState(() {
       favouriteIcon = IconButton(
@@ -153,18 +138,27 @@ class _ProductCardState extends State<ProductCard> {
     });
 
     if (widget.product.isfavourite) {
-      http.Response response = await favouriteManagement.removeFromFavourite(
-        productId: widget.screen == 'fav'
-            ? widget.product.productId
-            : widget.product.id,
-        token: await SharedPrefManager().getData('token'),
-      );
-
-      if (response.statusCode == 200 || response.statusCode == 204) {
-        widget.product.isfavourite = false;
-        _showSnackBar("تم حذف المنتج من قائمه التمني", 'info');
+      if (widget.screen == 'fav') {
+        BlocProvider.of<FavouriteCubit>(context).deleteFromFavourite(
+          widget.product.productId,
+          widget.product,
+        );
       } else {
-        _showSnackBar("فشل حذف المنتج من قائمه التمني", 'error');
+        http.Response response =
+            await FavouriteManagement().removeFromFavourite(
+          productId: widget.product.id,
+          token: await SharedPrefManager().getData('token'),
+        );
+        if (response.statusCode == 200 || response.statusCode == 204) {
+          _showSnackBar("تم حذف المنتج من قائمه التمني", 'info');
+          widget.product.isfavourite = false;
+          favourite = [];
+          if (widget.screen == 'fav') {
+            mostSelling = [];
+          }
+        } else {
+          _showSnackBar("فشل حذف المنتج من قائمه التمني", 'info');
+        }
       }
     } else {
       http.Response response = await favouriteManagement.addToFavourite(
@@ -173,6 +167,10 @@ class _ProductCardState extends State<ProductCard> {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         widget.product.isfavourite = true;
+        favourite = [];
+        if (widget.screen == 'fav') {
+          mostSelling = [];
+        }
         _showSnackBar("تم اضافه المنتج الي قائمه التمني", 'info');
       } else {
         _showSnackBar("فشل اضافه المنتج الي قائمه التمني", 'error');
@@ -224,10 +222,14 @@ class _ProductCardState extends State<ProductCard> {
             ? widget.product.productId
             : widget.product.id,
       );
-      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         widget.product.isCartExist = false;
+        cart = [];
+        if (widget.screen == 'fav') {
+          mostSelling = [];
+          cart = [];
+        }
         _showSnackBar("تم حذف المنتج من السله", 'info');
       } else {
         _showSnackBar("فشل حذف المنتج من السله", 'error');
@@ -243,6 +245,11 @@ class _ProductCardState extends State<ProductCard> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         widget.product.isCartExist = true;
+        cart = [];
+        if (widget.screen == 'fav') {
+          mostSelling = [];
+          cart = [];
+        }
         _showSnackBar("تم اضافه المنتج الي السله", 'info');
       } else {
         _showSnackBar("فشل اضافه المنتج الي السله", 'error');
@@ -296,10 +303,53 @@ class _ProductCardState extends State<ProductCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Favourite Icon Section
-          Align(
-            alignment: Alignment.centerRight,
-            child: favouriteIcon,
-          ),
+          widget.screen == 'fav'
+              ? Align(
+                  alignment: Alignment.centerRight,
+                  child: BlocListener<FavouriteCubit, FavouriteState>(
+                    listener: (context, state) {
+                      if (state is FavouriteSuccess) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          const CustomSnackBar.info(
+                            message: "تم حذف المنتج من قائمه التمني",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      } else if (state is FavouriteError) {
+                        showTopSnackBar(
+                          Overlay.of(context),
+                          const CustomSnackBar.info(
+                            message: "فشل حذف المنتج من قائمه التمني",
+                            textAlign: TextAlign.center,
+                            textStyle: TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        );
+                      }
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        favouriteIcon,
+                      ],
+                    ),
+                  ),
+                )
+              : Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    favouriteIcon,
+                  ],
+                ),
 
           // Image Section
           Expanded(

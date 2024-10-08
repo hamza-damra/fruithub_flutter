@@ -10,6 +10,7 @@ class MyTextField extends StatefulWidget {
     required this.align,
     this.errorText,
     this.suffixIcon,
+    required this.readOnly,
   });
 
   final String hint;
@@ -19,6 +20,7 @@ class MyTextField extends StatefulWidget {
   final TextAlign align;
   final String? errorText;
   final Widget? suffixIcon;
+  final bool readOnly;
 
   @override
   State<MyTextField> createState() => _MyTextFieldState();
@@ -30,6 +32,7 @@ class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      readOnly: widget.readOnly,
       controller: widget.controller,
       obscureText: widget.showprefixIcon ? _isHidden : false,
       textAlign: widget.align,

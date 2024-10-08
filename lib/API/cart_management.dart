@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,6 +24,7 @@ class CartManagement {
           'Content-Type': 'application/json',
         },
       );
+      print(response.body);
       return response;
     } catch (e) {
       throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');

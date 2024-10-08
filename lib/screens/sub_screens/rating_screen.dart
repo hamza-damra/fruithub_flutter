@@ -64,6 +64,7 @@ class _RatingScreenState extends State<RatingScreen> {
                   padding: const EdgeInsets.all(8.0),
                   child: MyTextField(
                     hint: 'اكتب تعليق',
+                    readOnly: false,
                     showprefixIcon: false,
                     align: TextAlign.right,
                     suffixIcon: Padding(

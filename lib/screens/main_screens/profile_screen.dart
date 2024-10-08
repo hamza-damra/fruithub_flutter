@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
 import 'package:fruitshub/screens/sub_screens/favourite_screen.dart';
+import 'package:fruitshub/screens/sub_screens/personal_profile.dart';
 import 'package:fruitshub/widgets/profile_section.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -177,7 +178,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ProfileSection(
             icon: 'assets/profile/user.svg',
             section: 'الملف الشخصي',
-            onPressed: () {},
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const PersonalProfile(),
+                ),
+              );
+            },
           ),
           const SizedBox(height: 5),
           ProfileSection(

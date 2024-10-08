@@ -109,7 +109,7 @@ class _SignInScreenState extends State<SignInScreen> {
             ),
           ),
         );
-      }else if (signInResponse.statusCode == 401) {
+      } else if (signInResponse.statusCode == 401) {
         showCustomDialog(
           context,
           'خطأ',
@@ -121,7 +121,7 @@ class _SignInScreenState extends State<SignInScreen> {
       // wrong data error
       else if (signInResponse.statusCode == 500 ||
           signInResponse.statusCode == 501) {
-        if(mounted){
+        if (mounted) {
           showCustomDialog(
             context,
             'خطأ',
@@ -129,7 +129,6 @@ class _SignInScreenState extends State<SignInScreen> {
             'حسنا',
           );
         }
-
       }
     }
 
@@ -182,6 +181,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 40),
                 MyTextField(
+                  readOnly: false,
                   align: TextAlign.right,
                   hint: 'البريد الالكتروني',
                   showprefixIcon: false,
@@ -190,6 +190,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
                 const SizedBox(height: 20),
                 MyTextField(
+                  readOnly: false,
                   align: TextAlign.right,
                   hint: 'كلمه السر',
                   showprefixIcon: true,

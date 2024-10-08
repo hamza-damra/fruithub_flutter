@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
 import 'package:fruitshub/widgets/cart_builder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -24,7 +24,7 @@ class CartScreen extends StatelessWidget {
                 showTopSnackBar(
                   Overlay.of(context),
                   const CustomSnackBar.info(
-                    message: "تم الحذف بنجاح",
+                    message: "تم حذف المنتج بنجاح",
                     textAlign: TextAlign.center,
                     textStyle: TextStyle(
                       fontFamily: 'Cairo',
@@ -36,7 +36,7 @@ class CartScreen extends StatelessWidget {
               } else if (state is CartError) {
                 showTopSnackBar(
                   Overlay.of(context),
-                  const CustomSnackBar.info(
+                  const CustomSnackBar.error(
                     message: "فشل حذف المنتج",
                     textAlign: TextAlign.center,
                     textStyle: TextStyle(
