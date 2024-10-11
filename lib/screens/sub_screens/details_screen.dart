@@ -600,7 +600,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
   int getMonthsUntilExpiry(String expiryDate) {
     DateTime expiry = DateTime.parse(expiryDate);
     DateTime now = DateTime.now();
-    int months = ((expiry.year - now.year) * 12) + expiry.month - now.month;
+
+    // Calculate the months difference
+    int months = ((expiry.year - now.year) * 12) + (expiry.month - now.month);
+
+    // If the current day is later than the expiry day in the same month, subtract one month
+    if (now.day > expiry.day) {
+      months--;
+    }
+
+    // Ensure that the number of months is not negative
     return months < 0 ? 0 : months;
   }
 }

@@ -13,6 +13,8 @@ class SearchManagement {
         ),
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'accept': 'application/json; charset=UTF-8',
         },
       );
 

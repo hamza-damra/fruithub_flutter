@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/search/search_delegate.dart';
 import 'package:fruitshub/widgets/most_selling_builder.dart';
 import 'package:fruitshub/widgets/search.dart';
@@ -20,7 +21,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String sortBy = 'name';
 
   void reBuild() {
-    setState(() {});
+    setState(() {
+      mostSellingPageNumber = 0;
+      mostSelling = [];
+    });
   }
 
   String name = '';
@@ -185,6 +189,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _selectedOption = value;
                                   sortDirection = 'asc';
                                   sortBy = 'price';
+                                  mostSellingPageNumber = 0;
                                 });
                               },
                             ),
@@ -203,6 +208,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _selectedOption = value;
                                   sortDirection = 'desc';
                                   sortBy = 'price';
+                                  mostSellingPageNumber = 0;
                                 });
                               },
                             ),
@@ -221,6 +227,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   _selectedOption = value;
                                   sortDirection = 'desc';
                                   sortBy = 'name';
+                                  mostSellingPageNumber = 0;
                                 });
                               },
                             ),

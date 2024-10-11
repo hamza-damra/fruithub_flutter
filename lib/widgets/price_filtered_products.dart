@@ -142,11 +142,14 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                                   onPressed: () {
                                     context
                                         .read<ProductsCubit>()
-                                        .showProductState(myState: 'most');
+                                        .showProductState(
+                                          myState: 'most',
+                                        );
                                     minNum = 0;
                                     maxNum = 0;
                                     maxController.clear();
                                     minController.clear();
+                                    mostSelling = [];
                                   },
                                   icon: const Icon(
                                     Icons.cancel_outlined,

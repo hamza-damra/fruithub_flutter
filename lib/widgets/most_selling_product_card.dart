@@ -224,6 +224,7 @@ class _ProductCardState extends State<ProductCard> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
+        lastAdded = [];
         widget.product.isCartExist = false;
         cart = [];
         if (widget.screen == 'fav') {
@@ -244,6 +245,7 @@ class _ProductCardState extends State<ProductCard> {
       print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        lastAdded = [];
         widget.product.isCartExist = true;
         cart = [];
         if (widget.screen == 'fav') {
@@ -376,6 +378,8 @@ class _ProductCardState extends State<ProductCard> {
                   fit: BoxFit.scaleDown,
                   alignment: Alignment.centerRight,
                   child: Text(
+                    textAlign: TextAlign.right,
+                    textDirection: TextDirection.rtl,
                     widget.product.name,
                     style: TextStyle(
                       fontFamily: 'Cairo',

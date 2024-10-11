@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/products_management.dart';
@@ -6,6 +8,7 @@ import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/widgets/last_added_product_card.dart';
+import 'package:http/http.dart' as http;
 
 class LastAddedProducts extends StatefulWidget {
   const LastAddedProducts({super.key});
@@ -15,11 +18,13 @@ class LastAddedProducts extends StatefulWidget {
 }
 
 class _LastAddedProductsState extends State<LastAddedProducts> {
-  Future<List<Product>> getProducts() async {
+  final scrollController = ScrollController();
+  int totalItems = 0;
+  Future<http.Response> getProducts() async {
     return await ProductsManagement().getAllProducts(
       token: await SharedPrefManager().getData('token'),
-      pageSize: '10',
-      pageNumber: '0',
+      itemsPerPage: '10',
+      pageNumber: lastAddedPageNumber.toString(),
       sortDirection: 'desc',
       sortBy: 'createdAt',
     );
@@ -27,11 +32,38 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
 
   Future<List<Product>> requestData() async {
     if (lastAdded.isEmpty) {
-      lastAdded = await getProducts();
-      return lastAdded;
-    } else {
-      return lastAdded;
+      final response = await getProducts();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      totalItems = data['totalItems'];
+
+      lastAdded = data['items']
+          .map<Product>(
+            (json) => Product.fromJson(json as Map<String, dynamic>),
+          )
+          .toList();
     }
+    return lastAdded;
+  }
+
+  Future fetchNewData() async {
+    lastAddedPageNumber += 1;
+    final response = await getProducts();
+    final Map<String, dynamic> data = jsonDecode(response.body);
+    totalItems = data['totalItems'];
+    if (lastAdded.length < totalItems) {
+      setState(() {
+        lastAdded.addAll(data['items']
+            .map<Product>(
+                (json) => Product.fromJson(json as Map<String, dynamic>))
+            .toList());
+      });
+    }
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose(); // Disposing the controller
+    super.dispose();
   }
 
   @override
@@ -81,6 +113,7 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
             } else {
               final products = snapshot.data!;
               return ListView.builder(
+                controller: scrollController,
                 reverse: true,
                 itemCount: products.length,
                 scrollDirection: Axis.horizontal,

@@ -28,6 +28,7 @@ class CartCubit extends Cubit<CartState> {
       mostSelling = [];
       cart = [];
       favourite = [];
+      lastAdded = [];
     } else {
       emit(CartError());
     }

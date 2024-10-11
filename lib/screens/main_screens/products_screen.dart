@@ -25,7 +25,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
 
   @override
   void initState() {
-    BlocProvider.of<ProductsCubit>(context).showProductState(myState: 'most');
+    BlocProvider.of<ProductsCubit>(context).showProductState(
+      myState: 'most',
+    );
     super.initState();
   }
 

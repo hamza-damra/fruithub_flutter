@@ -4,9 +4,9 @@ import 'package:fruitshub/models/product.dart';
 import 'package:http/http.dart' as http;
 
 class ProductsManagement {
-  Future<List<Product>> getAllProducts({
+  Future<http.Response> getAllProducts({
     required String token,
-    required String pageSize,
+    required String itemsPerPage,
     required String pageNumber,
     required String sortDirection,
     required String sortBy,
@@ -14,20 +14,25 @@ class ProductsManagement {
     try {
       http.Response response = await http.get(
         Uri.parse(
-          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/products/all?pageSize=$pageSize&pageNumber=$pageNumber&sortBy=$sortBy&sortDir=$sortDirection',
+          'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/products/all?itemsPerPage=$itemsPerPage&currentPage=$pageNumber&sortBy=$sortBy&sortDir=$sortDirection',
         ),
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'accept': 'application/json; charset=UTF-8',
         },
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
-        List<Product> items = jsonResponse
-            .map((json) => Product.fromJson(json as Map<String, dynamic>))
-            .toList();
-        jsonResponse.clear();
-        return items;
+        // Map<String, dynamic> decodeedResponse = jsonDecode(response.body);
+        // Map<String, dynamic> jsonResponse = {
+        //   'items': decodeedResponse['items']
+        //       .map((json) => Product.fromJson(json as Map<String, dynamic>))
+        //       .toList(),
+        //   'lastPage': decodeedResponse['lastPage'],
+        // };
+        // decodeedResponse.clear();
+        return response;
       } else {
         throw Exception('فشل تحميل البيانات');
       }
@@ -49,6 +54,8 @@ class ProductsManagement {
         ),
         headers: {
           'Authorization': 'Bearer $token',
+          'Content-Type': 'application/json; charset=UTF-8',
+          'accept': 'application/json; charset=UTF-8',
         },
       );
 
