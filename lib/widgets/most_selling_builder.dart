@@ -6,10 +6,11 @@ import 'package:fruitshub/API/products_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
-import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
-import 'package:fruitshub/widgets/most_selling_product_card.dart';
 import 'package:http/http.dart' as http;
+
+import '../screens/sub_screens/details_screen.dart';
+import 'most_selling_product_card.dart';
 
 class MostSellingBuilder extends StatefulWidget {
   const MostSellingBuilder({
@@ -30,6 +31,7 @@ class MostSellingBuilder extends StatefulWidget {
 class _MostSellingBuilderState extends State<MostSellingBuilder> {
   final scrollController = ScrollController();
   int totalItems = 0;
+  bool isLoading = false; // Add a flag to track the loading state
 
   Future<http.Response> getProducts() async {
     return await ProductsManagement().getAllProducts(
@@ -56,23 +58,35 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
   }
 
   Future fetchNewData() async {
-    mostSellingPageNumber += 1;
-    final response = await getProducts();
-    final Map<String, dynamic> data = jsonDecode(response.body);
-    totalItems = data['totalItems'];
-    if (mostSelling.length < totalItems) {
+    if (!isLoading && mostSelling.length < totalItems) {
       setState(() {
-        mostSelling.addAll(data['items']
-            .map<Product>(
-                (json) => Product.fromJson(json as Map<String, dynamic>))
-            .toList());
+        isLoading = true; // Set loading to true when fetching data
       });
+
+      mostSellingPageNumber += 1;
+      final response = await getProducts();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      totalItems = data['totalItems'];
+
+      if (mostSelling.length < totalItems) {
+        setState(() {
+          mostSelling.addAll(data['items']
+              .map<Product>(
+                  (json) => Product.fromJson(json as Map<String, dynamic>))
+              .toList());
+          isLoading = false; // Set loading to false after data is fetched
+        });
+      } else {
+        setState(() {
+          isLoading = false; // Set loading to false if no more data to fetch
+        });
+      }
     }
   }
 
   @override
   void dispose() {
-    scrollController.dispose(); // Disposing the controller
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -184,58 +198,70 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                   return Column(
                     children: [
                       Expanded(
-                        child: Row(
+                        child: Stack(
                           children: [
-                            SizedBox(
-                              width: screenWidth * 0.04,
-                            ),
-                            Expanded(
-                              child: GridView.builder(
-                                controller: scrollController,
-                                itemCount: products.length + 1,
-                                gridDelegate:
-                                    SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  childAspectRatio: 2 / 2.5,
-                                  mainAxisSpacing: 8,
-                                  crossAxisSpacing: screenWidth * 0.04,
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: screenWidth * 0.04,
                                 ),
-                                itemBuilder: (context, index) {
-                                  if (index < products.length) {
-                                    return GestureDetector(
-                                      onTap: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) => DetailsScreen(
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    child: GridView.builder(
+                                      controller: scrollController,
+                                      itemCount: products.length + 1,
+                                      gridDelegate:
+                                          SliverGridDelegateWithFixedCrossAxisCount(
+                                        crossAxisCount: 2,
+                                        childAspectRatio: 2 / 2.5,
+                                        mainAxisSpacing: 8,
+                                        crossAxisSpacing: screenWidth * 0.04,
+                                      ),
+                                      itemBuilder: (context, index) {
+                                        if (index < products.length) {
+                                          return GestureDetector(
+                                            onTap: () {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      DetailsScreen(
+                                                    product: products[index],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            child: ProductCard(
                                               product: products[index],
                                             ),
-                                          ),
-                                        );
+                                          );
+                                        }
+                                        return null;
                                       },
-                                      child: ProductCard(
-                                        product: products[index],
-                                      ),
-                                    );
-                                  }
-                                  return null;
-                                },
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  width: screenWidth * 0.04,
+                                ),
+                              ],
+                            ),
+                            if (isLoading)
+                              const Positioned(
+                                bottom: 0,
+                                left: 0,
+                                right: 0,
+                                child: Center(
+                                  child: SpinKitThreeBounce(
+                                    color: Colors.green,
+                                    size: 50.0,
+                                  ),
+                                ),
                               ),
-                            ),
-                            SizedBox(
-                              width: screenWidth * 0.04,
-                            ),
                           ],
                         ),
                       ),
-                      mostSelling.length < totalItems // &&
-                          // scrollController.position.pixels ==
-                          //     scrollController.position.maxScrollExtent
-                          ? const SpinKitThreeBounce(
-                              color: Colors.green,
-                              size: 50.0,
-                            )
-                          : const SizedBox(),
                     ],
                   );
                 }

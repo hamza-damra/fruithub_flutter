@@ -1,3 +1,4 @@
+import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/cart_management.dart';
@@ -6,12 +7,11 @@ import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
-import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:fruitshub/widgets/cart_container_and_sizedbox.dart';
 import 'package:fruitshub/widgets/heart_loader.dart';
+import 'package:http/http.dart' as http;
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
-import 'package:http/http.dart' as http;
 
 class ProductCard extends StatefulWidget {
   const ProductCard({
