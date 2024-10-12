@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/filter_products_cubit.dart';
 import 'package:fruitshub/screens/main_screens/cart_screen.dart';
 import 'package:fruitshub/screens/main_screens/home_screen.dart';
@@ -20,10 +20,7 @@ class _AppControllerState extends State<AppController> {
   int myIndex = 3;
   final List<Widget> screens = [
     const ProfileScreen(),
-    BlocProvider(
-      create: (context) => CartCubit(),
-      child: const CartScreen(),
-    ),
+    const CartScreen(),
     BlocProvider(
       create: (context) => ProductsCubit(),
       child: const ProductsScreen(),

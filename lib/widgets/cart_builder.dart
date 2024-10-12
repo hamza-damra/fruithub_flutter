@@ -4,7 +4,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
-import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:fruitshub/widgets/cart_item.dart';
@@ -142,8 +142,8 @@ class _CartState extends State<Cart> {
                           childButton: BlocBuilder<CartCubit, CartState>(
                             builder: (context, state) {
                               if (state is CartInitial ||
-                                  state is CartSuccess ||
-                                  state is CartError) {
+                                  state is CartDeleteSuccess ||
+                                  state is CartDeleteError) {
                                 return SvgPicture.asset(
                                   'assets/images/trash.svg',
                                 );

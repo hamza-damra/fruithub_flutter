@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
@@ -38,7 +39,7 @@ class _ProductCardState extends State<ProductCard> {
     if (snackBarType == 'info') {
       showTopSnackBar(
         Overlay.of(context),
-        displayDuration: const Duration(milliseconds: 1000),
+        displayDuration: const Duration(milliseconds: 10),
         CustomSnackBar.info(
           message: message,
           textAlign: TextAlign.center,
@@ -52,7 +53,7 @@ class _ProductCardState extends State<ProductCard> {
     } else {
       showTopSnackBar(
         Overlay.of(context),
-        displayDuration: const Duration(milliseconds: 1000),
+        displayDuration: const Duration(milliseconds: 10),
         CustomSnackBar.error(
           message: message,
           textAlign: TextAlign.center,
@@ -398,7 +399,23 @@ class _ProductCardState extends State<ProductCard> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // Cart Section
-              cartIcon,
+              BlocBuilder<CartCubit, CartState>(
+                builder: (context, state) {
+                  return widget.product.isCartExist
+                      ? GestureDetector(
+                          onTap: () {
+                            _toggleCart();
+                          },
+                          child: cartIcon,
+                        )
+                      : GestureDetector(
+                          onTap: () {
+                            _toggleCart();
+                          },
+                          child: cartIcon,
+                        );
+                },
+              ),
 
               // Price Display
               Flexible(

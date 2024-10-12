@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
+import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'auth/helpers/shared_pref_manager.dart';
@@ -55,6 +56,9 @@ class _MyAppState extends State<MyApp> {
         ),
         BlocProvider(
           create: (_) => FavouriteCubit(),
+        ),
+        BlocProvider(
+          create: (_) => CartCubit(),
         ),
       ],
       child: MaterialApp(

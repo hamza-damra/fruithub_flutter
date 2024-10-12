@@ -118,26 +118,27 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                widget.showText
-                    ? GestureDetector(
-                        onTap: () {
-                          Navigator.push(context, MaterialPageRoute(
-                            builder: (context) {
-                              return const MostSellingScreen();
-                            },
-                          ));
-                        },
-                        child: Text(
-                          'المزيد',
-                          style: TextStyle(
-                            color: const Color(0xff949D9E),
-                            fontWeight: FontWeight.w500,
-                            fontSize:
-                                (screenWidth * 0.04 + screenHeight * 0.02) / 2,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
+                // widget.showText
+                //     ? GestureDetector(
+                //         onTap: () {
+                //           Navigator.push(context, MaterialPageRoute(
+                //             builder: (context) {
+                //               return const MostSellingScreen();
+                //             },
+                //           ));
+                //         },
+                //         child: Text(
+                //           'المزيد',
+                //           style: TextStyle(
+                //             color: const Color(0xff949D9E),
+                //             fontWeight: FontWeight.w500,
+                //             fontSize:
+                //                 (screenWidth * 0.04 + screenHeight * 0.02) / 2,
+                //           ),
+                //         ),
+                //       )
+                //     : const SizedBox(),
+                const SizedBox(),
                 widget.showText
                     ? FittedBox(
                         fit: BoxFit.scaleDown,
@@ -205,7 +206,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                                 ),
                                 Expanded(
                                   child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 8.0),
+                                    padding: const EdgeInsets.only(bottom: 3.0),
                                     child: GridView.builder(
                                       controller: scrollController,
                                       itemCount: products.length + 1,
@@ -246,14 +247,18 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                               ],
                             ),
                             if (isLoading)
-                              const Positioned(
+                              Positioned(
                                 bottom: 0,
                                 left: 0,
                                 right: 0,
                                 child: Center(
-                                  child: SpinKitThreeBounce(
-                                    color: Colors.green,
-                                    size: 50.0,
+                                  child: Container(
+                                    width: double.infinity,
+                                    color: Colors.white,
+                                    child: const SpinKitThreeBounce(
+                                      color: Colors.green,
+                                      size: 50.0,
+                                    ),
                                   ),
                                 ),
                               ),

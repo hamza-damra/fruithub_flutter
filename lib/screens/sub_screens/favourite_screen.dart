@@ -51,6 +51,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           if (state is FavouriteSuccess) {
             showTopSnackBar(
               Overlay.of(context),
+              displayDuration: const Duration(milliseconds: 10),
               const CustomSnackBar.info(
                 message: "تم حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
@@ -64,6 +65,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           } else if (state is FavouriteError) {
             showTopSnackBar(
               Overlay.of(context),
+              displayDuration: const Duration(milliseconds: 10),
               const CustomSnackBar.info(
                 message: "فشل حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
