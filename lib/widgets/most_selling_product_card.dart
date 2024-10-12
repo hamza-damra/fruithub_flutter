@@ -406,13 +406,33 @@ class _ProductCardState extends State<ProductCard> {
                           onTap: () {
                             _toggleCart();
                           },
-                          child: cartIcon,
+                          child: state is CartAddSuccess
+                              ? const CartContainer(
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.done_rounded,
+                                      color: Colors.white,
+                                      size: 22,
+                                    ),
+                                  ),
+                                )
+                              : cartIcon,
                         )
                       : GestureDetector(
                           onTap: () {
                             _toggleCart();
                           },
-                          child: cartIcon,
+                          child: state is CartDeleteSuccess
+                              ? const CartContainer(
+                                  child: Center(
+                                    child: Icon(
+                                      Icons.add_rounded,
+                                      color: Colors.white,
+                                      size: 22,
+                                    ),
+                                  ),
+                                )
+                              : cartIcon,
                         );
                 },
               ),
