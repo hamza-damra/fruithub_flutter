@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/bloc/remove_from_cart_cubit.dart';
 import 'package:fruitshub/globals.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
@@ -228,10 +227,13 @@ class _CartItemWidgetState extends State<CartItemWidget> {
           // Product image container with dynamic height
           Container(
             width: screenWidth * 0.25,
-            color: const Color(0xffF3F5F7),
+            color: const Color(0xffEBF9F1),
             child: AspectRatio(
               aspectRatio: 1 / 1, // Ensures the image is square
               child: FancyShimmerImage(
+                errorWidget: Image.asset(
+                  'assets/images/image-error-placeHolder.png',
+                ),
                 boxFit: BoxFit.scaleDown,
                 imageUrl: widget.product.productImageUrl,
               ),

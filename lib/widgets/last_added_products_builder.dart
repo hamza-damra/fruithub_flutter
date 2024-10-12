@@ -1,14 +1,14 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/products_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
-import 'package:fruitshub/screens/sub_screens/details_screen.dart';
-import 'package:fruitshub/widgets/last_added_product_card.dart';
 import 'package:http/http.dart' as http;
+
+import '../screens/sub_screens/details_screen.dart';
+import 'last_added_product_card.dart';
 
 class LastAddedProducts extends StatefulWidget {
   const LastAddedProducts({super.key});
@@ -20,6 +20,9 @@ class LastAddedProducts extends StatefulWidget {
 class _LastAddedProductsState extends State<LastAddedProducts> {
   final scrollController = ScrollController();
   int totalItems = 0;
+  bool isLoading = false;
+  bool allItemsLoaded = false;
+
   Future<http.Response> getProducts() async {
     return await ProductsManagement().getAllProducts(
       token: await SharedPrefManager().getData('token'),
@@ -35,34 +38,53 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
       final response = await getProducts();
       final Map<String, dynamic> data = jsonDecode(response.body);
       totalItems = data['totalItems'];
-
       lastAdded = data['items']
           .map<Product>(
-            (json) => Product.fromJson(json as Map<String, dynamic>),
-          )
+              (json) => Product.fromJson(json as Map<String, dynamic>))
           .toList();
     }
     return lastAdded;
   }
 
   Future fetchNewData() async {
-    lastAddedPageNumber += 1;
-    final response = await getProducts();
-    final Map<String, dynamic> data = jsonDecode(response.body);
-    totalItems = data['totalItems'];
-    if (lastAdded.length < totalItems) {
+    if (!isLoading && !allItemsLoaded) {
       setState(() {
-        lastAdded.addAll(data['items']
-            .map<Product>(
-                (json) => Product.fromJson(json as Map<String, dynamic>))
-            .toList());
+        isLoading = true;
+      });
+
+      lastAddedPageNumber += 1;
+      final response = await getProducts();
+      final Map<String, dynamic> data = jsonDecode(response.body);
+      if (lastAdded.length < totalItems) {
+        setState(() {
+          lastAdded.addAll(data['items']
+              .map<Product>(
+                  (json) => Product.fromJson(json as Map<String, dynamic>))
+              .toList());
+        });
+      } else {
+        allItemsLoaded = true;
+      }
+      setState(() {
+        isLoading = false;
       });
     }
   }
 
   @override
+  void initState() {
+    scrollController.addListener(() {
+      if (scrollController.position.pixels ==
+          scrollController.position.maxScrollExtent) {
+        fetchNewData();
+      }
+    });
+    super.initState();
+  }
+
+  @override
   void dispose() {
-    scrollController.dispose(); // Disposing the controller
+    scrollController.dispose();
     super.dispose();
   }
 
@@ -72,10 +94,10 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return SizedBox(
-      height: screenHeight * 0.15, // 15% of screen height
+      height: screenHeight * 0.15,
       child: Padding(
         padding: EdgeInsets.only(
-          right: screenWidth * 0.02, // 2% of screen width
+          right: screenWidth * 0.02,
         ),
         child: FutureBuilder<List<Product>>(
           future: requestData(),
@@ -86,27 +108,8 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
                 size: 50.0,
               );
             } else if (snapshot.hasError) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/images/error.png',
-                      width: screenHeight * 0.1,
-                      height: screenHeight * 0.10,
-                      fit: BoxFit.contain,
-                    ),
-                    // SizedBox(height: screenHeight * 0.03),
-                    Text(
-                      '! حدث خطا اثناء تحميل البيانات',
-                      style: TextStyle(
-                        fontFamily: 'Cairo',
-                        fontWeight: FontWeight.bold,
-                        fontSize: screenWidth * 0.03,
-                      ),
-                    ),
-                  ],
-                ),
+              return const Center(
+                child: Text('Error loading products'),
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No products available'));
@@ -115,25 +118,37 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
               return ListView.builder(
                 controller: scrollController,
                 reverse: true,
-                itemCount: products.length,
+                itemCount: products.length + (isLoading ? 1 : 0),
                 scrollDirection: Axis.horizontal,
                 itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(context, MaterialPageRoute(
-                        builder: (context) {
-                          return DetailsScreen(
-                            product: products[index],
-                          );
-                        },
-                      ));
-                    },
-                    child: LastAddedProductCard(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight,
-                      product: products[index],
-                    ),
-                  );
+                  if (index < products.length) {
+                    return GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => DetailsScreen(
+                              product: products[index],
+                            ),
+                          ),
+                        );
+                      },
+                      child: LastAddedProductCard(
+                        screenWidth: screenWidth,
+                        screenHeight: screenHeight,
+                        product: products[index],
+                      ),
+                    );
+                  } else if (isLoading) {
+                    return const Center(
+                      child: SpinKitThreeBounce(
+                        color: Colors.green,
+                        size: 50.0,
+                      ),
+                    );
+                  } else {
+                    return const SizedBox();
+                  }
                 },
               );
             }

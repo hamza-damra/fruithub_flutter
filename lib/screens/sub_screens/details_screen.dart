@@ -123,96 +123,98 @@ class _DetailsScreenState extends State<DetailsScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    GestureDetector(
-                      onTap: widget.product.isCartExist
-                          ? () {}
-                          : () {
-                              if (widget.product.myQuantity > 1) {
-                                widget.product.myQuantity--;
-                                setState(() {});
-                              }
-                            },
-                      child: Container(
-                        width: screenWidth * 0.11,
-                        height: screenWidth * 0.11,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: widget.product.isCartExist
-                              ? const Color.fromARGB(111, 243, 245, 247)
-                              : const Color(0xffF3F5F7),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(
-                            horizontal: screenWidth * 0.02,
-                          ),
-                          child: Container(
-                            alignment: Alignment.center,
+                !widget.product.isCartExist
+                    ? Row(
+                        children: [
+                          GestureDetector(
+                            onTap: widget.product.isCartExist
+                                ? () {}
+                                : () {
+                                    if (widget.product.myQuantity > 1) {
+                                      widget.product.myQuantity--;
+                                      setState(() {});
+                                    }
+                                  },
                             child: Container(
-                              height: screenHeight * 0.003,
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
                               decoration: BoxDecoration(
-                                color: Colors.black.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(8),
+                                shape: BoxShape.circle,
+                                color: widget.product.isCartExist
+                                    ? const Color.fromARGB(111, 243, 245, 247)
+                                    : const Color(0xffF3F5F7),
+                              ),
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: screenWidth * 0.02,
+                                ),
+                                child: Container(
+                                  alignment: Alignment.center,
+                                  child: Container(
+                                    height: screenHeight * 0.003,
+                                    decoration: BoxDecoration(
+                                      color: Colors.black.withOpacity(0.5),
+                                      borderRadius: BorderRadius.circular(8),
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.04),
-                    Text(
-                      widget.product.myQuantity.toString(),
-                      style: TextStyle(
-                        fontSize: screenWidth * 0.045,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(width: screenWidth * 0.04),
-                    GestureDetector(
-                      onTap: widget.product.isCartExist
-                          ? () {}
-                          : () {
-                              if (widget.product.myQuantity <
-                                  widget.product.stockQuantity) {
-                                widget.product.myQuantity++;
-                                setState(() {});
-                              } else {
-                                showTopSnackBar(
-                                  Overlay.of(context),
-                                  const CustomSnackBar.error(
-                                    message:
-                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
-                                    textAlign: TextAlign.center,
-                                    textStyle: TextStyle(
-                                      fontFamily: 'Cairo',
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                );
-                              }
-                            },
-                      child: Container(
-                        width: screenWidth * 0.11,
-                        height: screenWidth * 0.11,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: widget.product.isCartExist
-                              ? const Color.fromARGB(255, 121, 160, 137)
-                              : const Color(0xff1B5E37),
-                        ),
-                        child: Icon(
-                          Icons.add,
-                          color: Colors.white,
-                          size: screenWidth * 0.05, // Adjust icon size
-                        ),
-                      ),
-                    ),
+                          SizedBox(width: screenWidth * 0.04),
+                          Text(
+                            widget.product.myQuantity.toString(),
+                            style: TextStyle(
+                              fontSize: screenWidth * 0.045,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(width: screenWidth * 0.04),
+                          GestureDetector(
+                            onTap: widget.product.isCartExist
+                                ? () {}
+                                : () {
+                                    if (widget.product.myQuantity <
+                                        widget.product.stockQuantity) {
+                                      widget.product.myQuantity++;
+                                      setState(() {});
+                                    } else {
+                                      showTopSnackBar(
+                                        Overlay.of(context),
+                                        const CustomSnackBar.error(
+                                          message:
+                                              "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                          textAlign: TextAlign.center,
+                                          textStyle: TextStyle(
+                                            fontFamily: 'Cairo',
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                            child: Container(
+                              width: screenWidth * 0.11,
+                              height: screenWidth * 0.11,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: widget.product.isCartExist
+                                    ? const Color.fromARGB(255, 121, 160, 137)
+                                    : const Color(0xff1B5E37),
+                              ),
+                              child: Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: screenWidth * 0.05, // Adjust icon size
+                              ),
+                            ),
+                          ),
 
-                    ///
-                  ],
-                ),
+                          ///
+                        ],
+                      )
+                    : const SizedBox(),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [

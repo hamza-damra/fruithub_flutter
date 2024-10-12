@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/products_management.dart';
@@ -8,7 +7,6 @@ import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
 import 'package:http/http.dart' as http;
-
 import '../screens/sub_screens/details_screen.dart';
 import 'most_selling_product_card.dart';
 
@@ -216,7 +214,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                                         crossAxisCount: 2,
                                         childAspectRatio: 2 / 2.5,
                                         mainAxisSpacing: 8,
-                                        crossAxisSpacing: screenWidth * 0.04,
+                                        crossAxisSpacing: screenWidth * 0.03,
                                       ),
                                       itemBuilder: (context, index) {
                                         if (index < products.length) {

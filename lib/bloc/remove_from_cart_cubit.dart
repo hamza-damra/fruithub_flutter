@@ -26,6 +26,7 @@ class CartCubit extends Cubit<CartState> {
     if (response.statusCode == 200 || response.statusCode == 204) {
       emit(CartSuccess());
       mostSelling = [];
+      mostSellingPageNumber = 0;
       cart = [];
       favourite = [];
       lastAdded = [];
