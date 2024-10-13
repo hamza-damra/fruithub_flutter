@@ -225,8 +225,8 @@ class _ProductCardState extends State<ProductCard> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 204) {
-        lastAdded = [];
         widget.product.isCartExist = false;
+        lastAdded = [];
         cart = [];
         if (widget.screen == 'fav') {
           mostSelling = [];
@@ -243,11 +243,10 @@ class _ProductCardState extends State<ProductCard> {
             ? widget.product.productId
             : widget.product.id,
       );
-      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        lastAdded = [];
         widget.product.isCartExist = true;
+        lastAdded = [];
         cart = [];
         if (widget.screen == 'fav') {
           mostSelling = [];

@@ -139,25 +139,6 @@ class _CartState extends State<Cart> {
                       // Show cart items
                       else if (index > 0 && index <= items.length) {
                         return CartItemWidget(
-                          childButton: BlocBuilder<CartCubit, CartState>(
-                            builder: (context, state) {
-                              if (state is CartInitial ||
-                                  state is CartDeleteSuccess ||
-                                  state is CartDeleteError) {
-                                return SvgPicture.asset(
-                                  'assets/images/trash.svg',
-                                );
-                              } else {
-                                return SizedBox(
-                                  width: screenWidth * 0.07,
-                                  height: screenWidth * 0.07,
-                                  child: const CircularProgressIndicator(
-                                    color: Color.fromARGB(255, 132, 139, 139),
-                                  ),
-                                );
-                              }
-                            },
-                          ),
                           product: items[index - 1],
                         );
                       }

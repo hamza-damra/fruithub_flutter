@@ -29,6 +29,7 @@ class CartCubit extends Cubit<CartState> {
       token: await SharedPrefManager().getData('token'),
       id: id,
     );
+
     if (response.statusCode == 200 || response.statusCode == 204) {
       emit(CartDeleteSuccess());
       cart = [];

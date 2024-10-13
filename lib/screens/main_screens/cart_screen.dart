@@ -56,9 +56,11 @@ class CartScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is CartInitial ||
                 state is CartDeleteSuccess ||
-                state is CartDeleteError) {
+                state is CartDeleteError ||
+                state is CartAddSuccess ||
+                state is CartAddError) {
               return const Cart();
-            } else if (state is CartDeleteLoading) {
+            } else if (state is CartDeleteLoading || state is CartAddLoading) {
               return Scaffold(
                 backgroundColor: Colors.white,
                 appBar: AppBar(

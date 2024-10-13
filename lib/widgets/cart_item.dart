@@ -14,20 +14,15 @@ class CartItemWidget extends StatefulWidget {
   const CartItemWidget({
     super.key,
     required this.product,
-    required this.childButton,
   });
 
   final Cartitem product;
-  final Widget childButton;
 
   @override
   State<CartItemWidget> createState() => _CartItemWidgetState();
 }
 
 class _CartItemWidgetState extends State<CartItemWidget> {
-  Widget deleteButtonChlild = SvgPicture.asset(
-    'assets/images/trash.svg',
-  );
   final cArt = CartManagement();
 
   @override
@@ -54,7 +49,9 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: widget.childButton,
+                      icon: SvgPicture.asset(
+                        'assets/images/trash.svg',
+                      ),
                       onPressed: () async {
                         mostSelling = [];
                         cart = [];
