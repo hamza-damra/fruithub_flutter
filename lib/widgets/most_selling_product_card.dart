@@ -10,6 +10,7 @@ import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/widgets/cart_container_and_sizedbox.dart';
 import 'package:fruitshub/widgets/heart_loader.dart';
+import 'package:fruitshub/widgets/product_price.dart';
 import 'package:http/http.dart' as http;
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -72,21 +73,29 @@ class _ProductCardState extends State<ProductCard> {
     super.initState();
 
     favouriteIcon = widget.product.isfavourite
-        ? IconButton(
-            icon: const Icon(
-              Icons.favorite_rounded,
-              color: Colors.red,
-              size: 22,
+        ? GestureDetector(
+            onTap: _toggleFavourite,
+            child: Container(
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.red,
+                  size: 22,
+                ),
+              ),
             ),
-            onPressed: _toggleFavourite,
           )
-        : IconButton(
-            icon: const Icon(
-              Icons.favorite_border_rounded,
-              color: Colors.red,
-              size: 22,
+        : GestureDetector(
+            onTap: _toggleFavourite,
+            child: Container(
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_border_rounded,
+                  color: Colors.red,
+                  size: 22,
+                ),
+              ),
             ),
-            onPressed: _toggleFavourite,
           );
 
     cartIcon = widget.product.isCartExist
@@ -123,8 +132,8 @@ class _ProductCardState extends State<ProductCard> {
   Future<void> _toggleFavourite() async {
     // heart loading
     setState(() {
-      favouriteIcon = IconButton(
-        icon: Padding(
+      favouriteIcon = Container(
+        child: Padding(
           padding: const EdgeInsets.all(4),
           child: SizedBox(
             width: 20,
@@ -134,7 +143,6 @@ class _ProductCardState extends State<ProductCard> {
             ),
           ),
         ),
-        onPressed: null,
       );
     });
 
@@ -180,21 +188,29 @@ class _ProductCardState extends State<ProductCard> {
 
     setState(() {
       favouriteIcon = widget.product.isfavourite
-          ? IconButton(
-              icon: const Icon(
-                Icons.favorite_rounded,
-                color: Colors.red,
-                size: 22,
+          ? GestureDetector(
+              onTap: _toggleFavourite,
+              child: Container(
+                child: const Center(
+                  child: Icon(
+                    Icons.favorite_rounded,
+                    color: Colors.red,
+                    size: 22,
+                  ),
+                ),
               ),
-              onPressed: _toggleFavourite,
             )
-          : IconButton(
-              icon: const Icon(
-                Icons.favorite_border_rounded,
-                color: Colors.red,
-                size: 22,
+          : GestureDetector(
+              onTap: _toggleFavourite,
+              child: Container(
+                child: const Center(
+                  child: Icon(
+                    Icons.favorite_border_rounded,
+                    color: Colors.red,
+                    size: 22,
+                  ),
+                ),
               ),
-              onPressed: _toggleFavourite,
             );
     });
   }
@@ -304,6 +320,8 @@ class _ProductCardState extends State<ProductCard> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          const SizedBox(height: 2),
+
           // Favourite Icon Section
           widget.screen == 'fav'
               ? Align(
@@ -353,7 +371,9 @@ class _ProductCardState extends State<ProductCard> {
                   ],
                 ),
 
-          // Image Section
+          const SizedBox(height: 3),
+
+          // Product Image Section
           Expanded(
             child: Center(
               child: FancyShimmerImage(
@@ -367,6 +387,8 @@ class _ProductCardState extends State<ProductCard> {
               ),
             ),
           ),
+
+          const SizedBox(height: 2),
 
           // Product Name Section
           Row(
@@ -393,97 +415,56 @@ class _ProductCardState extends State<ProductCard> {
             ],
           ),
 
-          // Price and Cart Section
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Cart Section
-              BlocBuilder<CartCubit, CartState>(
-                builder: (context, state) {
-                  return widget.product.isCartExist
-                      ? GestureDetector(
-                          onTap: () {
-                            _toggleCart();
-                          },
-                          child: state is CartAddSuccess
-                              ? const CartContainer(
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.done_rounded,
-                                      color: Colors.white,
-                                      size: 22,
+          SizedBox(
+            height: 30,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // Cart Section
+                BlocBuilder<CartCubit, CartState>(
+                  builder: (context, state) {
+                    return widget.product.isCartExist
+                        ? GestureDetector(
+                            onTap: () {
+                              _toggleCart();
+                            },
+                            child: state is CartAddSuccess
+                                ? const CartContainer(
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.done_rounded,
+                                        color: Colors.white,
+                                        size: 22,
+                                      ),
                                     ),
-                                  ),
-                                )
-                              : cartIcon,
-                        )
-                      : GestureDetector(
-                          onTap: () {
-                            _toggleCart();
-                          },
-                          child: state is CartDeleteSuccess
-                              ? const CartContainer(
-                                  child: Center(
-                                    child: Icon(
-                                      Icons.add_rounded,
-                                      color: Colors.white,
-                                      size: 22,
+                                  )
+                                : cartIcon,
+                          )
+                        : GestureDetector(
+                            onTap: () {
+                              _toggleCart();
+                            },
+                            child: state is CartDeleteSuccess
+                                ? const CartContainer(
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.add_rounded,
+                                        color: Colors.white,
+                                        size: 22,
+                                      ),
                                     ),
-                                  ),
-                                )
-                              : cartIcon,
-                        );
-                },
-              ),
-
-              // Price Display
-              Flexible(
-                child: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerRight,
-                  child: Row(
-                    children: [
-                      Text(
-                        'الكيلو',
-                        style: TextStyle(
-                          color: const Color(0xffF8C76D),
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Cairo',
-                          fontSize: screenWidth * 0.040,
-                        ),
-                      ),
-                      Text(
-                        '/',
-                        style: TextStyle(
-                          color: const Color(0xffF8C76D),
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'Cairo',
-                          fontSize: screenWidth * 0.040,
-                        ),
-                      ),
-                      Text(
-                        'جنية',
-                        style: TextStyle(
-                          color: const Color(0xffF4A91F),
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Cairo',
-                          fontSize: screenWidth * 0.040,
-                        ),
-                      ),
-                      Text(
-                        widget.product.price.toString(),
-                        style: TextStyle(
-                          color: const Color(0xffF4A91F),
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Cairo',
-                          fontSize: screenWidth * 0.040,
-                        ),
-                      ),
-                    ],
-                  ),
+                                  )
+                                : cartIcon,
+                          );
+                  },
                 ),
-              ),
-            ],
+
+                // Price Display
+                ProductPrice(
+                  price: widget.product.price,
+                ),
+              ],
+            ),
           ),
         ],
       ),

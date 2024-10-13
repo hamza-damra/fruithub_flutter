@@ -1,6 +1,4 @@
 import 'dart:convert';
-
-import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:http/http.dart' as http;
 

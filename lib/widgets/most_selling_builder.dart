@@ -5,7 +5,6 @@ import 'package:fruitshub/API/products_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
-import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
 import 'package:http/http.dart' as http;
 import '../screens/sub_screens/details_screen.dart';
 import 'most_selling_product_card.dart';
@@ -91,6 +90,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
   @override
   void initState() {
     super.initState();
+    mostSellingPageNumber = 0;
 
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -165,6 +165,7 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                     size: 50.0,
                   );
                 } else if (snapshot.hasError) {
+                  print(snapshot.error);
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

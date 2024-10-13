@@ -108,8 +108,29 @@ class _LastAddedProductsState extends State<LastAddedProducts> {
                 size: 50.0,
               );
             } else if (snapshot.hasError) {
-              return const Center(
-                child: Text('Error loading products'),
+              print(snapshot.error);
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Expanded(
+                      child: Image.asset(
+                        'assets/images/error.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                    const SizedBox(height: 5),
+                    const Expanded(
+                      child: Text(
+                        '! حدث خطا اثناء تحميل البيانات',
+                        style: TextStyle(
+                          fontFamily: 'Cairo',
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return const Center(child: Text('No products available'));

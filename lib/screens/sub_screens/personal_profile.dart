@@ -5,7 +5,6 @@ import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/change_email.dart';
 import 'package:fruitshub/auth/screens/reset_password.dart';
-import 'package:fruitshub/widgets/my_textfield.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:http/http.dart' as http;
 

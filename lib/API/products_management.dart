@@ -23,6 +23,8 @@ class ProductsManagement {
         },
       );
 
+      print(response.body);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Map<String, dynamic> decodeedResponse = jsonDecode(response.body);
         // Map<String, dynamic> jsonResponse = {

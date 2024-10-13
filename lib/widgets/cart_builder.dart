@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:fruitshub/widgets/cart_item.dart';

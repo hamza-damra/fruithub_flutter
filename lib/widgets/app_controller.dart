@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/filter_products_cubit.dart';
 import 'package:fruitshub/screens/main_screens/cart_screen.dart';
 import 'package:fruitshub/screens/main_screens/home_screen.dart';

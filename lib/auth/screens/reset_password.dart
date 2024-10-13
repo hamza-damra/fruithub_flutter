@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
-import 'package:http/http.dart' as http;
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({
