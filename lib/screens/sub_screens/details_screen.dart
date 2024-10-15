@@ -13,9 +13,11 @@ class DetailsScreen extends StatefulWidget {
   const DetailsScreen({
     super.key,
     required this.product,
+    this.screen,
   });
 
   final Product product;
+  final String? screen;
 
   @override
   State<DetailsScreen> createState() => _DetailsScreenState();
@@ -484,11 +486,18 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   lastAdded = [];
                   favourite = [];
                   if (widget.product.isCartExist) {
-                    BlocProvider.of<CartCubit>(context)
-                        .deleteFromCart(widget.product.id);
+                    BlocProvider.of<CartCubit>(context).deleteFromCart(
+                      widget.screen == 'fav'
+                          ? widget.product.productId
+                          : widget.product.id,
+                    );
                   } else {
                     BlocProvider.of<CartCubit>(context).addToCart(
-                        widget.product.id, widget.product.myQuantity);
+                      widget.screen == 'fav'
+                          ? widget.product.productId
+                          : widget.product.id,
+                      widget.product.myQuantity,
+                    );
                   }
                 },
                 child: BlocConsumer<CartCubit, CartState>(

@@ -161,6 +161,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                                     MaterialPageRoute(
                                       builder: (context) => DetailsScreen(
                                         product: products[index],
+                                        screen: 'fav',
                                       ),
                                     ),
                                   );
