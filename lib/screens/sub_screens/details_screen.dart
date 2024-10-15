@@ -27,11 +27,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
   @override
   void initState() {
     super.initState();
-
-    // // Reset state to CartInitial on page load
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   context.read<CartCubit>().emit(CartInitial());
-    // });
   }
 
   @override
@@ -46,11 +41,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     double average = totalRating > 0
         ? (widget.product.counterFiveStars * 5 +
-                widget.product.counterFourStars * 4 +
-                widget.product.counterThreeStars * 3 +
-                widget.product.counterTwoStars * 2 +
-                widget.product.counterOneStars * 1) /
-            totalRating
+        widget.product.counterFourStars * 4 +
+        widget.product.counterThreeStars * 3 +
+        widget.product.counterTwoStars * 2 +
+        widget.product.counterOneStars * 1) /
+        totalRating
         : 0;
 
     String formattedAverage = average.toStringAsFixed(1);
@@ -176,10 +171,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 setState(() {});
                               } else {
                                 showTopSnackBar(
-                                  Overlay.of(context),
+                                  context as OverlayState,
                                   const CustomSnackBar.error(
                                     message:
-                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                    "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                     textAlign: TextAlign.center,
                                     textStyle: TextStyle(
                                       fontFamily: 'Cairo',
@@ -297,113 +292,106 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            child: Expanded(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: ProductInfo(
+                    image: 'assets/images/calendar.svg',
+                    title: Row(
+                      children: [
+                        const Text(
+                          'اشهر',
+                          textAlign: TextAlign.right,
+                          style: TextStyle(
+                            color: Color(0xff23AA49),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        Text(
+                          ' ${getMonthsUntilExpiry(widget.product.expiryMonths.toString())}',
+                          textAlign: TextAlign.right,
+                          style: const TextStyle(
+                            color: Color(0xff23AA49),
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
+                    ),
+                    subTitle: const Text(
+                      'الصلاحيه',
+                      style: TextStyle(
+                        color: Color(0xff979899),
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => RatingScreen(
+                            product: widget.product,
+                            average: Row(
+                              children: [
+                                Text(
+                                  formattedAverage,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                                const Icon(
+                                  Icons.star_outlined,
+                                  color: Color(0xffFFC529),
+                                  size: 19,
+                                ),
+                              ],
+                            ),
+                            totalRating: totalRating,
+                          ),
+                        ),
+                      );
+                    },
                     child: ProductInfo(
-                      image: 'assets/images/calendar.svg',
+                      image: 'assets/images/reviews.svg',
                       title: Row(
                         children: [
-                          const Text(
-                            'اشهر',
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
+                          Text(
+                            '($totalRating)  $formattedAverage',
+                            style: const TextStyle(
                               color: Color(0xff23AA49),
                               fontWeight: FontWeight.w700,
                             ),
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                ' ${getMonthsUntilExpiry(widget.product.expiryMonths.toString())}',
-                                textAlign: TextAlign.right,
-                                style: const TextStyle(
-                                  color: Color(0xff23AA49),
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
+                          const Icon(
+                            Icons.star_outlined,
+                            color: Color(0xffFFC529),
+                            size: 19,
                           ),
                         ],
                       ),
                       subTitle: const Text(
-                        'الصلاحيه',
+                        'المراجعات',
                         style: TextStyle(
                           color: Color(0xff979899),
                           fontWeight: FontWeight.w600,
+                          decoration: TextDecoration.underline,
                         ),
                       ),
                     ),
                   ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => RatingScreen(
-                              product: widget.product,
-                              average: Row(
-                                children: [
-                                  Text(
-                                    formattedAverage,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  const Icon(
-                                    Icons.star_outlined,
-                                    color: Color(0xffFFC529),
-                                    size: 19,
-                                  ),
-                                ],
-                              ),
-                              totalRating: totalRating,
-                            ),
-                          ),
-                        );
-                      },
-                      child: ProductInfo(
-                        image: 'assets/images/reviews.svg',
-                        title: Row(
-                          children: [
-                            Text(
-                              '($totalRating)  $formattedAverage',
-                              style: const TextStyle(
-                                color: Color(0xff23AA49),
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                            const Icon(
-                              Icons.star_outlined,
-                              color: Color(0xffFFC529),
-                              size: 19,
-                            ),
-                          ],
-                        ),
-                        subTitle: const Text(
-                          'المراجعات',
-                          style: TextStyle(
-                            color: Color(0xff979899),
-                            fontWeight: FontWeight.w600,
-                            decoration: TextDecoration.underline,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
           Padding(
             padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
+            const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -479,7 +467,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                      WidgetStateProperty.all<Color>(const Color(0xff1B5E37)),
+                  MaterialStateProperty.all<Color>(const Color(0xff1B5E37)),
                 ),
                 onPressed: () {
                   cart = [];
@@ -505,13 +493,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     if (state is CartDeleteSuccess || state is CartAddSuccess) {
                       setState(() {
                         widget.product.isCartExist =
-                            !widget.product.isCartExist;
+                        !widget.product.isCartExist;
                       });
                     }
 
                     if (state is CartDeleteSuccess) {
                       showTopSnackBar(
-                        Overlay.of(context),
+                        context as OverlayState,
                         displayDuration: const Duration(milliseconds: 10),
                         const CustomSnackBar.info(
                           message: "تم حذف المنتج من السله",
@@ -525,7 +513,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       );
                     } else if (state is CartAddSuccess) {
                       showTopSnackBar(
-                        Overlay.of(context),
+                        context as OverlayState,
                         displayDuration: const Duration(milliseconds: 10),
                         const CustomSnackBar.info(
                           message: "تم اضافه المنتج الي السله",
@@ -540,7 +528,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
                       showTopSnackBar(
-                        Overlay.of(context),
+                        context as OverlayState,
                         displayDuration: const Duration(milliseconds: 10),
                         CustomSnackBar.error(
                           message: state is CartDeleteError

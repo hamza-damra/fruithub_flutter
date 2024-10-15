@@ -50,8 +50,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         listener: (context, state) {
           if (state is FavouriteSuccess) {
             showTopSnackBar(
-              Overlay.of(context),
-              displayDuration: const Duration(milliseconds: 10),
+              context as OverlayState,
               const CustomSnackBar.info(
                 message: "تم حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
@@ -64,8 +63,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             );
           } else if (state is FavouriteError) {
             showTopSnackBar(
-              Overlay.of(context),
-              displayDuration: const Duration(milliseconds: 10),
+              context as OverlayState,
               const CustomSnackBar.info(
                 message: "فشل حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
@@ -79,127 +77,98 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           }
         },
         builder: (context, state) {
-          if (state is FavouriteInitial ||
-              state is FavouriteError ||
-              state is FavouriteSuccess) {
-            return Expanded(
-              child: FutureBuilder<List<Product>>(
-                future: requestData(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const SpinKitThreeBounce(
-                      color: Colors.green,
-                      size: 50.0,
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/error.png',
-                            width: screenHeight * 0.5,
-                            height: screenHeight * 0.25,
-                            fit: BoxFit.contain,
-                          ),
-                          SizedBox(height: screenHeight * 0.03),
-                          Text(
-                            '! حدث خطا اثناء تحميل البيانات',
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.05,
+          return Column(
+            // Ensure FutureBuilder is within a Column
+            children: [
+              Expanded(
+                child: FutureBuilder<List<Product>>(
+                  future: requestData(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const SpinKitThreeBounce(
+                        color: Colors.green,
+                        size: 50.0,
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/error.png',
+                              width: screenHeight * 0.5,
+                              height: screenHeight * 0.25,
+                              fit: BoxFit.contain,
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Image.asset(
-                            'assets/images/noProducts.png',
-                            width: screenHeight * 0.5,
-                            height: screenHeight * 0.25,
-                            fit: BoxFit.contain,
-                          ),
-                          Text(
-                            'لم يتم اضافه منتجات في المفضله',
-                            style: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: FontWeight.bold,
-                              fontSize: screenWidth * 0.05,
+                            SizedBox(height: screenHeight * 0.03),
+                            Text(
+                              '! حدث خطا اثناء تحميل البيانات',
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 0.05,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    final products = snapshot.data!;
-                    return Row(
-                      children: [
-                        SizedBox(
-                          width: screenWidth * 0.04,
+                          ],
                         ),
-                        Expanded(
-                          child: GridView.builder(
-                            itemCount: products.length,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 2 / 2.5,
-                              mainAxisSpacing: 8,
-                              crossAxisSpacing: screenWidth * 0.04,
+                      );
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Image.asset(
+                              'assets/images/noProducts.png',
+                              width: screenHeight * 0.5,
+                              height: screenHeight * 0.25,
+                              fit: BoxFit.contain,
                             ),
-                            itemBuilder: (context, index) {
-                              return GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => DetailsScreen(
-                                        product: products[index],
-                                        screen: 'fav',
-                                      ),
-                                    ),
-                                  );
-                                },
-                                child: ProductCard(
-                                  product: products[index],
-                                  screen: 'fav',
+                            Text(
+                              'لم يتم اضافه منتجات في المفضله',
+                              style: TextStyle(
+                                fontFamily: 'Cairo',
+                                fontWeight: FontWeight.bold,
+                                fontSize: screenWidth * 0.05,
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      final products = snapshot.data!;
+                      return GridView.builder(
+                        itemCount: products.length,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 2 / 2.5,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: screenWidth * 0.04,
+                        ),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetailsScreen(
+                                    product: products[index],
+                                  ),
                                 ),
                               );
                             },
-                          ),
-                        ),
-                        SizedBox(
-                          width: screenWidth * 0.04,
-                        ),
-                      ],
-                    );
-                  }
-                },
-              ),
-            );
-          } else {
-            return Scaffold(
-              backgroundColor: Colors.white,
-              appBar: AppBar(
-                centerTitle: true,
-                backgroundColor: Colors.white,
-                surfaceTintColor: Colors.white,
-                leading: const SizedBox(),
-              ),
-              body: const Center(
-                child: SpinKitThreeBounce(
-                  color: Colors.green,
-                  size: 50.0,
+                            child: ProductCard(
+                              product: products[index],
+                              screen: 'fav',
+                            ),
+                          );
+                        },
+                      );
+                    }
+                  },
                 ),
               ),
-            );
-          }
+            ],
+          );
         },
       ),
     );
