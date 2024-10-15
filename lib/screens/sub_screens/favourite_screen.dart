@@ -136,32 +136,37 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                       );
                     } else {
                       final products = snapshot.data!;
-                      return GridView.builder(
-                        itemCount: products.length,
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          childAspectRatio: 2 / 2.5,
-                          mainAxisSpacing: 8,
-                          crossAxisSpacing: screenWidth * 0.04,
-                        ),
-                        itemBuilder: (context, index) {
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetailsScreen(
-                                    product: products[index],
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: GridView.builder(
+                          itemCount: products.length,
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 2 / 2.5,
+                            mainAxisSpacing: 8,
+                            crossAxisSpacing: screenWidth * 0.03,
+                          ),
+                          itemBuilder: (context, index) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => DetailsScreen(
+                                      product: products[index],
+                                      screen: 'fav',
+                                    ),
                                   ),
-                                ),
-                              );
-                            },
-                            child: ProductCard(
-                              product: products[index],
-                              screen: 'fav',
-                            ),
-                          );
-                        },
+                                );
+                              },
+                              child: ProductCard(
+                                product: products[index],
+                                screen: 'fav',
+                              ),
+                            );
+                          },
+                        ),
                       );
                     }
                   },

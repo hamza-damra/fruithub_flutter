@@ -41,11 +41,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     double average = totalRating > 0
         ? (widget.product.counterFiveStars * 5 +
-        widget.product.counterFourStars * 4 +
-        widget.product.counterThreeStars * 3 +
-        widget.product.counterTwoStars * 2 +
-        widget.product.counterOneStars * 1) /
-        totalRating
+                widget.product.counterFourStars * 4 +
+                widget.product.counterThreeStars * 3 +
+                widget.product.counterTwoStars * 2 +
+                widget.product.counterOneStars * 1) /
+            totalRating
         : 0;
 
     String formattedAverage = average.toStringAsFixed(1);
@@ -174,7 +174,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   context as OverlayState,
                                   const CustomSnackBar.error(
                                     message:
-                                    "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                     textAlign: TextAlign.center,
                                     textStyle: TextStyle(
                                       fontFamily: 'Cairo',
@@ -391,7 +391,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Padding(
             padding:
-            const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
+                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -467,7 +467,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
               child: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor:
-                  MaterialStateProperty.all<Color>(const Color(0xff1B5E37)),
+                      WidgetStateProperty.all<Color>(const Color(0xff1B5E37)),
                 ),
                 onPressed: () {
                   cart = [];
@@ -493,13 +493,13 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     if (state is CartDeleteSuccess || state is CartAddSuccess) {
                       setState(() {
                         widget.product.isCartExist =
-                        !widget.product.isCartExist;
+                            !widget.product.isCartExist;
                       });
                     }
 
                     if (state is CartDeleteSuccess) {
                       showTopSnackBar(
-                        context as OverlayState,
+                        Overlay.of(context),
                         displayDuration: const Duration(milliseconds: 10),
                         const CustomSnackBar.info(
                           message: "تم حذف المنتج من السله",
@@ -513,7 +513,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       );
                     } else if (state is CartAddSuccess) {
                       showTopSnackBar(
-                        context as OverlayState,
+                        Overlay.of(context),
                         displayDuration: const Duration(milliseconds: 10),
                         const CustomSnackBar.info(
                           message: "تم اضافه المنتج الي السله",
@@ -528,7 +528,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
                       showTopSnackBar(
-                        context as OverlayState,
+                        Overlay.of(context),
                         displayDuration: const Duration(milliseconds: 10),
                         CustomSnackBar.error(
                           message: state is CartDeleteError
