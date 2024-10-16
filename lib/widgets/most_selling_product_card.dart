@@ -75,25 +75,21 @@ class _ProductCardState extends State<ProductCard> {
     favouriteIcon = widget.product.isfavourite
         ? GestureDetector(
             onTap: _toggleFavourite,
-            child: Container(
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.red,
-                  size: 22,
-                ),
+            child: const Center(
+              child: Icon(
+                Icons.favorite_rounded,
+                color: Colors.red,
+                size: 22,
               ),
             ),
           )
         : GestureDetector(
             onTap: _toggleFavourite,
-            child: Container(
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_border_rounded,
-                  color: Colors.red,
-                  size: 22,
-                ),
+            child: const Center(
+              child: Icon(
+                Icons.favorite_border_rounded,
+                color: Colors.red,
+                size: 22,
               ),
             ),
           );
@@ -132,15 +128,13 @@ class _ProductCardState extends State<ProductCard> {
   Future<void> _toggleFavourite() async {
     // heart loading
     setState(() {
-      favouriteIcon = Container(
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: HeartLoader(
-              isFavorite: widget.product.isfavourite,
-            ),
+      favouriteIcon = Padding(
+        padding: const EdgeInsets.all(4),
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: HeartLoader(
+            isFavorite: widget.product.isfavourite,
           ),
         ),
       );
@@ -190,25 +184,21 @@ class _ProductCardState extends State<ProductCard> {
       favouriteIcon = widget.product.isfavourite
           ? GestureDetector(
               onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.red,
+                  size: 22,
                 ),
               ),
             )
           : GestureDetector(
               onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_border_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_border_rounded,
+                  color: Colors.red,
+                  size: 22,
                 ),
               ),
             );
@@ -321,7 +311,6 @@ class _ProductCardState extends State<ProductCard> {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           const SizedBox(height: 2),
-
           // Favourite Icon Section
           widget.screen == 'fav'
               ? Align(
@@ -331,6 +320,7 @@ class _ProductCardState extends State<ProductCard> {
                       if (state is FavouriteSuccess) {
                         showTopSnackBar(
                           Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 5),
                           const CustomSnackBar.info(
                             message: "تم حذف المنتج من قائمه التمني",
                             textAlign: TextAlign.center,
@@ -344,6 +334,7 @@ class _ProductCardState extends State<ProductCard> {
                       } else if (state is FavouriteError) {
                         showTopSnackBar(
                           Overlay.of(context),
+                          displayDuration: const Duration(milliseconds: 5),
                           const CustomSnackBar.info(
                             message: "فشل حذف المنتج من قائمه التمني",
                             textAlign: TextAlign.center,
