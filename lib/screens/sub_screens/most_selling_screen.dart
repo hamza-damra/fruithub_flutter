@@ -30,7 +30,7 @@ class MostSellingScreen extends StatelessWidget {
       body: const MostSellingBuilder(
         sortBy: 'name',
         sortDirection: 'desc',
-        showText: false,
+        startfilter: false,
       ),
     );
   }

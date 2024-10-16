@@ -184,16 +184,12 @@ class _CartState extends State<Cart> {
                         // Responsive Image
                         Image.asset(
                           'assets/images/noCart.PNG',
-                          width: screenHeight *
-                              0.5, // Adjust width as 50% of screen width
-                          height: screenHeight *
-                              0.25, // Adjust height as 25% of screen height
-                          fit: BoxFit
-                              .contain, // Ensure image fits within the specified dimensions
+                          width: screenHeight * 0.5,
+                          height: screenHeight * 0.25,
+                          fit: BoxFit.contain,
                         ),
 
-                        SizedBox(
-                            height: screenHeight * 0.02), // Responsive height
+                        SizedBox(height: screenHeight * 0.02),
 
                         Text(
                           '! السله فارغه',

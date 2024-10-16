@@ -22,6 +22,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
   String sortDirection = 'dasc';
   String sortBy = 'name';
   String? selectedOption;
+  bool startFilter = false;
 
   @override
   void initState() {
@@ -189,7 +190,6 @@ class _ProductsScreenState extends State<ProductsScreen> {
                               onChanged: (String? value) {
                                 setState(() {
                                   selectedOption = value;
-                                  sortDirection = 'desc';
                                   sortBy = 'name';
                                 });
                               },
@@ -206,7 +206,9 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                     ),
                                   ),
                                   onPressed: () {
+                                    ////////////////////////////////////////////////////////////////////
                                     Navigator.pop(context);
+                                    startFilter = true;
                                     reBuild();
                                   },
                                   child: const Text(
@@ -351,7 +353,8 @@ class _ProductsScreenState extends State<ProductsScreen> {
                                         BlocProvider.of<ProductsCubit>(
                                                 this.context)
                                             .showProductState(
-                                                myState: 'filtered');
+                                          myState: 'filtered',
+                                        );
                                       },
                                       child: const Text(
                                         'تصفيه',
@@ -410,7 +413,7 @@ class _ProductsScreenState extends State<ProductsScreen> {
             builder: (context, state) {
               if (state is MostSellingProducts || state is InitialProducts) {
                 return MostSellingBuilder(
-                  showText: true,
+                  startfilter: startFilter,
                   sortDirection: sortDirection,
                   sortBy: sortBy,
                 );

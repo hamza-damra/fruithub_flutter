@@ -7,7 +7,6 @@ import 'package:fruitshub/bloc/filter_products_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/details_screen.dart';
-import 'package:fruitshub/screens/sub_screens/most_selling_screen.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
 
 class PriceFilteredProducts extends StatefulWidget {
@@ -31,6 +30,12 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
       min: widget.min,
       max: widget.max,
     );
+  }
+
+  @override
+  void initState() {
+    getFilteredProducts();
+    super.initState();
   }
 
   @override
@@ -59,25 +64,7 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.push(context, MaterialPageRoute(
-                                  builder: (context) {
-                                    return const MostSellingScreen();
-                                  },
-                                ));
-                              },
-                              child: Text(
-                                'المزيد',
-                                style: TextStyle(
-                                  color: const Color(0xff949D9E),
-                                  fontWeight: FontWeight.w500,
-                                  fontSize: (screenWidth * 0.04 +
-                                          screenHeight * 0.02) /
-                                      2,
-                                ),
-                              ),
-                            ),
+                            const SizedBox(),
                             FittedBox(
                               fit: BoxFit.scaleDown,
                               child: Text(

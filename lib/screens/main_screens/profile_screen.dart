@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/screens/sub_screens/favourite_screen.dart';
 import 'package:fruitshub/screens/sub_screens/personal_profile.dart';
 import 'package:fruitshub/widgets/profile_section.dart';
@@ -31,6 +32,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _logOut() async {
     await SharedPrefManager().deleteData('token');
+    mostSelling.clear();
+    mostSelling.clear();
+    lastAdded.clear();
+    cart.clear();
+    favourite.clear();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
