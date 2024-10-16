@@ -23,7 +23,7 @@ class CartAddError extends CartState {}
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
 
-  Future<void> deleteFromCart(int id) async {
+  Future<void> deleteFromCart(int id, String? isFav) async {
     emit(CartDeleteLoading());
     http.Response response = await CartManagement().deleteFromCart(
       token: await SharedPrefManager().getData('token'),
@@ -31,6 +31,9 @@ class CartCubit extends Cubit<CartState> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 204) {
+      if (isFav == 'fav') {
+        mostSelling = [];
+      }
       emit(CartDeleteSuccess());
       cart = [];
       favourite = [];
@@ -40,7 +43,7 @@ class CartCubit extends Cubit<CartState> {
     }
   }
 
-  Future<void> addToCart(int id, int quantity) async {
+  Future<void> addToCart(int id, int quantity, String? isFav) async {
     emit(CartAddLoading());
     http.Response response = await CartManagement().addToCart(
       token: await SharedPrefManager().getData('token'),
@@ -48,6 +51,9 @@ class CartCubit extends Cubit<CartState> {
       quantity: quantity,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
+      if (isFav == 'fav') {
+        mostSelling = [];
+      }
       emit(CartAddSuccess());
       cart = [];
       favourite = [];

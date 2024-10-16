@@ -50,7 +50,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
         listener: (context, state) {
           if (state is FavouriteSuccess) {
             showTopSnackBar(
-              context as OverlayState,
+              Overlay.of(context),
+              displayDuration: const Duration(milliseconds: 10),
               const CustomSnackBar.info(
                 message: "تم حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
@@ -63,7 +64,8 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
             );
           } else if (state is FavouriteError) {
             showTopSnackBar(
-              context as OverlayState,
+              Overlay.of(context),
+              displayDuration: const Duration(milliseconds: 10),
               const CustomSnackBar.info(
                 message: "فشل حذف المنتج من قائمه التمني",
                 textAlign: TextAlign.center,
@@ -77,8 +79,13 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           }
         },
         builder: (context, state) {
+          if (state is FavouriteLoading) {
+            return const SpinKitThreeBounce(
+              color: Colors.green,
+              size: 50.0,
+            );
+          }
           return Column(
-            // Ensure FutureBuilder is within a Column
             children: [
               Expanded(
                 child: FutureBuilder<List<Product>>(

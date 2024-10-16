@@ -121,7 +121,6 @@ class _MyAppState extends State<MyApp> {
                 body: SizedBox(),
               )
             : StreamBuilder<ConnectivityResult>(
-                // Use 'map' to extract the first or last element from the list
                 stream: Connectivity().onConnectivityChanged.map((list) =>
                     list.isNotEmpty ? list.last : ConnectivityResult.none),
                 builder: (context, snapshot) {

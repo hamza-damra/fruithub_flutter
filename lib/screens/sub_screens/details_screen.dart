@@ -480,6 +480,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       widget.screen == 'fav'
                           ? widget.product.productId
                           : widget.product.id,
+                      widget.screen,
                     );
                   } else {
                     BlocProvider.of<CartCubit>(context).addToCart(
@@ -487,6 +488,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           ? widget.product.productId
                           : widget.product.id,
                       widget.product.myQuantity,
+                      widget.screen,
                     );
                   }
                 },

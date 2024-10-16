@@ -58,6 +58,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                         favourite = [];
                         BlocProvider.of<CartCubit>(this.context).deleteFromCart(
                           widget.product.productId,
+                          '',
                         );
                       },
                     ),

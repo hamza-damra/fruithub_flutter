@@ -14,12 +14,12 @@ class MostSellingBuilder extends StatefulWidget {
     super.key,
     required this.sortDirection,
     required this.sortBy,
-    required this.showText,
+    required this.startfilter,
   });
 
   final String sortDirection;
   final String sortBy;
-  final bool showText;
+  final bool startfilter;
 
   @override
   State<MostSellingBuilder> createState() => _MostSellingBuilderState();
@@ -35,13 +35,13 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
       token: await SharedPrefManager().getData('token'),
       itemsPerPage: '10',
       pageNumber: mostSellingPageNumber.toString(),
-      sortDirection: widget.sortBy == 'name' ? 'desc' : widget.sortDirection,
+      sortDirection: widget.sortBy == 'name' ? 'asc' : widget.sortDirection,
       sortBy: widget.sortBy,
     );
   }
 
   Future<List<Product>> requestData() async {
-    if (mostSelling.isEmpty) {
+    if (mostSelling.isEmpty || widget.startfilter) {
       final response = await getProducts();
       final Map<String, dynamic> data = jsonDecode(response.body);
       totalItems = data['totalItems'];
@@ -138,20 +138,19 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                 //         ),
                 //       )
                 //     : const SizedBox(),
+                const Spacer(),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    'الأكثر مبيعًا',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.w700,
+                      fontSize: screenWidth * 0.050,
+                    ),
+                  ),
+                ),
                 const SizedBox(),
-                widget.showText
-                    ? FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          'الأكثر مبيعًا',
-                          style: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.w700,
-                            fontSize: screenWidth * 0.050,
-                          ),
-                        ),
-                      )
-                    : const SizedBox(),
               ],
             ),
           ),
@@ -206,40 +205,37 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                                   width: screenWidth * 0.04,
                                 ),
                                 Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(bottom: 3.0),
-                                    child: GridView.builder(
-                                      controller: scrollController,
-                                      itemCount: products.length + 1,
-                                      gridDelegate:
-                                          SliverGridDelegateWithFixedCrossAxisCount(
-                                        crossAxisCount: 2,
-                                        childAspectRatio: 2 / 2.5,
-                                        mainAxisSpacing: 8,
-                                        crossAxisSpacing: screenWidth * 0.03,
-                                      ),
-                                      itemBuilder: (context, index) {
-                                        if (index < products.length) {
-                                          return GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                  builder: (context) =>
-                                                      DetailsScreen(
-                                                    product: products[index],
-                                                  ),
-                                                ),
-                                              );
-                                            },
-                                            child: ProductCard(
-                                              product: products[index],
-                                            ),
-                                          );
-                                        }
-                                        return null;
-                                      },
+                                  child: GridView.builder(
+                                    controller: scrollController,
+                                    itemCount: products.length + 1,
+                                    gridDelegate:
+                                        SliverGridDelegateWithFixedCrossAxisCount(
+                                      crossAxisCount: 2,
+                                      childAspectRatio: 2 / 2.5,
+                                      mainAxisSpacing: 8,
+                                      crossAxisSpacing: screenWidth * 0.03,
                                     ),
+                                    itemBuilder: (context, index) {
+                                      if (index < products.length) {
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    DetailsScreen(
+                                                  product: products[index],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: ProductCard(
+                                            product: products[index],
+                                          ),
+                                        );
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                                 SizedBox(

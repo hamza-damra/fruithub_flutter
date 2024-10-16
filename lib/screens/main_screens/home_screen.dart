@@ -19,6 +19,7 @@ class _HomeScreenState extends State<HomeScreen> {
   String? _selectedOption;
   String sortDirection = 'dasc';
   String sortBy = 'name';
+  bool startFilter = false;
 
   void reBuild() {
     setState(() {
@@ -244,6 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                   onPressed: () {
                                     Navigator.pop(context);
+                                    startFilter = true;
                                     reBuild(); // Call sort function
                                   },
                                   child: const Text(
@@ -268,7 +270,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 7),
           MostSellingBuilder(
-            showText: true,
+            startfilter: startFilter,
             sortDirection: sortDirection,
             sortBy: sortBy,
           ),
