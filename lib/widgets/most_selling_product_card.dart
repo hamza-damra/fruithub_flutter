@@ -6,7 +6,6 @@ import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
-import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/widgets/cart_container_and_sizedbox.dart';
 import 'package:fruitshub/widgets/heart_loader.dart';
@@ -35,6 +34,7 @@ class _ProductCardState extends State<ProductCard> {
 
   late Widget favouriteIcon;
   late Widget cartIcon;
+  bool _isCartLoading = false; // حالة التحميل لمعرفة إذا كان الزر في وضع التحميل
 
   void _showSnackBar(String message, String snackBarType) {
     if (snackBarType == 'info') {
@@ -74,73 +74,69 @@ class _ProductCardState extends State<ProductCard> {
 
     favouriteIcon = widget.product.isfavourite
         ? GestureDetector(
-            onTap: _toggleFavourite,
-            child: Container(
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_rounded,
-                  color: Colors.red,
-                  size: 22,
-                ),
-              ),
-            ),
-          )
+      onTap: _toggleFavourite,
+      child: const Center(
+        child: Icon(
+          Icons.favorite_rounded,
+          color: Colors.red,
+          size: 22,
+        ),
+      ),
+    )
         : GestureDetector(
-            onTap: _toggleFavourite,
-            child: Container(
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_border_rounded,
-                  color: Colors.red,
-                  size: 22,
-                ),
-              ),
-            ),
-          );
+      onTap: _toggleFavourite,
+      child: Container(
+        child: const Center(
+          child: Icon(
+            Icons.favorite_border_rounded,
+            color: Colors.red,
+            size: 22,
+          ),
+        ),
+      ),
+    );
 
     cartIcon = widget.product.isCartExist
         ? GestureDetector(
-            onTap: () {
-              _toggleCart();
-            },
-            child: const CartContainer(
-              child: Center(
-                child: Icon(
-                  Icons.done_rounded,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ),
-          )
+      onTap: () {
+        _toggleCart();
+      },
+      child: const CartContainer(
+        child: Center(
+          child: Icon(
+            Icons.done_rounded,
+            color: Colors.white,
+            size: 22,
+          ),
+        ),
+      ),
+    )
         : GestureDetector(
-            onTap: () {
-              _toggleCart();
-            },
-            child: const CartContainer(
-              child: Center(
-                child: Icon(
-                  Icons.add_rounded,
-                  color: Colors.white,
-                  size: 22,
-                ),
-              ),
-            ),
-          );
+      onTap: () {
+        _toggleCart();
+      },
+      child: const CartContainer(
+        child: Center(
+          child: Icon(
+            Icons.add_rounded,
+            color: Colors.white,
+            size: 22,
+          ),
+        ),
+      ),
+    );
   }
 
   Future<void> _toggleFavourite() async {
     // heart loading
     setState(() {
-      favouriteIcon = Container(
-        child: Padding(
-          padding: const EdgeInsets.all(4),
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: HeartLoader(
-              isFavorite: widget.product.isfavourite,
-            ),
+      favouriteIcon = Padding(
+        padding: const EdgeInsets.all(4),
+        child: SizedBox(
+          width: 20,
+          height: 20,
+          child: HeartLoader(
+            isFavorite: widget.product.isfavourite,
           ),
         ),
       );
@@ -153,18 +149,12 @@ class _ProductCardState extends State<ProductCard> {
           widget.product,
         );
       } else {
-        http.Response response =
-            await FavouriteManagement().removeFromFavourite(
+        http.Response response = await FavouriteManagement().removeFromFavourite(
           productId: widget.product.id,
           token: await SharedPrefManager().getData('token'),
         );
         if (response.statusCode == 200 || response.statusCode == 204) {
-          _showSnackBar("تم حذف المنتج من قائمه التمني", 'info');
           widget.product.isfavourite = false;
-          favourite = [];
-          if (widget.screen == 'fav') {
-            mostSelling = [];
-          }
         } else {
           _showSnackBar("فشل حذف المنتج من قائمه التمني", 'info');
         }
@@ -176,11 +166,6 @@ class _ProductCardState extends State<ProductCard> {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         widget.product.isfavourite = true;
-        favourite = [];
-        if (widget.screen == 'fav') {
-          mostSelling = [];
-        }
-        _showSnackBar("تم اضافه المنتج الي قائمه التمني", 'info');
       } else {
         _showSnackBar("فشل اضافه المنتج الي قائمه التمني", 'error');
       }
@@ -189,39 +174,42 @@ class _ProductCardState extends State<ProductCard> {
     setState(() {
       favouriteIcon = widget.product.isfavourite
           ? GestureDetector(
-              onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
-                ),
-              ),
-            )
+        onTap: _toggleFavourite,
+        child: Container(
+          child: const Center(
+            child: Icon(
+              Icons.favorite_rounded,
+              color: Colors.red,
+              size: 22,
+            ),
+          ),
+        ),
+      )
           : GestureDetector(
-              onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_border_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
-                ),
-              ),
-            );
+        onTap: _toggleFavourite,
+        child: Container(
+          child: const Center(
+            child: Icon(
+              Icons.favorite_border_rounded,
+              color: Colors.red,
+              size: 22,
+            ),
+          ),
+        ),
+      );
     });
   }
 
   Future<void> _toggleCart() async {
+    if (_isCartLoading) return; // إذا كان الزر في وضع التحميل، إيقاف التنفيذ
+
     setState(() {
+      _isCartLoading = true; // تفعيل حالة التحميل عند بدء عملية إضافة/حذف من السلة
       cartIcon = const CartContainer(
         child: Center(
           child: SizedBox(
-            width: 19, // Ensure it fits inside the CartContainer
-            height: 19, // Keep it square to maintain circular shape
+            width: 19,
+            height: 19,
             child: CircularProgressIndicator(
               color: Colors.white,
               strokeWidth: 2.5,
@@ -242,13 +230,6 @@ class _ProductCardState extends State<ProductCard> {
 
       if (response.statusCode == 200 || response.statusCode == 204) {
         widget.product.isCartExist = false;
-        lastAdded = [];
-        cart = [];
-        if (widget.screen == 'fav') {
-          mostSelling = [];
-          cart = [];
-        }
-        _showSnackBar("تم حذف المنتج من السله", 'info');
       } else {
         _showSnackBar("فشل حذف المنتج من السله", 'error');
       }
@@ -262,48 +243,38 @@ class _ProductCardState extends State<ProductCard> {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         widget.product.isCartExist = true;
-        lastAdded = [];
-        cart = [];
-        if (widget.screen == 'fav') {
-          mostSelling = [];
-          cart = [];
-        }
-        _showSnackBar("تم اضافه المنتج الي السله", 'info');
       } else {
         _showSnackBar("فشل اضافه المنتج الي السله", 'error');
       }
     }
 
     setState(() {
+      _isCartLoading = false; // إيقاف حالة التحميل بعد الانتهاء من العملية
       cartIcon = widget.product.isCartExist
           ? GestureDetector(
-              onTap: () {
-                _toggleCart();
-              },
-              child: const CartContainer(
-                child: Center(
-                  child: Icon(
-                    Icons.done_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-              ),
-            )
+        onTap: _isCartLoading ? null : _toggleCart, // تعطيل الزر إذا كان في حالة تحميل
+        child: const CartContainer(
+          child: Center(
+            child: Icon(
+              Icons.done_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
+          ),
+        ),
+      )
           : GestureDetector(
-              onTap: () {
-                _toggleCart();
-              },
-              child: const CartContainer(
-                child: Center(
-                  child: Icon(
-                    Icons.add_rounded,
-                    color: Colors.white,
-                    size: 22,
-                  ),
-                ),
-              ),
-            );
+        onTap: _isCartLoading ? null : _toggleCart, // تعطيل الزر إذا كان في حالة تحميل
+        child: const CartContainer(
+          child: Center(
+            child: Icon(
+              Icons.add_rounded,
+              color: Colors.white,
+              size: 22,
+            ),
+          ),
+        ),
+      );
     });
   }
 
@@ -325,51 +296,39 @@ class _ProductCardState extends State<ProductCard> {
           // Favourite Icon Section
           widget.screen == 'fav'
               ? Align(
-                  alignment: Alignment.centerRight,
-                  child: BlocListener<FavouriteCubit, FavouriteState>(
-                    listener: (context, state) {
-                      if (state is FavouriteSuccess) {
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          const CustomSnackBar.info(
-                            message: "تم حذف المنتج من قائمه التمني",
-                            textAlign: TextAlign.center,
-                            textStyle: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      } else if (state is FavouriteError) {
-                        showTopSnackBar(
-                          Overlay.of(context),
-                          const CustomSnackBar.info(
-                            message: "فشل حذف المنتج من قائمه التمني",
-                            textAlign: TextAlign.center,
-                            textStyle: TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        );
-                      }
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        favouriteIcon,
-                      ],
+            alignment: Alignment.centerRight,
+            child: BlocListener<FavouriteCubit, FavouriteState>(
+              listener: (context, state) {
+                if (state is FavouriteSuccess) {
+                } else if (state is FavouriteError) {
+                  showTopSnackBar(
+                    Overlay.of(context),
+                    const CustomSnackBar.info(
+                      message: "فشل حذف المنتج من قائمه التمني",
+                      textAlign: TextAlign.center,
+                      textStyle: TextStyle(
+                        fontFamily: 'Cairo',
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                )
+                  );
+                }
+              },
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  favouriteIcon,
+                ],
+              ),
+            ),
+          )
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    favouriteIcon,
-                  ],
-                ),
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              favouriteIcon,
+            ],
+          ),
 
           const SizedBox(height: 3),
 
@@ -423,39 +382,10 @@ class _ProductCardState extends State<ProductCard> {
                 // Cart Section
                 BlocBuilder<CartCubit, CartState>(
                   builder: (context, state) {
-                    return widget.product.isCartExist
-                        ? GestureDetector(
-                            onTap: () {
-                              _toggleCart();
-                            },
-                            child: state is CartAddSuccess
-                                ? const CartContainer(
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.done_rounded,
-                                        color: Colors.white,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  )
-                                : cartIcon,
-                          )
-                        : GestureDetector(
-                            onTap: () {
-                              _toggleCart();
-                            },
-                            child: state is CartDeleteSuccess
-                                ? const CartContainer(
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.add_rounded,
-                                        color: Colors.white,
-                                        size: 22,
-                                      ),
-                                    ),
-                                  )
-                                : cartIcon,
-                          );
+                    return GestureDetector(
+                      onTap: _isCartLoading ? null : _toggleCart, // تعطيل الزر إذا كان في حالة تحميل
+                      child: cartIcon,
+                    );
                   },
                 ),
 

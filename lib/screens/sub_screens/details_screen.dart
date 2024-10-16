@@ -24,15 +24,13 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  @override
-  void initState() {
-    super.initState();
-  }
+  bool _isCartLoading = false; // Loading state for button
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+
     int totalRating = widget.product.counterFiveStars +
         widget.product.counterFourStars +
         widget.product.counterThreeStars +
@@ -41,11 +39,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     double average = totalRating > 0
         ? (widget.product.counterFiveStars * 5 +
-                widget.product.counterFourStars * 4 +
-                widget.product.counterThreeStars * 3 +
-                widget.product.counterTwoStars * 2 +
-                widget.product.counterOneStars * 1) /
-            totalRating
+        widget.product.counterFourStars * 4 +
+        widget.product.counterThreeStars * 3 +
+        widget.product.counterTwoStars * 2 +
+        widget.product.counterOneStars * 1) /
+        totalRating
         : 0;
 
     String formattedAverage = average.toStringAsFixed(1);
@@ -171,10 +169,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                 setState(() {});
                               } else {
                                 showTopSnackBar(
-                                  context as OverlayState,
+                                  Overlay.of(context),
                                   const CustomSnackBar.error(
                                     message:
-                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                    "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                     textAlign: TextAlign.center,
                                     textStyle: TextStyle(
                                       fontFamily: 'Cairo',
@@ -391,7 +389,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Padding(
             padding:
-                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
+            const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -466,13 +464,17 @@ class _DetailsScreenState extends State<DetailsScreen> {
               height: 45,
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor:
-                      WidgetStateProperty.all<Color>(const Color(0xff1B5E37)),
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                    const Color(0xff1B5E37),
+                  ),
                 ),
-                onPressed: () {
-                  cart = [];
-                  lastAdded = [];
-                  favourite = [];
+                onPressed: _isCartLoading
+                    ? null // Disable button during loading
+                    : () {
+                  setState(() {
+                    _isCartLoading = true; // Start loading
+                  });
+
                   if (widget.product.isCartExist) {
                     BlocProvider.of<CartCubit>(context).deleteFromCart(
                       widget.screen == 'fav'
@@ -490,10 +492,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 },
                 child: BlocConsumer<CartCubit, CartState>(
                   listener: (context, state) {
-                    if (state is CartDeleteSuccess || state is CartAddSuccess) {
+                    if (state is CartDeleteSuccess ||
+                        state is CartAddSuccess) {
                       setState(() {
                         widget.product.isCartExist =
-                            !widget.product.isCartExist;
+                        !widget.product.isCartExist;
+                        _isCartLoading = false; // Stop loading on success
                       });
                     }
 
@@ -527,6 +531,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       );
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
+                      setState(() {
+                        _isCartLoading = false; // Stop loading on error
+                      });
+
                       showTopSnackBar(
                         Overlay.of(context),
                         displayDuration: const Duration(milliseconds: 10),
