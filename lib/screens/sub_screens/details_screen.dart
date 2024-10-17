@@ -563,7 +563,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                     return Text(
                       widget.product.isCartExist
                           ? 'حذف من السله'
-                          : 'اضافه الي السله',
+                          : 'أضف الى العربة',
                       style: const TextStyle(
                         color: Colors.white,
                       ),

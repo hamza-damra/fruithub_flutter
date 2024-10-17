@@ -2,28 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
-import 'package:fruitshub/globals.dart';
-import 'package:fruitshub/screens/sub_screens/favourite_screen.dart';
-import 'package:fruitshub/screens/sub_screens/personal_profile.dart';
-import 'package:fruitshub/widgets/profile_section.dart';
+import 'package:fruitshub/screens/sub_screens/favourite_screen.dart'; // Make sure this import is included
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
+
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  String name = '';
-  String email = '';
+  String name = 'روبي'; // Sample Arabic name for demonstration
+  String email = 'robi123@gmail.com';
+
+  @override
+  void initState() {
+    getUserName();
+    super.initState();
+  }
+
   void getUserName() async {
     Map<String, dynamic> decodedToken = JwtDecoder.decode(
       await SharedPrefManager().getData('token'),
     );
-
     setState(() {
       name = decodedToken['name'];
       email = decodedToken['sub'];
@@ -32,11 +36,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> _logOut() async {
     await SharedPrefManager().deleteData('token');
-    mostSelling.clear();
-    mostSelling.clear();
-    lastAdded.clear();
-    cart.clear();
-    favourite.clear();
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
@@ -46,7 +45,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _confirmLogout(BuildContext context) {
-    // Show a confirmation dialog before logging out
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -55,16 +53,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'تسجيل الخروج',
             textAlign: TextAlign.right,
           ),
-          content: const FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              '!هل أنت متأكد أنك تريد تسجيل الخروج ؟',
-              style: TextStyle(
-                fontFamily: 'Cairo',
-                fontWeight: FontWeight.w600,
-              ),
-              textAlign: TextAlign.right,
+          content: const Text(
+            '!هل أنت متأكد أنك تريد تسجيل الخروج ؟',
+            style: TextStyle(
+              fontFamily: 'Cairo',
+              fontWeight: FontWeight.w600,
             ),
+            textAlign: TextAlign.right,
           ),
           actions: [
             TextButton(
@@ -74,6 +69,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: const Text(
                 'إلغاء',
                 textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Colors.redAccent,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             TextButton(
@@ -84,6 +83,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               child: const Text(
                 'تأكيد',
                 textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ],
@@ -93,203 +96,161 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   @override
-  void initState() {
-    getUserName();
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: const Text(
-          'حسابي',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        centerTitle: true,
-        backgroundColor: Colors.white,
-        surfaceTintColor: Colors.white,
-      ),
-      body: ListView(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              const Spacer(flex: 25),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          children: [
+            const SizedBox(height: 60), // Smaller space at the top
+            // Profile Avatar and Info (Smaller Header)
+            Center(
+              child: Column(
                 children: [
+                  CircleAvatar(
+                    radius: screenWidth * 0.12, // Reduced avatar size
+                    backgroundImage: const AssetImage('assets/images/avatar.jpg'), // Replace with your image asset
+                  ),
+                  const SizedBox(height: 10), // Smaller space between avatar and name
+                  // Name and Email (Smaller Font Sizes)
                   Text(
                     name,
-                    style: TextStyle(
+                    style: const TextStyle(
+                      fontSize: 18, // Slightly smaller font size for name
                       fontWeight: FontWeight.bold,
-                      fontSize: screenWidth * 0.045,
                     ),
                   ),
+                  const SizedBox(height: 4), // Smaller space between name and email
                   Text(
                     email,
-                    style: TextStyle(
-                      color: const Color(0xff888FA0),
-                      fontSize: screenWidth * 0.037,
+                    style: const TextStyle(
+                      fontSize: 13, // Slightly smaller font size for email
+                      color: Colors.grey,
                     ),
                   ),
-                ],
-              ),
-              const Spacer(flex: 2),
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(200),
-                    child: Image.asset(
-                      'assets/images/avatar.jpg',
-                      width: screenWidth * 0.18,
-                      height: screenWidth * 0.18,
-                    ),
-                  ),
-                  Positioned(
-                    top: screenWidth * 0.11,
-                    right: screenWidth * 0.02,
-                    child: IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/profile/change-image.svg',
-                        width: screenWidth * 0.08,
-                        height: screenWidth * 0.08,
-                      ),
-                      onPressed: () {},
-                    ),
-                  ),
-                ],
-              ),
-              const Spacer(flex: 2),
-            ],
-          ),
-          const SizedBox(height: 35),
-          const Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Spacer(flex: 30),
-              Text(
-                'عام',
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Spacer(flex: 2),
-            ],
-          ),
-          const SizedBox(height: 7),
-          ProfileSection(
-            icon: 'assets/profile/user.svg',
-            section: 'الملف الشخصي',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const PersonalProfile(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 5),
-          ProfileSection(
-            icon: 'assets/profile/box.svg',
-            section: 'طلباتي',
-            onPressed: () {},
-          ),
-          const SizedBox(height: 5),
-          ProfileSection(
-            icon: 'assets/profile/heart.svg',
-            section: 'المفضلة',
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const FavouriteScreen(),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 5),
-          ProfileSection(
-            icon: 'assets/profile/notification.svg',
-            section: 'الاشعارات',
-            onPressed: () {
-              showTopSnackBar(
-                Overlay.of(context),
-                const CustomSnackBar.info(
-                  message: "سيتم توفير الاشعارات قريبا",
-                  textAlign: TextAlign.center,
-                  textStyle: TextStyle(
-                    fontFamily: 'Cairo',
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-              );
-            },
-          ),
-          const SizedBox(height: 5),
-          ProfileSection(
-            icon: 'assets/profile/global.svg',
-            section: 'اللغة',
-            onPressed: () {},
-          ),
-          const SizedBox(height: 5),
-          ProfileSection(
-            icon: 'assets/profile/magicpen.svg',
-            section: 'الوضع',
-            onPressed: () {},
-          ),
-          const SizedBox(height: 45),
-          Center(
-            child: ElevatedButton(
-              style: ButtonStyle(
-                backgroundColor: const WidgetStatePropertyAll(
-                  Color(0xffEBF9F1),
-                ),
-                shape: WidgetStateProperty.all(
-                  const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.zero,
-                  ),
-                ),
-                shadowColor: const WidgetStatePropertyAll(
-                  Colors.transparent,
-                ),
-              ),
-              onPressed: () {
-                _confirmLogout(context);
-              },
-              child: Row(
-                children: [
-                  const Spacer(flex: 1),
-                  Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.rotationY(3.1416), // 180 degrees flip
-                    child: Icon(
-                      Icons.logout_rounded,
-                      color: const Color(0xff53B175),
-                      size: MediaQuery.of(context).size.width *
-                          0.06, // Responsive icon size
-                    ),
-                  ),
-                  const Spacer(flex: 2),
-                  Text(
-                    'تسجيل الخروج',
-                    style: TextStyle(
-                      color: const Color(0xff1B5E37),
-                      fontSize: MediaQuery.of(context).size.width *
-                          0.045, // Responsive text size
-                    ),
-                  ),
-                  const Spacer(flex: 3),
                 ],
               ),
             ),
+            const SizedBox(height: 30), // Smaller space below the header
+            // Profile Options List
+            Expanded(
+              child: ListView(
+                children: [
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/user.svg',
+                    label: 'الملف الشخصي',
+                    onTap: () {},
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/box.svg',
+                    label: 'طلباتي',
+                    onTap: () {},
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/heart.svg',
+                    label: 'المفضلة',
+                    // Navigate to FavouriteScreen when this option is tapped
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const FavouriteScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/notification.svg',
+                    label: 'الاشعارات',
+                    onTap: () {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        const CustomSnackBar.info(
+                          message: "سيتم توفير الاشعارات قريبا",
+                          textAlign: TextAlign.center,
+                          textStyle: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/global.svg',
+                    label: 'اللغة',
+                    onTap: () {},
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/magicpen.svg',
+                    label: 'الوضع',
+                    onTap: () {},
+                  ),
+                  _buildProfileOption(
+                    iconPath: 'assets/profile/logout.svg',
+                    label: 'تسجيل الخروج',
+                    onTap: () {
+                      _confirmLogout(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  // Profile Option Widget with Icon (Smaller Header Adjustment)
+  Widget _buildProfileOption({
+    required String iconPath,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
         ],
+      ),
+      child: ListTile(
+        leading: const Icon(
+          Icons.arrow_back_ios_new, // Updated modern arrow icon
+          color: Colors.grey,
+          size: 20,
+        ),
+        trailing: CircleAvatar(
+          radius: 20,
+          backgroundColor: const Color(0xffF2F3F2),
+          child: SvgPicture.asset(
+            iconPath,
+            width: 24,
+            height: 24,
+            color: const Color(0xff53B175),
+          ),
+        ),
+        title: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.right, // Ensure RTL alignment
+        ),
+        onTap: onTap,
       ),
     );
   }
