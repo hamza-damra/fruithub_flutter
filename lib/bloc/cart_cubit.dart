@@ -31,10 +31,10 @@ class CartCubit extends Cubit<CartState> {
     );
 
     if (response.statusCode == 200 || response.statusCode == 204) {
+      emit(CartDeleteSuccess());
       if (isFav == 'fav') {
         mostSelling = [];
       }
-      emit(CartDeleteSuccess());
       cart = [];
       favourite = [];
       lastAdded = [];
@@ -51,10 +51,10 @@ class CartCubit extends Cubit<CartState> {
       quantity: quantity,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
+      emit(CartAddSuccess());
       if (isFav == 'fav') {
         mostSelling = [];
       }
-      emit(CartAddSuccess());
       cart = [];
       favourite = [];
       lastAdded = [];

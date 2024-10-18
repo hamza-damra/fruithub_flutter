@@ -27,6 +27,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   bool _isCartLoading = false; // Loading state for button
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
@@ -39,11 +45,11 @@ class _DetailsScreenState extends State<DetailsScreen> {
 
     double average = totalRating > 0
         ? (widget.product.counterFiveStars * 5 +
-        widget.product.counterFourStars * 4 +
-        widget.product.counterThreeStars * 3 +
-        widget.product.counterTwoStars * 2 +
-        widget.product.counterOneStars * 1) /
-        totalRating
+                widget.product.counterFourStars * 4 +
+                widget.product.counterThreeStars * 3 +
+                widget.product.counterTwoStars * 2 +
+                widget.product.counterOneStars * 1) /
+            totalRating
         : 0;
 
     String formattedAverage = average.toStringAsFixed(1);
@@ -172,7 +178,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
                                   Overlay.of(context),
                                   const CustomSnackBar.error(
                                     message:
-                                    "لا يمكنك تجاوز الكميه المتوفره للمنتج",
+                                        "لا يمكنك تجاوز الكميه المتوفره للمنتج",
                                     textAlign: TextAlign.center,
                                     textStyle: TextStyle(
                                       fontFamily: 'Cairo',
@@ -389,7 +395,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
           ),
           Padding(
             padding:
-            const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
+                const EdgeInsets.only(left: 8, right: 8, top: 4, bottom: 5),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -464,77 +470,61 @@ class _DetailsScreenState extends State<DetailsScreen> {
               height: 45,
               child: ElevatedButton(
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
+                  backgroundColor: WidgetStateProperty.all<Color>(
                     const Color(0xff1B5E37),
                   ),
                 ),
                 onPressed: _isCartLoading
                     ? null // Disable button during loading
                     : () {
-                  setState(() {
-                    _isCartLoading = true; // Start loading
-                  });
+                        _isCartLoading = true; // Start loading
 
-                  if (widget.product.isCartExist) {
-                    BlocProvider.of<CartCubit>(context).deleteFromCart(
-                      widget.screen == 'fav'
-                          ? widget.product.productId
-                          : widget.product.id,
-                      widget.screen,
-                    );
-                  } else {
-                    BlocProvider.of<CartCubit>(context).addToCart(
-                      widget.screen == 'fav'
-                          ? widget.product.productId
-                          : widget.product.id,
-                      widget.product.myQuantity,
-                      widget.screen,
-                    );
-                  }
-                },
+                        if (widget.product.isCartExist) {
+                          BlocProvider.of<CartCubit>(context).deleteFromCart(
+                            widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
+                            widget.screen,
+                          );
+                        } else {
+                          BlocProvider.of<CartCubit>(context).addToCart(
+                            widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
+                            widget.product.myQuantity,
+                            widget.screen,
+                          );
+                        }
+
+                        _isCartLoading = false; // end loading
+                      },
                 child: BlocConsumer<CartCubit, CartState>(
                   listener: (context, state) {
-                    if (state is CartDeleteSuccess ||
-                        state is CartAddSuccess) {
+                    if (state is CartDeleteSuccess || state is CartAddSuccess) {
                       setState(() {
                         widget.product.isCartExist =
-                        !widget.product.isCartExist;
-                        _isCartLoading = false; // Stop loading on success
+                            !widget.product.isCartExist;
+                        _isCartLoading = false;
                       });
-                    }
-
-                    if (state is CartDeleteSuccess) {
-                      showTopSnackBar(
-                        Overlay.of(context),
-                        displayDuration: const Duration(milliseconds: 10),
-                        const CustomSnackBar.info(
-                          message: "تم حذف المنتج من السله",
-                          textAlign: TextAlign.center,
-                          textStyle: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
-                    } else if (state is CartAddSuccess) {
-                      showTopSnackBar(
-                        Overlay.of(context),
-                        displayDuration: const Duration(milliseconds: 10),
-                        const CustomSnackBar.info(
-                          message: "تم اضافه المنتج الي السله",
-                          textAlign: TextAlign.center,
-                          textStyle: TextStyle(
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      );
+                      // showTopSnackBar(
+                      //   Overlay.of(context),
+                      //   displayDuration: const Duration(milliseconds: 10),
+                      //   CustomSnackBar.info(
+                      //     message: state is CartDeleteSuccess
+                      //         ? "تم حذف المنتج من السله"
+                      //         : "تم اضافه المنتج الي السله",
+                      //     textAlign: TextAlign.center,
+                      //     textStyle: const TextStyle(
+                      //       fontFamily: 'Cairo',
+                      //       fontWeight: FontWeight.bold,
+                      //       color: Colors.white,
+                      //     ),
+                      //   ),
+                      // );
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
                       setState(() {
-                        _isCartLoading = false; // Stop loading on error
+                        _isCartLoading = false;
                       });
 
                       showTopSnackBar(
@@ -559,15 +549,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       return const CircularProgressIndicator(
                         color: Colors.white,
                       );
+                    } else {
+                      return Text(
+                        widget.product.isCartExist
+                            ? 'حذف من العربة'
+                            : 'أضف الى العربة',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      );
                     }
-                    return Text(
-                      widget.product.isCartExist
-                          ? 'حذف من السله'
-                          : 'أضف الى العربة',
-                      style: const TextStyle(
-                        color: Colors.white,
-                      ),
-                    );
                   },
                 ),
               ),

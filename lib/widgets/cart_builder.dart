@@ -35,7 +35,6 @@ class _CartState extends State<Cart> {
   Widget build(BuildContext context) {
     final screenHeight = MediaQuery.of(context).size.height;
     final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -47,134 +46,164 @@ class _CartState extends State<Cart> {
         backgroundColor: Colors.white,
         surfaceTintColor: Colors.white,
       ),
-      body: Stack(
-        children: [
-          // FutureBuilder to load cart items
-          FutureBuilder(
-            future: requestData(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SpinKitThreeBounce(
-                  color: Colors.green,
-                  size: 50.0,
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/images/error.png',
-                        width: screenHeight * 0.5,
-                        height: screenHeight * 0.25,
-                        fit: BoxFit.contain,
-                      ),
-                      SizedBox(height: screenHeight * 0.03),
-                      Text(
-                        '! حدث خطا اثناء تحميل البيانات',
-                        style: TextStyle(
-                          fontFamily: 'Cairo',
-                          fontWeight: FontWeight.bold,
-                          fontSize: screenWidth * 0.05,
-                        ),
-                      ),
-                    ],
+      body: FutureBuilder(
+        future: requestData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SpinKitThreeBounce(
+              color: Colors.green,
+              size: 50.0,
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/images/error.png',
+                    width: screenHeight * 0.5,
+                    height: screenHeight * 0.25,
+                    fit: BoxFit.contain,
                   ),
-                );
-              } else {
-                List<Cartitem> items = snapshot.data ?? [];
-                return Column(
-                  children: [
-                    // Fixed header text at the top
-                    Container(
-                      width: double.infinity,
-                      height: screenHeight * 0.09,
-                      color: const Color(0xffEBF9F1),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'منتجات في سله التسوق',
-                              style: TextStyle(
-                                color: const Color(0xff1B5E37),
-                                fontWeight: FontWeight.bold,
-                                fontSize: screenWidth * 0.04,
-                              ),
-                            ),
-                            Text(
-                              ' ${items.length} ',
-                              style: TextStyle(
-                                color: const Color(0xff1B5E37),
-                                fontWeight: FontWeight.bold,
-                                fontSize: screenWidth * 0.04,
-                              ),
-                            ),
-                            Text(
-                              'لديك',
-                              style: TextStyle(
-                                color: const Color(0xff1B5E37),
-                                fontWeight: FontWeight.bold,
-                                fontSize: screenWidth * 0.04,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
+                  SizedBox(height: screenHeight * 0.03),
+                  Text(
+                    '! حدث خطا اثناء تحميل البيانات',
+                    style: TextStyle(
+                      fontFamily: 'Cairo',
+                      fontWeight: FontWeight.bold,
+                      fontSize: screenWidth * 0.05,
                     ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(
-                          bottom: screenHeight * 0.1, // Space for the button
-                        ),
-                        child: ListView.builder(
-                          itemCount: items.length,
-                          itemBuilder: (context, index) {
-                            return CartItemWidget(
-                              product: items[index],
-                            );
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
-          ),
-          // Fixed pay button at the bottom with an icon
-          Positioned(
-            bottom: 0,
-            left: 0,
-            right: 0,
-            child: Padding(
-              padding: const EdgeInsets.all(12.0),
-              child: ElevatedButton.icon(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xff1B5E37), // Button color
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12.0), // Rounded corners
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  textStyle: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                icon: const Icon(Icons.payment, color: Colors.white), // Payment icon
-                onPressed: () {
-                  // Handle the payment action here
-                },
-                label: const Text(
-                  'الدفع',
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
+                ],
               ),
-            ),
-          ),
-        ],
+            );
+          } else {
+            List<Cartitem> items = snapshot.data ?? [];
+            return items.isNotEmpty
+                ? ListView.builder(
+                    itemCount: items.length + 2,
+                    itemBuilder: (context, index) {
+                      if (index == 0) {
+                        return Column(
+                          children: [
+                            Container(
+                              width: double.infinity,
+                              height: MediaQuery.sizeOf(context).height * 0.09,
+                              color: const Color(0xffEBF9F1),
+                              child: Center(
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'منتجات في سله التسوق',
+                                      style: TextStyle(
+                                        color: const Color(0xff1B5E37),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.04,
+                                      ),
+                                    ),
+                                    Text(
+                                      ' ${items.length} ',
+                                      style: TextStyle(
+                                        color: const Color(0xff1B5E37),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.04,
+                                      ),
+                                    ),
+                                    Text(
+                                      'لديك',
+                                      style: TextStyle(
+                                        color: const Color(0xff1B5E37),
+                                        fontWeight: FontWeight.bold,
+                                        fontSize:
+                                            MediaQuery.sizeOf(context).width *
+                                                0.04,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                          ],
+                        );
+                      }
+                      // Show cart items
+                      else if (index > 0 && index <= items.length) {
+                        return CartItemWidget(
+                          product: items[index - 1],
+                        );
+                      }
+                      // Last item is the payment button
+                      else if (index == items.length + 1) {
+                        return Column(
+                          mainAxisSize: MainAxisSize.max,
+                          children: [
+                            const SizedBox(height: 6),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 20),
+                              child: SizedBox(
+                                width: double.infinity,
+                                height: 45,
+                                child: ElevatedButton(
+                                  style: ButtonStyle(
+                                    backgroundColor: WidgetStateProperty.all(
+                                      const Color(0xff1B5E37),
+                                    ),
+                                  ),
+                                  onPressed: () {
+                                    // Add payment handling logic here
+                                  },
+                                  child: const Text(
+                                    'الدفع',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 6),
+                          ],
+                        );
+                      }
+                      return null;
+                    },
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        // Responsive Image
+                        Image.asset(
+                          'assets/images/noCart.PNG',
+                          width: screenHeight *
+                              0.5, // Adjust width as 50% of screen width
+                          height: screenHeight *
+                              0.25, // Adjust height as 25% of screen height
+                          fit: BoxFit
+                              .contain, // Ensure image fits within the specified dimensions
+                        ),
+                        SizedBox(
+                            height: screenHeight * 0.02), // Responsive height
+                        Text(
+                          '! السله فارغه',
+                          style: TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            fontSize: screenHeight * 0.03,
+                          ),
+                        ),
+                      ],
+                    ),
+                  );
+          }
+        },
       ),
     );
   }
