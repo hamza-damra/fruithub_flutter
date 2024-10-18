@@ -3,6 +3,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
 import 'package:fruitshub/screens/sub_screens/favourite_screen.dart'; // Make sure this import is included
+import 'package:fruitshub/screens/sub_screens/personal_profile.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -53,13 +54,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
             'تسجيل الخروج',
             textAlign: TextAlign.right,
           ),
-          content: const Text(
-            '!هل أنت متأكد أنك تريد تسجيل الخروج ؟',
-            style: TextStyle(
-              fontFamily: 'Cairo',
-              fontWeight: FontWeight.w600,
+          content: const FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              '!هل أنت متأكد أنك تريد تسجيل الخروج ؟',
+              style: TextStyle(
+                fontFamily: 'Cairo',
+                fontWeight: FontWeight.w600,
+              ),
+              textAlign: TextAlign.right,
             ),
-            textAlign: TextAlign.right,
           ),
           actions: [
             TextButton(
@@ -70,7 +74,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'إلغاء',
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                  color: Colors.redAccent,
+                  color: Colors.green,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -84,7 +88,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'تأكيد',
                 textAlign: TextAlign.right,
                 style: TextStyle(
-                  color: Colors.green,
+                  color: Colors.redAccent,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -95,54 +99,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
+  Widget _buildProfileOption({
+    required String iconPath,
+    required String label,
+    required VoidCallback onTap,
+  }) {
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 6,
+        vertical: 9,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            blurRadius: 9,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: ListTile(
+        leading: const Icon(
+          Icons.arrow_back_ios_new, // Updated modern arrow icon
+          color: Colors.grey,
+          size: 20,
+        ),
+        trailing: CircleAvatar(
+          radius: 20,
+          backgroundColor: const Color(0xffF2F3F2),
+          child: SvgPicture.asset(
+            iconPath,
+            width: 24,
+            height: 24,
+            color: const Color(0xff53B175),
+          ),
+        ),
+        title: Text(
+          label,
+          style: const TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+          textAlign: TextAlign.right, // Ensure RTL alignment
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('حسابي'),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        surfaceTintColor: Colors.white,
+      ),
       backgroundColor: Colors.white,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            const SizedBox(height: 60), // Smaller space at the top
-            // Profile Avatar and Info (Smaller Header)
-            Center(
-              child: Column(
-                children: [
-                  CircleAvatar(
-                    radius: screenWidth * 0.12, // Reduced avatar size
-                    backgroundImage: const AssetImage('assets/images/avatar.jpg'), // Replace with your image asset
-                  ),
-                  const SizedBox(height: 10), // Smaller space between avatar and name
-                  // Name and Email (Smaller Font Sizes)
-                  Text(
-                    name,
-                    style: const TextStyle(
-                      fontSize: 18, // Slightly smaller font size for name
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4), // Smaller space between name and email
-                  Text(
-                    email,
-                    style: const TextStyle(
-                      fontSize: 13, // Slightly smaller font size for email
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 30), // Smaller space below the header
+            // Smaller space below the header
             // Profile Options List
             Expanded(
               child: ListView(
                 children: [
+                  Center(
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: screenWidth * 0.12,
+                          backgroundImage:
+                              const AssetImage('assets/images/avatar.jpg'),
+                        ),
+                        const SizedBox(height: 10),
+                        Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          email,
+                          style: const TextStyle(
+                            fontSize: 13,
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 15),
                   _buildProfileOption(
                     iconPath: 'assets/profile/user.svg',
                     label: 'الملف الشخصي',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const PersonalProfile(),
+                        ),
+                      );
+                    },
                   ),
                   _buildProfileOption(
                     iconPath: 'assets/profile/box.svg',
@@ -152,7 +219,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   _buildProfileOption(
                     iconPath: 'assets/profile/heart.svg',
                     label: 'المفضلة',
-                    // Navigate to FavouriteScreen when this option is tapped
                     onTap: () {
                       Navigator.push(
                         context,
@@ -168,6 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onTap: () {
                       showTopSnackBar(
                         Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 10),
                         const CustomSnackBar.info(
                           message: "سيتم توفير الاشعارات قريبا",
                           textAlign: TextAlign.center,
@@ -202,55 +269,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  // Profile Option Widget with Icon (Smaller Header Adjustment)
-  Widget _buildProfileOption({
-    required String iconPath,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ListTile(
-        leading: const Icon(
-          Icons.arrow_back_ios_new, // Updated modern arrow icon
-          color: Colors.grey,
-          size: 20,
-        ),
-        trailing: CircleAvatar(
-          radius: 20,
-          backgroundColor: const Color(0xffF2F3F2),
-          child: SvgPicture.asset(
-            iconPath,
-            width: 24,
-            height: 24,
-            color: const Color(0xff53B175),
-          ),
-        ),
-        title: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.right, // Ensure RTL alignment
-        ),
-        onTap: onTap,
       ),
     );
   }
