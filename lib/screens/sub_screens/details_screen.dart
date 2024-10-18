@@ -477,7 +477,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                 onPressed: _isCartLoading
                     ? null // Disable button during loading
                     : () {
-                        _isCartLoading = true; // Start loading
+                        setState(() {
+                          _isCartLoading = true; // Start loading
+                        });
 
                         if (widget.product.isCartExist) {
                           BlocProvider.of<CartCubit>(context).deleteFromCart(
@@ -496,7 +498,9 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           );
                         }
 
-                        _isCartLoading = false; // end loading
+                        setState(() {
+                          _isCartLoading = false;
+                        });
                       },
                 child: BlocConsumer<CartCubit, CartState>(
                   listener: (context, state) {
@@ -504,7 +508,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       setState(() {
                         widget.product.isCartExist =
                             !widget.product.isCartExist;
-                        _isCartLoading = false;
                       });
                       // showTopSnackBar(
                       //   Overlay.of(context),
@@ -523,10 +526,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                       // );
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
-                      setState(() {
-                        _isCartLoading = false;
-                      });
-
                       showTopSnackBar(
                         Overlay.of(context),
                         displayDuration: const Duration(milliseconds: 10),
