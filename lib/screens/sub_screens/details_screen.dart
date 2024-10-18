@@ -509,21 +509,6 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         widget.product.isCartExist =
                             !widget.product.isCartExist;
                       });
-                      // showTopSnackBar(
-                      //   Overlay.of(context),
-                      //   displayDuration: const Duration(milliseconds: 10),
-                      //   CustomSnackBar.info(
-                      //     message: state is CartDeleteSuccess
-                      //         ? "تم حذف المنتج من السله"
-                      //         : "تم اضافه المنتج الي السله",
-                      //     textAlign: TextAlign.center,
-                      //     textStyle: const TextStyle(
-                      //       fontFamily: 'Cairo',
-                      //       fontWeight: FontWeight.bold,
-                      //       color: Colors.white,
-                      //     ),
-                      //   ),
-                      // );
                     } else if (state is CartDeleteError ||
                         state is CartAddError) {
                       showTopSnackBar(
@@ -531,8 +516,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                         displayDuration: const Duration(milliseconds: 10),
                         CustomSnackBar.error(
                           message: state is CartDeleteError
-                              ? "فشل حذف المنتج من السله"
-                              : "فشل اضافه المنتج الي السله",
+                              ? "فشل حذف المنتج من العربة"
+                              : "فشل اضافه المنتج الي العربة",
                           textAlign: TextAlign.center,
                           textStyle: const TextStyle(
                             fontFamily: 'Cairo',

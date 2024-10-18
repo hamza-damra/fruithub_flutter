@@ -33,7 +33,6 @@ class _ProductCardState extends State<ProductCard> {
   final cartManagement = CartManagement();
 
   late Widget favouriteIcon;
-  final bool _isCartLoading = false;
 
   void _showSnackBar(String message, String snackBarType) {
     if (snackBarType == 'info') {
@@ -126,7 +125,7 @@ class _ProductCardState extends State<ProductCard> {
         if (response.statusCode == 200 || response.statusCode == 204) {
           widget.product.isfavourite = false;
         } else {
-          _showSnackBar("فشل حذف المنتج من قائمه التمني", 'info');
+          _showSnackBar("فشل حذف المنتج من قائمه التمني", 'error');
         }
       }
     } else {
@@ -279,6 +278,23 @@ class _ProductCardState extends State<ProductCard> {
                         widget.product.isCartExist =
                             !widget.product.isCartExist;
                       });
+                    } else if (state is CartDeleteError ||
+                        state is CartAddError) {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        displayDuration: const Duration(milliseconds: 10),
+                        CustomSnackBar.error(
+                          message: state is CartDeleteError
+                              ? "فشل حذف المنتج من العربة"
+                              : "فشل اضافه المنتج الي العربة",
+                          textAlign: TextAlign.center,
+                          textStyle: const TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                      );
                     }
                   },
                   builder: (context, state) {
