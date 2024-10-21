@@ -177,7 +177,7 @@ class _ProductCardState extends State<ProductCard> {
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: const Color(0xffF3F5F7),
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(15),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -226,14 +226,17 @@ class _ProductCardState extends State<ProductCard> {
           // Product Image Section
           Expanded(
             child: Center(
-              child: FancyShimmerImage(
-                errorWidget: Image.asset(
-                  'assets/images/image-error-placeHolder.png',
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(15),
+                child: FancyShimmerImage(
+                  errorWidget: Image.asset(
+                    'assets/images/image-error-placeHolder.png',
+                  ),
+                  imageUrl: widget.product.imageUrl,
+                  shimmerBaseColor: Colors.grey[300],
+                  shimmerHighlightColor: Colors.white,
+                  boxFit: BoxFit.cover,
                 ),
-                imageUrl: widget.product.imageUrl,
-                shimmerBaseColor: Colors.grey[300],
-                shimmerHighlightColor: Colors.white,
-                boxFit: BoxFit.contain,
               ),
             ),
           ),
@@ -273,7 +276,10 @@ class _ProductCardState extends State<ProductCard> {
               children: [
                 BlocConsumer<CartCubit, CartState>(
                   listener: (context, state) {
-                    if (state is CartAddSuccess || state is CartDeleteSuccess) {
+                    if ((state is CartAddSuccess &&
+                            state.id == widget.product.id) ||
+                        (state is CartDeleteSuccess &&
+                            state.id == widget.product.id)) {
                       setState(() {
                         widget.product.isCartExist =
                             !widget.product.isCartExist;
@@ -298,11 +304,46 @@ class _ProductCardState extends State<ProductCard> {
                     }
                   },
                   builder: (context, state) {
-                    if (state is CartInitial ||
-                        state is CartAddSuccess ||
-                        state is CartDeleteSuccess ||
-                        state is CartDeleteError ||
-                        state is CartAddError) {
+                    if (state is CartAddLoading &&
+                        state.id == widget.product.id) {
+                      return const CartContainer(
+                        child: SizedBox(
+                          width: 17,
+                          height: 17,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        ),
+                      );
+                    }
+                    if ((state is CartAddSuccess &&
+                        state.id == widget.product.id)) {
+                      return GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<CartCubit>(context).deleteFromCart(
+                            widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
+                            widget.screen,
+                          );
+
+                          setState(() {
+                            widget.product.isCartExist =
+                                !widget.product.isCartExist;
+                          });
+                        },
+                        child: const CartContainer(
+                          child: Center(
+                            child: Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
                       return widget.product.isCartExist
                           ? GestureDetector(
                               onTap: () {
@@ -313,6 +354,11 @@ class _ProductCardState extends State<ProductCard> {
                                       : widget.product.id,
                                   widget.screen,
                                 );
+
+                                setState(() {
+                                  widget.product.isCartExist =
+                                      !widget.product.isCartExist;
+                                });
                               },
                               child: const CartContainer(
                                 child: Center(
@@ -333,6 +379,11 @@ class _ProductCardState extends State<ProductCard> {
                                   widget.product.myQuantity,
                                   widget.screen,
                                 );
+
+                                setState(() {
+                                  widget.product.isCartExist =
+                                      !widget.product.isCartExist;
+                                });
                               },
                               child: const CartContainer(
                                 child: Center(
@@ -344,17 +395,6 @@ class _ProductCardState extends State<ProductCard> {
                                 ),
                               ),
                             );
-                    } else {
-                      return const CartContainer(
-                        child: SizedBox(
-                          width: 17,
-                          height: 17,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        ),
-                      );
                     }
                   },
                 ),

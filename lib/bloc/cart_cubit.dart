@@ -8,15 +8,31 @@ class CartState {}
 
 class CartInitial extends CartState {}
 
-class CartDeleteLoading extends CartState {}
+class CartDeleteLoading extends CartState {
+  final int id;
 
-class CartDeleteSuccess extends CartState {}
+  CartDeleteLoading({required this.id});
+}
+
+class CartDeleteSuccess extends CartState {
+  final int id;
+
+  CartDeleteSuccess({required this.id});
+}
 
 class CartDeleteError extends CartState {}
 
-class CartAddLoading extends CartState {}
+class CartAddLoading extends CartState {
+  final int id;
 
-class CartAddSuccess extends CartState {}
+  CartAddLoading({required this.id});
+}
+
+class CartAddSuccess extends CartState {
+  final int id;
+
+  CartAddSuccess({required this.id});
+}
 
 class CartAddError extends CartState {}
 
@@ -24,14 +40,14 @@ class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
 
   Future<void> deleteFromCart(int id, String? isFav) async {
-    emit(CartDeleteLoading());
+    emit(CartDeleteLoading(id: id));
     http.Response response = await CartManagement().deleteFromCart(
       token: await SharedPrefManager().getData('token'),
       id: id,
     );
 
     if (response.statusCode == 200 || response.statusCode == 204) {
-      emit(CartDeleteSuccess());
+      emit(CartDeleteSuccess(id: id));
       if (isFav == 'fav') {
         mostSelling = [];
       }
@@ -44,14 +60,14 @@ class CartCubit extends Cubit<CartState> {
   }
 
   Future<void> addToCart(int id, int quantity, String? isFav) async {
-    emit(CartAddLoading());
+    emit(CartAddLoading(id: id));
     http.Response response = await CartManagement().addToCart(
       token: await SharedPrefManager().getData('token'),
       productId: id,
       quantity: quantity,
     );
     if (response.statusCode == 200 || response.statusCode == 201) {
-      emit(CartAddSuccess());
+      emit(CartAddSuccess(id: id));
       if (isFav == 'fav') {
         mostSelling = [];
       }
