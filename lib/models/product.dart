@@ -75,4 +75,8 @@ class Product {
       counterOneStars: json['counterOneStars'],
     );
   }
+
+  static List<Product> fromJsonList(List<dynamic> jsonList) {
+    return jsonList.map((json) => Product.fromJson(json)).toList();
+  }
 }
