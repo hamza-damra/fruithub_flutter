@@ -23,6 +23,7 @@ class CartManagement {
           'accept': 'application/json; charset=UTF-8',
         },
       );
+      if (response.statusCode == 404) {}
       print(response.body);
       return response;
     } catch (e) {
