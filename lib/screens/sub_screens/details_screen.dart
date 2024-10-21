@@ -23,11 +23,10 @@ class DetailsScreen extends StatefulWidget {
 }
 
 class _DetailsScreenState extends State<DetailsScreen> {
-  bool _isCartLoading = false; // Loading state for button
+  bool _isCartLoading = false;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
@@ -468,71 +467,72 @@ class _DetailsScreenState extends State<DetailsScreen> {
               width: double.infinity,
               height: 45,
               child: ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: WidgetStateProperty.all<Color>(
-                    const Color(0xff1B5E37),
+                  style: ButtonStyle(
+                    backgroundColor: WidgetStateProperty.all<Color>(
+                      const Color(0xff1B5E37),
+                    ),
                   ),
-                ),
-                onPressed: _isCartLoading
-                    ? null // Disable button during loading
-                    : () {
-                        setState(() {
-                          _isCartLoading = true; // Start loading
-                        });
+                  onPressed: _isCartLoading
+                      ? null
+                      : () {
+                          setState(() {
+                            _isCartLoading = true;
+                          });
 
-                        if (widget.product.isCartExist) {
-                          BlocProvider.of<CartCubit>(context).deleteFromCart(
-                            widget.screen == 'fav'
-                                ? widget.product.productId
-                                : widget.product.id,
-                            widget.screen,
-                          );
-                        } else {
-                          BlocProvider.of<CartCubit>(context).addToCart(
-                            widget.screen == 'fav'
-                                ? widget.product.productId
-                                : widget.product.id,
-                            widget.product.myQuantity,
-                            widget.screen,
-                          );
-                        }
+                          if (widget.product.isCartExist) {
+                            BlocProvider.of<CartCubit>(context).deleteFromCart(
+                              widget.screen == 'fav'
+                                  ? widget.product.productId
+                                  : widget.product.id,
+                              widget.screen,
+                            );
+                          } else {
+                            BlocProvider.of<CartCubit>(context).addToCart(
+                              widget.screen == 'fav'
+                                  ? widget.product.productId
+                                  : widget.product.id,
+                              widget.product.myQuantity,
+                              widget.screen,
+                            );
+                          }
 
-                        setState(() {
-                          _isCartLoading = false;
-                        });
-                      },
-                child: BlocConsumer<CartCubit, CartState>(
-                  listener: (context, state) {
-                    if (state is CartDeleteSuccess || state is CartAddSuccess) {
-                      setState(() {
-                        widget.product.isCartExist =
-                            !widget.product.isCartExist;
-                      });
-                    } else if (state is CartDeleteError ||
-                        state is CartAddError) {
-                      showTopSnackBar(
-                        Overlay.of(context),
-                        displayDuration: const Duration(milliseconds: 10),
-                        CustomSnackBar.error(
-                          message: state is CartDeleteError
-                              ? "فشل حذف المنتج من العربة"
-                              : "فشل اضافه المنتج الي العربة",
-                          textAlign: TextAlign.center,
-                          textStyle: const TextStyle(
-                            fontFamily: 'Cairo',
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                          setState(() {
+                            _isCartLoading = false;
+                          });
+                        },
+                  child: BlocConsumer<CartCubit, CartState>(
+                    listener: (context, state) {
+                      if ((state is CartDeleteSuccess &&
+                              state.id == widget.product.id) ||
+                          state is CartAddSuccess &&
+                              state.id == widget.product.id) {
+                        setState(() {});
+                      } else if (state is CartDeleteError ||
+                          state is CartAddError) {
+                        showTopSnackBar(
+                          context as OverlayState,
+                          CustomSnackBar.error(
+                            message: state is CartDeleteError
+                                ? "فشل حذف المنتج من العربة"
+                                : "فشل اضافه المنتج الي العربة",
+                            textStyle: const TextStyle(
+                              fontFamily: 'Cairo',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
-                        ),
-                      );
-                    }
-                  },
-                  builder: (context, state) {
-                    if (state is CartAddLoading || state is CartDeleteLoading) {
-                      return const CircularProgressIndicator(
-                        color: Colors.white,
-                      );
-                    } else {
+                          displayDuration: const Duration(milliseconds: 2000),
+                        );
+                      }
+                    },
+                    builder: (context, state) {
+                      if (state is CartAddLoading &&
+                              state.id == widget.product.id ||
+                          state is CartDeleteLoading &&
+                              state.id == widget.product.id) {
+                        return const CircularProgressIndicator(
+                            color: Colors.white);
+                      }
                       return Text(
                         widget.product.isCartExist
                             ? 'حذف من العربة'
@@ -541,10 +541,8 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           color: Colors.white,
                         ),
                       );
-                    }
-                  },
-                ),
-              ),
+                    },
+                  )),
             ),
           ),
           const SizedBox(
@@ -559,15 +557,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
     DateTime expiry = DateTime.parse(expiryDate);
     DateTime now = DateTime.now();
 
-    // Calculate the months difference
     int months = ((expiry.year - now.year) * 12) + (expiry.month - now.month);
 
-    // If the current day is later than the expiry day in the same month, subtract one month
     if (now.day > expiry.day) {
       months--;
     }
 
-    // Ensure that the number of months is not negative
     return months < 0 ? 0 : months;
   }
 }
