@@ -177,7 +177,7 @@ class _ProductCardState extends State<ProductCard> {
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
         color: const Color(0xffF3F5F7),
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,7 +235,7 @@ class _ProductCardState extends State<ProductCard> {
                   imageUrl: widget.product.imageUrl,
                   shimmerBaseColor: Colors.grey[300],
                   shimmerHighlightColor: Colors.white,
-                  boxFit: BoxFit.cover,
+                  boxFit: BoxFit.contain,
                 ),
               ),
             ),
@@ -304,55 +304,16 @@ class _ProductCardState extends State<ProductCard> {
                     }
                   },
                   builder: (context, state) {
-                    if (state is CartAddLoading &&
-                        state.id == widget.product.id) {
-                      return const CartContainer(
-                        child: SizedBox(
-                          width: 17,
-                          height: 17,
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                            strokeWidth: 2.5,
-                          ),
-                        ),
-                      );
-                    }
-                    if ((state is CartAddSuccess &&
-                        state.id == widget.product.id)) {
-                      return GestureDetector(
-                        onTap: () {
-                          BlocProvider.of<CartCubit>(context).deleteFromCart(
-                            widget.screen == 'fav'
-                                ? widget.product.productId
-                                : widget.product.id,
-                            widget.screen,
-                          );
-
-                          setState(() {
-                            widget.product.isCartExist =
-                                !widget.product.isCartExist;
-                          });
-                        },
-                        child: const CartContainer(
-                          child: Center(
-                            child: Icon(
-                              Icons.done_rounded,
-                              color: Colors.white,
-                              size: 22,
-                            ),
-                          ),
-                        ),
-                      );
-                    } else {
+                    if (state is CartInitial) {
                       return widget.product.isCartExist
                           ? GestureDetector(
                               onTap: () {
                                 BlocProvider.of<CartCubit>(context)
                                     .deleteFromCart(
-                                  widget.screen == 'fav'
+                                  id: widget.screen == 'fav'
                                       ? widget.product.productId
                                       : widget.product.id,
-                                  widget.screen,
+                                  screen: widget.screen,
                                 );
 
                                 setState(() {
@@ -373,11 +334,131 @@ class _ProductCardState extends State<ProductCard> {
                           : GestureDetector(
                               onTap: () {
                                 BlocProvider.of<CartCubit>(context).addToCart(
-                                  widget.screen == 'fav'
+                                  id: widget.screen == 'fav'
                                       ? widget.product.productId
                                       : widget.product.id,
-                                  widget.product.myQuantity,
-                                  widget.screen,
+                                  quantity: widget.product.myQuantity,
+                                  screen: widget.screen,
+                                );
+
+                                setState(() {
+                                  widget.product.isCartExist =
+                                      !widget.product.isCartExist;
+                                });
+                              },
+                              child: const CartContainer(
+                                child: Center(
+                                  child: Icon(
+                                    Icons.add_rounded,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            );
+                    }
+                    if (state is CartAddLoading &&
+                            state.id == widget.product.id ||
+                        state is CartDeleteLoading &&
+                            state.id == widget.product.id) {
+                      return const CartContainer(
+                        child: SizedBox(
+                          width: 17,
+                          height: 17,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                            strokeWidth: 2.5,
+                          ),
+                        ),
+                      );
+                    } else if ((state is CartAddSuccess &&
+                            state.id == widget.product.id ||
+                        state is CartDeleteError)) {
+                      return GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<CartCubit>(context).deleteFromCart(
+                            id: widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
+                            screen: widget.screen,
+                          );
+                          setState(() {
+                            widget.product.isCartExist =
+                                !widget.product.isCartExist;
+                          });
+                        },
+                        child: const CartContainer(
+                          child: Center(
+                            child: Icon(
+                              Icons.done_rounded,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else if (state is CartDeleteSuccess &&
+                            state.id == widget.product.id ||
+                        state is CartAddError) {
+                      return GestureDetector(
+                        onTap: () {
+                          BlocProvider.of<CartCubit>(context).addToCart(
+                            id: widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
+                            quantity: widget.product.myQuantity,
+                            screen: widget.screen,
+                          );
+
+                          setState(() {
+                            widget.product.isCartExist =
+                                !widget.product.isCartExist;
+                          });
+                        },
+                        child: const CartContainer(
+                          child: Center(
+                            child: Icon(
+                              Icons.add_rounded,
+                              color: Colors.white,
+                              size: 22,
+                            ),
+                          ),
+                        ),
+                      );
+                    } else {
+                      return widget.product.isCartExist
+                          ? GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<CartCubit>(context)
+                                    .deleteFromCart(
+                                  id: widget.screen == 'fav'
+                                      ? widget.product.productId
+                                      : widget.product.id,
+                                  screen: widget.screen,
+                                );
+                                setState(() {
+                                  widget.product.isCartExist =
+                                      !widget.product.isCartExist;
+                                });
+                              },
+                              child: const CartContainer(
+                                child: Center(
+                                  child: Icon(
+                                    Icons.done_rounded,
+                                    color: Colors.white,
+                                    size: 22,
+                                  ),
+                                ),
+                              ),
+                            )
+                          : GestureDetector(
+                              onTap: () {
+                                BlocProvider.of<CartCubit>(context).addToCart(
+                                  id: widget.screen == 'fav'
+                                      ? widget.product.productId
+                                      : widget.product.id,
+                                  quantity: widget.product.myQuantity,
+                                  screen: widget.screen,
                                 );
 
                                 setState(() {

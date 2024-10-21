@@ -57,8 +57,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                         cart = [];
                         favourite = [];
                         BlocProvider.of<CartCubit>(this.context).deleteFromCart(
-                          widget.product.productId,
-                          '',
+                          id: widget.product.productId,
+                          screen: '',
                         );
                       },
                     ),
@@ -110,7 +110,7 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                         ),
                         Text(
                           (widget.product.price * widget.product.quantity)
-                              .toStringAsFixed(2)
+                              .toStringAsFixed(1)
                               .toString(),
                           style: TextStyle(
                             color: const Color(0xffF4A91F),

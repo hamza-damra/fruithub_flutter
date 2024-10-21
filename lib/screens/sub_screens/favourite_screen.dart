@@ -6,7 +6,6 @@ import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
-import 'package:fruitshub/screens/sub_screens/details_screen.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -155,22 +154,9 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
                             crossAxisSpacing: screenWidth * 0.03,
                           ),
                           itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => DetailsScreen(
-                                      product: products[index],
-                                      screen: 'fav',
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: ProductCard(
-                                product: products[index],
-                                screen: 'fav',
-                              ),
+                            return ProductCard(
+                              product: products[index],
+                              screen: 'fav',
                             );
                           },
                         ),

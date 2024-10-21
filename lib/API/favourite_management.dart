@@ -74,12 +74,13 @@ class FavouriteManagement {
         },
       );
 
+      print(response.body);
+
       if (response.statusCode == 200 || response.statusCode == 201) {
         List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
         List<Product> items = jsonResponse
             .map((json) => Product.fromJson(json as Map<String, dynamic>))
             .toList();
-        jsonResponse.clear();
         return items;
       } else {
         throw Exception('فشل تحميل البيانات');

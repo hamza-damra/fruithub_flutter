@@ -225,12 +225,14 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                                                 builder: (context) =>
                                                     DetailsScreen(
                                                   product: products[index],
+                                                  screen: '',
                                                 ),
                                               ),
                                             );
                                           },
                                           child: ProductCard(
                                             product: products[index],
+                                            screen: '',
                                           ),
                                         );
                                       }

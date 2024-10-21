@@ -467,72 +467,84 @@ class _DetailsScreenState extends State<DetailsScreen> {
               width: double.infinity,
               height: 45,
               child: ElevatedButton(
-                  style: ButtonStyle(
-                    backgroundColor: WidgetStateProperty.all<Color>(
-                      const Color(0xff1B5E37),
-                    ),
+                style: ButtonStyle(
+                  backgroundColor: WidgetStateProperty.all<Color>(
+                    const Color(0xff1B5E37),
                   ),
-                  onPressed: _isCartLoading
-                      ? null
-                      : () {
-                          setState(() {
-                            _isCartLoading = true;
-                          });
+                ),
+                onPressed: _isCartLoading
+                    ? null
+                    : () {
+                        setState(() {
+                          _isCartLoading = true;
+                        });
 
-                          if (widget.product.isCartExist) {
-                            BlocProvider.of<CartCubit>(context).deleteFromCart(
-                              widget.screen == 'fav'
-                                  ? widget.product.productId
-                                  : widget.product.id,
-                              widget.screen,
-                            );
-                          } else {
-                            BlocProvider.of<CartCubit>(context).addToCart(
-                              widget.screen == 'fav'
-                                  ? widget.product.productId
-                                  : widget.product.id,
-                              widget.product.myQuantity,
-                              widget.screen,
-                            );
-                          }
+                        if (widget.product.isCartExist) {
+                          BlocProvider.of<CartCubit>(context).deleteFromCart(
+                            id: widget.product.id,
+                            screen: widget.screen,
+                          );
+                        } else {
+                          BlocProvider.of<CartCubit>(context).addToCart(
+                            id: widget.product.id,
+                            quantity: widget.product.myQuantity,
+                            screen: widget.screen,
+                          );
+                        }
 
-                          setState(() {
-                            _isCartLoading = false;
-                          });
-                        },
-                  child: BlocConsumer<CartCubit, CartState>(
-                    listener: (context, state) {
-                      if ((state is CartDeleteSuccess &&
-                              state.id == widget.product.id) ||
-                          state is CartAddSuccess &&
-                              state.id == widget.product.id) {
-                        setState(() {});
-                      } else if (state is CartDeleteError ||
-                          state is CartAddError) {
-                        showTopSnackBar(
-                          context as OverlayState,
-                          CustomSnackBar.error(
-                            message: state is CartDeleteError
-                                ? "فشل حذف المنتج من العربة"
-                                : "فشل اضافه المنتج الي العربة",
-                            textStyle: const TextStyle(
-                              fontFamily: 'Cairo',
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
+                        setState(() {
+                          _isCartLoading = false;
+                        });
+                      },
+                child: BlocConsumer<CartCubit, CartState>(
+                  listener: (context, state) {
+                    if ((state is CartDeleteSuccess &&
+                            state.id == widget.product.id) ||
+                        state is CartAddSuccess &&
+                            state.id == widget.product.id) {
+                      setState(() {});
+                    } else if (state is CartDeleteError ||
+                        state is CartAddError) {
+                      showTopSnackBar(
+                        Overlay.of(context),
+                        CustomSnackBar.error(
+                          message: state is CartDeleteError
+                              ? "فشل حذف المنتج من العربة"
+                              : "فشل اضافه المنتج الي العربة",
+                          textStyle: const TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
                           ),
-                          displayDuration: const Duration(milliseconds: 2000),
-                        );
-                      }
-                    },
-                    builder: (context, state) {
-                      if (state is CartAddLoading &&
-                              state.id == widget.product.id ||
-                          state is CartDeleteLoading &&
-                              state.id == widget.product.id) {
-                        return const CircularProgressIndicator(
-                            color: Colors.white);
-                      }
+                        ),
+                        displayDuration: const Duration(milliseconds: 2000),
+                      );
+                    }
+                  },
+                  builder: (context, state) {
+                    print(state);
+                    if (state is CartAddLoading &&
+                            state.id == widget.product.id ||
+                        state is CartDeleteLoading &&
+                            state.id == widget.product.id) {
+                      return const CircularProgressIndicator(
+                        color: Colors.white,
+                      );
+                    } else if (state is CartAddSuccess) {
+                      return const Text(
+                        'حذف من العربة',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      );
+                    } else if (state is CartDeleteSuccess) {
+                      return const Text(
+                        'أضف الى العربة',
+                        style: TextStyle(
+                          color: Colors.white,
+                        ),
+                      );
+                    } else {
                       return Text(
                         widget.product.isCartExist
                             ? 'حذف من العربة'
@@ -541,8 +553,10 @@ class _DetailsScreenState extends State<DetailsScreen> {
                           color: Colors.white,
                         ),
                       );
-                    },
-                  )),
+                    }
+                  },
+                ),
+              ),
             ),
           ),
           const SizedBox(

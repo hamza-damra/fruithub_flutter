@@ -39,42 +39,56 @@ class CartAddError extends CartState {}
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
 
-  Future<void> deleteFromCart(int id, String? isFav) async {
-    emit(CartDeleteLoading(id: id));
-    http.Response response = await CartManagement().deleteFromCart(
-      token: await SharedPrefManager().getData('token'),
-      id: id,
-    );
-
-    if (response.statusCode == 200 || response.statusCode == 204) {
-      emit(CartDeleteSuccess(id: id));
-      if (isFav == 'fav') {
-        mostSelling = [];
+  Future<void> deleteFromCart({
+    required int id,
+    required String? screen,
+  }) async {
+    try {
+      emit(CartDeleteLoading(id: id));
+      http.Response response = await CartManagement().deleteFromCart(
+        token: await SharedPrefManager().getData('token'),
+        id: id,
+      );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        emit(CartDeleteSuccess(id: id));
+        if (screen == 'fav') {
+          mostSelling = [];
+        }
+        cart = [];
+        favourite = [];
+        lastAdded = [];
+      } else {
+        emit(CartDeleteError());
       }
-      cart = [];
-      favourite = [];
-      lastAdded = [];
-    } else {
+    } on Exception {
       emit(CartDeleteError());
     }
   }
 
-  Future<void> addToCart(int id, int quantity, String? isFav) async {
-    emit(CartAddLoading(id: id));
-    http.Response response = await CartManagement().addToCart(
-      token: await SharedPrefManager().getData('token'),
-      productId: id,
-      quantity: quantity,
-    );
-    if (response.statusCode == 200 || response.statusCode == 201) {
-      emit(CartAddSuccess(id: id));
-      if (isFav == 'fav') {
-        mostSelling = [];
+  Future<void> addToCart({
+    required int id,
+    required int quantity,
+    required String? screen,
+  }) async {
+    try {
+      emit(CartAddLoading(id: id));
+      http.Response response = await CartManagement().addToCart(
+        token: await SharedPrefManager().getData('token'),
+        productId: id,
+        quantity: quantity,
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        emit(CartAddSuccess(id: id));
+        if (screen == 'fav') {
+          mostSelling = [];
+        }
+        cart = [];
+        favourite = [];
+        lastAdded = [];
+      } else {
+        emit(CartAddError());
       }
-      cart = [];
-      favourite = [];
-      lastAdded = [];
-    } else {
+    } on Exception {
       emit(CartAddError());
     }
   }
