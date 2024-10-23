@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:fruitshub/widgets/cart_item.dart';
@@ -39,7 +41,7 @@ class _CartState extends State<Cart> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'السله',
+          'العربه',
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
@@ -134,6 +136,8 @@ class _CartState extends State<Cart> {
                       }
                       // Show cart items
                       else if (index > 0 && index <= items.length) {
+                        BlocProvider.of<CartTotalPriceCubit>(context)
+                            .updateTotalPrice();
                         return CartItemWidget(
                           product: items[index - 1],
                         );
@@ -159,11 +163,44 @@ class _CartState extends State<Cart> {
                                   onPressed: () {
                                     // Add payment handling logic here
                                   },
-                                  child: const Text(
-                                    'الدفع',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
+                                  child: BlocBuilder<CartTotalPriceCubit,
+                                      CartTotalPriceState>(
+                                    builder: (context, state) {
+                                      print(state);
+                                      if (state is CartTotalPricChange ||
+                                          state is CartTotalPricInitial) {
+                                        return Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            const Spacer(flex: 14),
+                                            const Text(
+                                              'جنيه',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const Spacer(flex: 1),
+                                            Text(
+                                              state.totalPrice.toString(),
+                                              style: const TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const Spacer(flex: 1),
+                                            const Text(
+                                              'الدفع',
+                                              style: TextStyle(
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                            const Spacer(flex: 14),
+                                          ],
+                                        );
+                                      } else {
+                                        return const Text('unexpected state!');
+                                      }
+                                    },
                                   ),
                                 ),
                               ),

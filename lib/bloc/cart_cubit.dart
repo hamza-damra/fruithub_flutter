@@ -39,6 +39,10 @@ class CartAddError extends CartState {}
 class CartCubit extends Cubit<CartState> {
   CartCubit() : super(CartInitial());
 
+  void sendCartInitial() {
+    emit(CartInitial());
+  }
+
   Future<void> deleteFromCart({
     required int id,
     required String? screen,
@@ -51,6 +55,7 @@ class CartCubit extends Cubit<CartState> {
       );
       if (response.statusCode == 200 || response.statusCode == 204) {
         emit(CartDeleteSuccess(id: id));
+        emit(CartInitial());
         if (screen == 'fav') {
           mostSelling = [];
         }
@@ -79,6 +84,7 @@ class CartCubit extends Cubit<CartState> {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(CartAddSuccess(id: id));
+        emit(CartInitial());
         if (screen == 'fav') {
           mostSelling = [];
         }

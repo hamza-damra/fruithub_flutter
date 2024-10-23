@@ -2,6 +2,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/screens/sub_screens/rating_screen.dart';
 import 'package:fruitshub/widgets/product_info.dart';
@@ -24,11 +25,6 @@ class DetailsScreen extends StatefulWidget {
 
 class _DetailsScreenState extends State<DetailsScreen> {
   bool _isCartLoading = false;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -523,7 +519,16 @@ class _DetailsScreenState extends State<DetailsScreen> {
                   },
                   builder: (context, state) {
                     print(state);
-                    if (state is CartAddLoading &&
+                    if (state is CartInitial) {
+                      return Text(
+                        widget.product.isCartExist
+                            ? 'حذف من العربة'
+                            : 'أضف الى العربة',
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
+                      );
+                    } else if (state is CartAddLoading &&
                             state.id == widget.product.id ||
                         state is CartDeleteLoading &&
                             state.id == widget.product.id) {

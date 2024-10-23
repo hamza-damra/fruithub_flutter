@@ -2,6 +2,7 @@ import 'package:fancy_shimmer_image/fancy_shimmer_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
+import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
@@ -133,6 +134,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                 token:
                                     await SharedPrefManager().getData('token'),
                               );
+                              BlocProvider.of<CartTotalPriceCubit>(context)
+                                  .updateTotalPrice();
                             }
                           },
                           child: Container(
@@ -178,6 +181,8 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                 token:
                                     await SharedPrefManager().getData('token'),
                               );
+                              BlocProvider.of<CartTotalPriceCubit>(context)
+                                  .updateTotalPrice();
                             } else {
                               showTopSnackBar(
                                 Overlay.of(context),
