@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
@@ -65,19 +64,19 @@ class _PersonalProfileState extends State<PersonalProfile> {
                     height: screenWidth * 0.30,
                   ),
                 ),
-                Positioned(
-                  top: screenWidth * 0.24,
-                  right: 1,
-                  left: 1,
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      'assets/profile/change-image.svg',
-                      width: screenWidth * 0.08,
-                      height: screenWidth * 0.08,
-                    ),
-                    onPressed: () {},
-                  ),
-                ),
+                // Positioned(
+                //   top: screenWidth * 0.24,
+                //   right: 1,
+                //   left: 1,
+                //   child: IconButton(
+                //     icon: SvgPicture.asset(
+                //       'assets/profile/change-image.svg',
+                //       width: screenWidth * 0.08,
+                //       height: screenWidth * 0.08,
+                //     ),
+                //     onPressed: () {},
+                //   ),
+                // ),
               ],
             ),
             const SizedBox(height: 20),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
-import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
 import 'package:fruitshub/widgets/cart_builder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';

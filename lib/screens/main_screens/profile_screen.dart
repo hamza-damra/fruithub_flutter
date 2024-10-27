@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/auth/screens/signin_screen.dart';
-import 'package:fruitshub/screens/sub_screens/favourite_screen.dart'; // Make sure this import is included
+import 'package:fruitshub/screens/sub_screens/Addresses_screen.dart';
+import 'package:fruitshub/screens/sub_screens/favourite_screen.dart';
+import 'package:fruitshub/screens/sub_screens/my_orders.dart';
 import 'package:fruitshub/screens/sub_screens/personal_profile.dart';
+import 'package:fruitshub/widgets/profile_option.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -99,57 +101,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  Widget _buildProfileOption({
-    required String iconPath,
-    required String label,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      padding: const EdgeInsets.symmetric(
-        horizontal: 6,
-        vertical: 9,
-      ),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 9,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: ListTile(
-        leading: const Icon(
-          Icons.arrow_back_ios_new, // Updated modern arrow icon
-          color: Colors.grey,
-          size: 20,
-        ),
-        trailing: CircleAvatar(
-          radius: 20,
-          backgroundColor: const Color(0xffF2F3F2),
-          child: SvgPicture.asset(
-            iconPath,
-            width: 24,
-            height: 24,
-            color: const Color(0xff53B175),
-          ),
-        ),
-        title: Text(
-          label,
-          style: const TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
-          textAlign: TextAlign.right, // Ensure RTL alignment
-        ),
-        onTap: onTap,
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
@@ -166,8 +117,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Column(
           children: [
-            // Smaller space below the header
-            // Profile Options List
             Expanded(
               child: ListView(
                 children: [
@@ -199,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   const SizedBox(height: 15),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/user.svg',
                     label: 'الملف الشخصي',
                     onTap: () {
@@ -211,12 +160,31 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
+                    iconPath: 'assets/profile/box.svg',
+                    label: 'العناوين',
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const AddressesScreen(),
+                        ),
+                      );
+                    },
+                  ),
+                  ProfileOption(
                     iconPath: 'assets/profile/box.svg',
                     label: 'طلباتي',
-                    onTap: () {},
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const MyOrdersScreen(),
+                        ),
+                      );
+                    },
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/heart.svg',
                     label: 'المفضلة',
                     onTap: () {
@@ -228,7 +196,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/notification.svg',
                     label: 'الاشعارات',
                     onTap: () {
@@ -247,17 +215,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       );
                     },
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/global.svg',
                     label: 'اللغة',
                     onTap: () {},
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/magicpen.svg',
                     label: 'الوضع',
                     onTap: () {},
                   ),
-                  _buildProfileOption(
+                  ProfileOption(
                     iconPath: 'assets/profile/logout.svg',
                     label: 'تسجيل الخروج',
                     onTap: () {

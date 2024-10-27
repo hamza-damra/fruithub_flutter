@@ -325,7 +325,9 @@ class _ProductCardState extends State<ProductCard> {
                       return GestureDetector(
                         onTap: () {
                           BlocProvider.of<CartCubit>(context).deleteFromCart(
-                            id: widget.product.id,
+                            id: widget.screen == 'fav'
+                                ? widget.product.productId
+                                : widget.product.id,
                             screen: widget.screen,
                           );
                         },
@@ -345,7 +347,9 @@ class _ProductCardState extends State<ProductCard> {
                     return GestureDetector(
                       onTap: () {
                         BlocProvider.of<CartCubit>(context).addToCart(
-                          id: widget.product.id,
+                          id: widget.screen == 'fav'
+                              ? widget.product.productId
+                              : widget.product.id,
                           quantity: widget.product.myQuantity,
                           screen: widget.screen,
                         );

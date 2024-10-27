@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fruitshub/models/address.dart';
 import 'package:fruitshub/models/cartItem.dart';
 import 'package:fruitshub/models/product.dart';
 
@@ -8,11 +9,12 @@ double minNum = 0;
 TextEditingController maxController = TextEditingController();
 TextEditingController minController = TextEditingController();
 
-// product screens list
+// screens list
 List<Product> mostSelling = [];
 List<Product> lastAdded = [];
 List<Cartitem> cart = [];
 List<Product> favourite = [];
+List<AddressModel> address = [];
 
 //
 int mostSellingPageNumber = 0;
