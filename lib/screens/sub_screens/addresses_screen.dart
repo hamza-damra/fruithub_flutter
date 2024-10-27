@@ -26,7 +26,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
   TextEditingController apartmentNumberController = TextEditingController();
   TextEditingController postalCodeController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
-  bool isDefault = false;
+  bool isDefault = true;
 
   void showSnackBar(String message, String snackBarType) {
     if (snackBarType == 'info') {
@@ -456,7 +456,6 @@ class _AddressesScreenState extends State<AddressesScreen> {
                   ),
                 );
               }
-
               List<AddressModel> myAddresses = snapshot.data!;
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -467,7 +466,6 @@ class _AddressesScreenState extends State<AddressesScreen> {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: AddressItem(
                         address: myAddresses[index],
-                        addressLength: myAddresses.length,
                       ),
                     );
                   },

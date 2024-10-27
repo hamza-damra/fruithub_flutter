@@ -10,11 +10,9 @@ class AddressItem extends StatefulWidget {
   const AddressItem({
     super.key,
     required this.address,
-    required this.addressLength,
   });
 
   final AddressModel address;
-  final int addressLength;
 
   @override
   State<AddressItem> createState() => _AddressItemState();
@@ -362,30 +360,6 @@ class _AddressItemState extends State<AddressItem> {
                                       align: TextAlign.right,
                                       readOnly: false,
                                       inputType: TextInputType.number,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: screenWidth * 0.02,
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        const Text('تعيين كعنوان افتراضي'),
-                                        Checkbox(
-                                          value: widget.addressLength == 1
-                                              ? true
-                                              : widget.address.isDefault,
-                                          activeColor: Colors.green[600],
-                                          onChanged: (value) {
-                                            setModalState(() {
-                                              widget.address.isDefault =
-                                                  value ?? false;
-                                            });
-                                          },
-                                        ),
-                                      ],
                                     ),
                                   ),
                                   const SizedBox(height: 10),
