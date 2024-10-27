@@ -10,9 +10,11 @@ class AddressItem extends StatefulWidget {
   const AddressItem({
     super.key,
     required this.address,
+    required this.addressLength,
   });
 
   final AddressModel address;
+  final int addressLength;
 
   @override
   State<AddressItem> createState() => _AddressItemState();
@@ -372,7 +374,9 @@ class _AddressItemState extends State<AddressItem> {
                                       children: [
                                         const Text('تعيين كعنوان افتراضي'),
                                         Checkbox(
-                                          value: widget.address.isDefault,
+                                          value: widget.addressLength == 1
+                                              ? true
+                                              : widget.address.isDefault,
                                           activeColor: Colors.green[600],
                                           onChanged: (value) {
                                             setModalState(() {

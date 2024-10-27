@@ -107,6 +107,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
+          clearControllers();
           showModalBottomSheet(
             context: context,
             backgroundColor: Colors.white,
@@ -466,6 +467,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                       padding: const EdgeInsets.only(bottom: 8.0),
                       child: AddressItem(
                         address: myAddresses[index],
+                        addressLength: myAddresses.length,
                       ),
                     );
                   },
