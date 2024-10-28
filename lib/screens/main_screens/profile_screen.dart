@@ -40,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Future<void> _logOut() async {
     await SharedPrefManager().deleteData('token');
     Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
       context,
       MaterialPageRoute(
         builder: (context) => const SignInScreen(),

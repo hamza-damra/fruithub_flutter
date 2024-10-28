@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/foundation.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:http/http.dart' as http;
 
@@ -23,7 +24,9 @@ class ProductsManagement {
         },
       );
 
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         // Map<String, dynamic> decodeedResponse = jsonDecode(response.body);
@@ -39,7 +42,9 @@ class ProductsManagement {
         throw Exception('فشل تحميل البيانات');
       }
     } on Exception catch (e) {
-      print(e.toString());
+      if (kDebugMode) {
+        print(e.toString());
+      }
       throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');
     }
   }

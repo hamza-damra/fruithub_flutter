@@ -83,13 +83,11 @@ class _ProductCardState extends State<ProductCard> {
           )
         : GestureDetector(
             onTap: _toggleFavourite,
-            child: Container(
-              child: const Center(
-                child: Icon(
-                  Icons.favorite_border_rounded,
-                  color: Colors.red,
-                  size: 22,
-                ),
+            child: const Center(
+              child: Icon(
+                Icons.favorite_border_rounded,
+                color: Colors.red,
+                size: 22,
               ),
             ),
           );
@@ -144,25 +142,21 @@ class _ProductCardState extends State<ProductCard> {
       favouriteIcon = widget.product.isfavourite
           ? GestureDetector(
               onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_rounded,
+                  color: Colors.red,
+                  size: 22,
                 ),
               ),
             )
           : GestureDetector(
               onTap: _toggleFavourite,
-              child: Container(
-                child: const Center(
-                  child: Icon(
-                    Icons.favorite_border_rounded,
-                    color: Colors.red,
-                    size: 22,
-                  ),
+              child: const Center(
+                child: Icon(
+                  Icons.favorite_border_rounded,
+                  color: Colors.red,
+                  size: 22,
                 ),
               ),
             );

@@ -50,6 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
+    // ignore: deprecated_member_use
     final textScaleFactor = MediaQuery.of(context).textScaleFactor;
 
     return Scaffold(

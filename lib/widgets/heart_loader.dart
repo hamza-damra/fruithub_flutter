@@ -13,6 +13,7 @@ class HeartLoader extends StatefulWidget {
   final bool isFavorite;
 
   @override
+  // ignore: library_private_types_in_public_api
   _HeartLoaderState createState() => _HeartLoaderState();
 }
 

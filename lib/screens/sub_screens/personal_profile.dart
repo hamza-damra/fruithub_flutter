@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
@@ -22,7 +23,9 @@ class _PersonalProfileState extends State<PersonalProfile> {
       await SharedPrefManager().getData('token'),
     );
 
-    print(decodedToken);
+    if (kDebugMode) {
+      print(decodedToken);
+    }
 
     setState(() {
       email = decodedToken['sub'];
@@ -114,11 +117,13 @@ class _PersonalProfileState extends State<PersonalProfile> {
                     email: email,
                   );
 
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
 
                   if (verificationResponse.statusCode == 200 ||
                       verificationResponse.statusCode == 201) {
                     Navigator.push(
+                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(
                         builder: (context) => const ChangeEmail(),
@@ -174,11 +179,13 @@ class _PersonalProfileState extends State<PersonalProfile> {
                     email,
                   );
 
+                  // ignore: use_build_context_synchronously
                   Navigator.pop(context);
 
                   if (verificationResponse.statusCode == 200 ||
                       verificationResponse.statusCode == 201) {
                     Navigator.push(
+                      // ignore: use_build_context_synchronously
                       context,
                       MaterialPageRoute(
                         builder: (context) => ResetPassword(

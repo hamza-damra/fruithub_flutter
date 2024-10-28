@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -88,7 +89,9 @@ class _PriceFilteredProductsState extends State<PriceFilteredProducts> {
                     ],
                   );
                 } else if (snapshot.hasError) {
-                  print(snapshot.error);
+                  if (kDebugMode) {
+                    print(snapshot.error);
+                  }
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

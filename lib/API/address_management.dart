@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:fruitshub/models/address.dart';
 import 'package:http/http.dart' as http;
 
@@ -56,7 +57,9 @@ class AddressManagement {
         },
       );
 
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
@@ -95,7 +98,9 @@ class AddressManagement {
         },
       );
 
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         return response;
@@ -119,7 +124,9 @@ class AddressManagement {
       },
     );
 
-    print(response.body);
+    if (kDebugMode) {
+      print(response.body);
+    }
 
     try {
       if (response.statusCode == 200 || response.statusCode == 201) {
@@ -132,7 +139,9 @@ class AddressManagement {
         throw Exception('حدث خطأ أثناء إضافة عنوان جديد');
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw Exception('حدث خطأ غير متوقع يرجى المحاولة مرة أخرى');
     }
   }

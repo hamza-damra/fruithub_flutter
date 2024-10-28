@@ -8,6 +8,7 @@ class AddressController extends StatelessWidget {
   });
 
   final String title;
+  // ignore: prefer_typing_uninitialized_variables
   final onTap;
 
   @override
