@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -5,7 +6,7 @@ import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
 import 'package:fruitshub/globals.dart';
-import 'package:fruitshub/models/cartItem.dart';
+import 'package:fruitshub/models/cart_item.dart';
 import 'package:fruitshub/widgets/cart_item.dart';
 
 class Cart extends StatefulWidget {
@@ -18,13 +19,13 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  Future<List<Cartitem>> getProducts() async {
+  Future<List<CartItem>> getProducts() async {
     return await CartManagement().getCartItems(
       token: await SharedPrefManager().getData('token'),
     );
   }
 
-  Future<List<Cartitem>> requestData() async {
+  Future<List<CartItem>> requestData() async {
     if (cart.isEmpty) {
       cart = await getProducts();
       return cart;
@@ -80,7 +81,7 @@ class _CartState extends State<Cart> {
               ),
             );
           } else {
-            List<Cartitem> items = snapshot.data ?? [];
+            List<CartItem> items = snapshot.data ?? [];
             return items.isNotEmpty
                 ? ListView.builder(
                     itemCount: items.length + 2,
@@ -166,7 +167,9 @@ class _CartState extends State<Cart> {
                                   child: BlocBuilder<CartTotalPriceCubit,
                                       CartTotalPriceState>(
                                     builder: (context, state) {
-                                      print(state);
+                                      if (kDebugMode) {
+                                        print(state);
+                                      }
                                       if (state is CartTotalPricChange ||
                                           state is CartTotalPricInitial) {
                                         return Row(

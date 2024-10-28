@@ -30,6 +30,7 @@ class _ChangeEmailState extends State<ChangeEmail> {
   Future<void> logOut() async {
     await SharedPrefManager().deleteData('token');
     Navigator.pushReplacement(
+      // ignore: use_build_context_synchronously
       context,
       MaterialPageRoute(builder: (context) => const SignInScreen()),
     );
@@ -60,9 +61,11 @@ class _ChangeEmailState extends State<ChangeEmail> {
         newEmail: emailController.text,
         confirmEmail: confirmEmailController.text,
       );
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       _handleResponse(response);
     } catch (error) {
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
       _showErrorDialog('حدث خطأ ما. حاول مرة أخرى.');
     }

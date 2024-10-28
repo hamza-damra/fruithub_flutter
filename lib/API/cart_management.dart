@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:fruitshub/models/cartItem.dart';
+import 'package:flutter/foundation.dart';
+import 'package:fruitshub/models/cart_item.dart';
 import 'package:http/http.dart' as http;
 
 class CartManagement {
@@ -24,14 +25,16 @@ class CartManagement {
         },
       );
       if (response.statusCode == 404) {}
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       return response;
     } catch (e) {
       throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');
     }
   }
 
-  Future<List<Cartitem>> getCartItems({
+  Future<List<CartItem>> getCartItems({
     required String token,
   }) async {
     try {
@@ -45,14 +48,16 @@ class CartManagement {
           'accept': 'application/json; charset=UTF-8',
         },
       );
-      print(jsonDecode(response.body));
+      if (kDebugMode) {
+        print(jsonDecode(response.body));
+      }
 
       if (response.statusCode == 200) {
         List<dynamic> jsonResponse = jsonDecode(response.body)['items'];
 
-        List<Cartitem> items = jsonResponse
+        List<CartItem> items = jsonResponse
             .map(
-              (json) => Cartitem.fromJson(json),
+              (json) => CartItem.fromJson(json),
             )
             .toList();
         jsonResponse.clear();
@@ -79,7 +84,9 @@ class CartManagement {
           'Content-Type': 'application/json',
         },
       );
-      print(response.body);
+      if (kDebugMode) {
+        print(response.body);
+      }
       return response;
     } catch (e) {
       throw Exception('حدث خطا غير متوقع يرجي المحاوله مره اخري');

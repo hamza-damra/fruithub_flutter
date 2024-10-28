@@ -1,4 +1,4 @@
-class Cartitem {
+class CartItem {
   final int id;
   final int productId;
   int quantity;
@@ -7,7 +7,7 @@ class Cartitem {
   final double price;
   int stockQuantity;
 
-  Cartitem({
+  CartItem({
     required this.id,
     required this.productId,
     required this.quantity,
@@ -17,8 +17,8 @@ class Cartitem {
     required this.price,
   });
 
-  factory Cartitem.fromJson(json) {
-    return Cartitem(
+  factory CartItem.fromJson(json) {
+    return CartItem(
       id: json['id'],
       productId: json['productId'],
       quantity: json['quantity'],

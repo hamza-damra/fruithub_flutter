@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/products_management.dart';
@@ -164,7 +165,9 @@ class _MostSellingBuilderState extends State<MostSellingBuilder> {
                     size: 50.0,
                   );
                 } else if (snapshot.hasError) {
-                  print(snapshot.error);
+                  if (kDebugMode) {
+                    print(snapshot.error);
+                  }
                   return Center(
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,

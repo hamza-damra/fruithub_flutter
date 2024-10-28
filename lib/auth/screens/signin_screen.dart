@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:fruitshub/auth/helpers/manage_users.dart';
@@ -81,8 +82,11 @@ class _SignInScreenState extends State<SignInScreen> {
         emailController.text,
         passwordController.text,
       );
+      // ignore: use_build_context_synchronously
       Navigator.pop(context);
-      print(signInResponse.statusCode);
+      if (kDebugMode) {
+        print(signInResponse.statusCode);
+      }
 
       // request success
       if (signInResponse.statusCode == 200 ||
@@ -91,6 +95,7 @@ class _SignInScreenState extends State<SignInScreen> {
             jsonDecode(signInResponse.body);
         SharedPrefManager().saveData('token', responseData['token']);
         Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
             builder: (context) => const AppController(),
@@ -101,6 +106,7 @@ class _SignInScreenState extends State<SignInScreen> {
       // user not verified
       else if (signInResponse.statusCode == 400) {
         Navigator.pushReplacement(
+          // ignore: use_build_context_synchronously
           context,
           MaterialPageRoute(
             builder: (context) => VerifyNewUser(
@@ -111,6 +117,7 @@ class _SignInScreenState extends State<SignInScreen> {
         );
       } else if (signInResponse.statusCode == 401) {
         showCustomDialog(
+          // ignore: use_build_context_synchronously
           context,
           'خطأ',
           'هذا المستخدم غير موجود او تم حذفه',
@@ -134,12 +141,15 @@ class _SignInScreenState extends State<SignInScreen> {
 
     // unexpected error
     on Exception {
+      // ignore: use_build_context_synchronously
       if (Navigator.canPop(context)) {
+        // ignore: use_build_context_synchronously
         Navigator.pop(context);
       }
 
       Future.delayed(const Duration(milliseconds: 100), () {
         showCustomDialog(
+          // ignore: use_build_context_synchronously
           context,
           'خطأ',
           'حدث خطأ غير متوقع الرجاء المحاولة مرة أخرى لاحقًا',

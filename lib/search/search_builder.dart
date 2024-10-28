@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/search_management.dart';
@@ -33,7 +34,9 @@ class SearchBuilder extends StatelessWidget {
 
           // Error state
           if (snapshot.hasError) {
-            print(snapshot.error);
+            if (kDebugMode) {
+              print(snapshot.error);
+            }
             return Scaffold(
               backgroundColor: Colors.white,
               body: Center(

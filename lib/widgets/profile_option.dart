@@ -45,6 +45,7 @@ class ProfileOption extends StatelessWidget {
             iconPath,
             width: 24,
             height: 24,
+            // ignore: deprecated_member_use
             color: const Color(0xff53B175),
           ),
         ),

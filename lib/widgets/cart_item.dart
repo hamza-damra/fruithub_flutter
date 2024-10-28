@@ -7,7 +7,7 @@ import 'package:fruitshub/globals.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
-import 'package:fruitshub/models/cartItem.dart';
+import 'package:fruitshub/models/cart_item.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -17,7 +17,7 @@ class CartItemWidget extends StatefulWidget {
     required this.product,
   });
 
-  final Cartitem product;
+  final CartItem product;
 
   @override
   State<CartItemWidget> createState() => _CartItemWidgetState();
@@ -134,8 +134,11 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                 token:
                                     await SharedPrefManager().getData('token'),
                               );
-                              BlocProvider.of<CartTotalPriceCubit>(context)
-                                  .updateTotalPrice();
+                              if (mounted) {
+                                // ignore: use_build_context_synchronously
+                                BlocProvider.of<CartTotalPriceCubit>(context)
+                                    .updateTotalPrice();
+                              }
                             }
                           },
                           child: Container(
@@ -181,8 +184,11 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                                 token:
                                     await SharedPrefManager().getData('token'),
                               );
-                              BlocProvider.of<CartTotalPriceCubit>(context)
-                                  .updateTotalPrice();
+                              if (mounted) {
+                                // ignore: use_build_context_synchronously
+                                BlocProvider.of<CartTotalPriceCubit>(context)
+                                    .updateTotalPrice();
+                              }
                             } else {
                               showTopSnackBar(
                                 Overlay.of(context),

@@ -213,19 +213,25 @@ class _ResetPasswordState extends State<ResetPassword> {
         confirmPasswordController.text,
       );
 
+      // ignore: use_build_context_synchronously
       Navigator.pop(context); // Close loading
 
       if (_isSuccess(response.statusCode)) {
+        // ignore: use_build_context_synchronously
         _showSuccessDialog(context);
       } else if (_isInvalidOtp(response.statusCode)) {
+        // ignore: use_build_context_synchronously
         _showInvalidOtpDialog(context);
       } else {
+        // ignore: use_build_context_synchronously
         _showErrorDialog(context,
             'حدث خطأ أثناء إعادة تعيين كلمة المرور. حاول مرة أخرى لاحقًا.');
       }
     } catch (e) {
+      // ignore: use_build_context_synchronously
       Navigator.pop(context); // Close loading
       _showErrorDialog(
+        // ignore: use_build_context_synchronously
         context,
         'حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت والمحاولة مرة أخرى.',
       );

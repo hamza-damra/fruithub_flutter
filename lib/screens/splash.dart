@@ -29,6 +29,7 @@ class _SplashState extends State<Splash> {
                         width: double.infinity,
                         child: SvgPicture.asset(
                           "assets/app/splash1back.svg",
+                          // ignore: deprecated_member_use
                           color: const Color.fromARGB(255, 255, 220, 151),
                           fit: BoxFit.cover,
                         ),

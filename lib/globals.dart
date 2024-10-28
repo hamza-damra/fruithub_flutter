@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fruitshub/models/address.dart';
-import 'package:fruitshub/models/cartItem.dart';
+import 'package:fruitshub/models/cart_item.dart';
 import 'package:fruitshub/models/product.dart';
 
 // filter vars
@@ -12,7 +12,7 @@ TextEditingController minController = TextEditingController();
 // screens list
 List<Product> mostSelling = [];
 List<Product> lastAdded = [];
-List<Cartitem> cart = [];
+List<CartItem> cart = [];
 List<Product> favourite = [];
 List<AddressModel> address = [];
 

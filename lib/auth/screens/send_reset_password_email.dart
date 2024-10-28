@@ -119,11 +119,13 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                       emailController.text,
                     );
 
+                    // ignore: use_build_context_synchronously
                     Navigator.pop(context);
 
                     if (verificationResponse.statusCode == 200 ||
                         verificationResponse.statusCode == 201) {
                       Navigator.push(
+                        // ignore: use_build_context_synchronously
                         context,
                         MaterialPageRoute(
                           builder: (context) => const ResetPassword(),
@@ -131,6 +133,7 @@ class _SendResetPasswordEmailState extends State<SendResetPasswordEmail> {
                       );
                     } else {
                       showDialog(
+                        // ignore: use_build_context_synchronously
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
