@@ -5,6 +5,8 @@ import 'package:fruitshub/bloc/address_cubit.dart';
 import 'package:fruitshub/models/address.dart';
 import 'package:fruitshub/widgets/address_controller.dart';
 import 'package:fruitshub/widgets/my_textfield.dart';
+import 'package:top_snackbar_flutter/custom_snack_bar.dart';
+import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
 class AddressItem extends StatefulWidget {
   const AddressItem({
@@ -26,6 +28,13 @@ class _AddressItemState extends State<AddressItem> {
   late TextEditingController floorController;
   late TextEditingController postalCodeController;
   late TextEditingController phoneController;
+  String? nameErrorText;
+  String? cityErrorText;
+  String? streetErrorText;
+  String? floorNumberErrorText;
+  String? apartmentNumberErrorText;
+  String? postalCodeErrorText;
+  String? phoneErrorText;
 
   @override
   void initState() {
@@ -63,6 +72,38 @@ class _AddressItemState extends State<AddressItem> {
     phoneController.addListener(() {
       widget.address.phoneNumber = phoneController.text;
     });
+  }
+
+  void showSnackBar(String message, String snackBarType) {
+    if (snackBarType == 'info') {
+      showTopSnackBar(
+        Overlay.of(context),
+        displayDuration: const Duration(milliseconds: 10),
+        CustomSnackBar.info(
+          message: message,
+          textAlign: TextAlign.center,
+          textStyle: const TextStyle(
+            fontFamily: 'Cairo',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
+    } else {
+      showTopSnackBar(
+        Overlay.of(context),
+        displayDuration: const Duration(milliseconds: 1000),
+        CustomSnackBar.error(
+          message: message,
+          textAlign: TextAlign.center,
+          textStyle: const TextStyle(
+            fontFamily: 'Cairo',
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+      );
+    }
   }
 
   @override
@@ -277,6 +318,7 @@ class _AddressItemState extends State<AddressItem> {
                                       hint: 'الاسم',
                                       controller: fullNameController,
                                       showprefixIcon: false,
+                                      errorText: nameErrorText,
                                       align: TextAlign.right,
                                       readOnly: false,
                                     ),
@@ -289,6 +331,7 @@ class _AddressItemState extends State<AddressItem> {
                                     child: MyTextField(
                                       hint: 'المدينه',
                                       controller: cityController,
+                                      errorText: cityErrorText,
                                       showprefixIcon: false,
                                       align: TextAlign.right,
                                       readOnly: false,
@@ -304,6 +347,7 @@ class _AddressItemState extends State<AddressItem> {
                                       controller: streetController,
                                       showprefixIcon: false,
                                       align: TextAlign.right,
+                                      errorText: streetErrorText,
                                       readOnly: false,
                                     ),
                                   ),
@@ -317,6 +361,7 @@ class _AddressItemState extends State<AddressItem> {
                                       controller: apartmentController,
                                       showprefixIcon: false,
                                       inputType: TextInputType.number,
+                                      errorText: apartmentNumberErrorText,
                                       align: TextAlign.right,
                                       readOnly: false,
                                     ),
@@ -329,6 +374,7 @@ class _AddressItemState extends State<AddressItem> {
                                     child: MyTextField(
                                       hint: 'رقم الدور',
                                       controller: floorController,
+                                      errorText: floorNumberErrorText,
                                       showprefixIcon: false,
                                       inputType: TextInputType.number,
                                       align: TextAlign.right,
@@ -345,6 +391,7 @@ class _AddressItemState extends State<AddressItem> {
                                       controller: postalCodeController,
                                       showprefixIcon: false,
                                       align: TextAlign.right,
+                                      errorText: postalCodeErrorText,
                                       readOnly: false,
                                     ),
                                   ),
@@ -357,6 +404,7 @@ class _AddressItemState extends State<AddressItem> {
                                       hint: 'رقم الهاتف',
                                       controller: phoneController,
                                       showprefixIcon: false,
+                                      errorText: phoneErrorText,
                                       align: TextAlign.right,
                                       readOnly: false,
                                       inputType: TextInputType.number,
@@ -367,20 +415,97 @@ class _AddressItemState extends State<AddressItem> {
                                     width: screenWidth * 0.90,
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        showDialog(
-                                          context: context,
-                                          barrierDismissible: false,
-                                          builder: (context) => const Center(
-                                            child: CircularProgressIndicator(
-                                              color: Colors.black,
+                                        if (fullNameController.text.isEmpty ||
+                                            cityController.text.isEmpty ||
+                                            streetController.text.isEmpty ||
+                                            phoneController.text.isEmpty ||
+                                            floorController.text.isEmpty ||
+                                            apartmentController.text.isEmpty ||
+                                            postalCodeController.text.isEmpty) {
+                                          showSnackBar(
+                                            'الرجاء ادخال جميع الحقول المطلوبه',
+                                            'error',
+                                          );
+                                        } else if (fullNameController.text
+                                                .trim()
+                                                .length <
+                                            2) {
+                                          nameErrorText =
+                                              'الاسم يجب أن يحتوي على حرفين على الأقل';
+                                          setModalState(() {});
+                                        } else if (cityController.text
+                                                .trim()
+                                                .length <
+                                            2) {
+                                          cityErrorText =
+                                              'المدينة يجب أن تحتوي على حرفين على الأقل';
+                                          setModalState(() {});
+                                        } else if (streetController.text
+                                                .trim()
+                                                .length <
+                                            5) {
+                                          streetErrorText =
+                                              'الشارع يجب أن يحتوي على 5 أحرف على الأقل';
+                                          setModalState(() {});
+                                        } else if (apartmentController.text
+                                            .trim()
+                                            .isEmpty) {
+                                          apartmentNumberErrorText =
+                                              'رقم الشقة يجب أن يحتوي على حرف واحد على الأقل';
+                                          setModalState(() {});
+                                        } else if (floorController.text
+                                            .trim()
+                                            .isEmpty) {
+                                          floorNumberErrorText =
+                                              'رقم الطابق يجب أن يحتوي على حرف واحد على الأقل';
+                                          setModalState(() {});
+                                        } else if (postalCodeController.text
+                                                    .trim()
+                                                    .length <
+                                                5 ||
+                                            postalCodeController.text
+                                                    .trim()
+                                                    .length >
+                                                10) {
+                                          postalCodeErrorText =
+                                              'الرمز البريدي يجب أن يكون بين 5 و 10 أحرف';
+                                          setModalState(() {});
+                                        } else if (phoneController.text
+                                                    .trim()
+                                                    .length <
+                                                10 ||
+                                            phoneController.text.trim().length >
+                                                15) {
+                                          phoneErrorText =
+                                              'رقم الهاتف يجب أن يكون بين 10 و 15 حرف';
+                                          setModalState(() {});
+                                        } else {
+                                          nameErrorText = null;
+                                          cityErrorText = null;
+                                          streetErrorText = null;
+                                          floorNumberErrorText = null;
+                                          apartmentNumberErrorText = null;
+                                          postalCodeErrorText = null;
+                                          phoneErrorText = null;
+                                          setModalState(() {});
+
+                                          // Show loading dialog
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (context) => const Center(
+                                              child: CircularProgressIndicator(
+                                                color: Colors.black,
+                                              ),
                                             ),
-                                          ),
-                                        );
-                                        BlocProvider.of<AddressCubit>(context)
-                                            .updateAddress(
-                                          newAddress: widget.address,
-                                          isSetDefult: false,
-                                        );
+                                          );
+
+                                          BlocProvider.of<AddressCubit>(context)
+                                              .updateAddress(
+                                            newAddress: widget.address,
+                                            isSetDefult: false,
+                                          );
+                                        }
                                       },
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor:

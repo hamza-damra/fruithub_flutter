@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:fruitshub/API/favourite_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
-import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
+import 'package:fruitshub/bloc/favourite_cubit.dart';
 import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/product.dart';
 import 'package:fruitshub/widgets/most_selling_product_card.dart';
@@ -47,7 +47,7 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       ),
       body: BlocConsumer<FavouriteCubit, FavouriteState>(
         listener: (context, state) {
-          if (state is FavouriteSuccess) {
+          if (state is FavouriteDeleteSuccess) {
             showTopSnackBar(
               Overlay.of(context),
               displayDuration: const Duration(milliseconds: 10),

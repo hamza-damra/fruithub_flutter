@@ -5,7 +5,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:fruitshub/bloc/address_cubit.dart';
 import 'package:fruitshub/bloc/cart_cubit.dart';
 import 'package:fruitshub/bloc/cart_total_price_cubit.dart';
-import 'package:fruitshub/bloc/remove_from_favourite_cubit.dart';
+import 'package:fruitshub/bloc/favourite_cubit.dart';
 import 'package:fruitshub/screens/splash.dart';
 import 'package:fruitshub/widgets/app_controller.dart';
 import 'auth/helpers/shared_pref_manager.dart';

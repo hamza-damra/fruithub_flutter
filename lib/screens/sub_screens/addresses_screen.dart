@@ -26,7 +26,17 @@ class _AddressesScreenState extends State<AddressesScreen> {
   TextEditingController apartmentNumberController = TextEditingController();
   TextEditingController postalCodeController = TextEditingController();
   TextEditingController phoneController = TextEditingController();
+
+  String? nameErrorText;
+  String? cityErrorText;
+  String? streetErrorText;
+  String? floorNumberErrorText;
+  String? apartmentNumberErrorText;
+  String? postalCodeErrorText;
+  String? phoneErrorText;
+
   bool isDefault = true;
+  final addressManagement = AddressManagement();
 
   void showSnackBar(String message, String snackBarType) {
     if (snackBarType == 'info') {
@@ -60,7 +70,15 @@ class _AddressesScreenState extends State<AddressesScreen> {
     }
   }
 
-  final addressManagement = AddressManagement();
+  void clearControllers() {
+    nameController.clear();
+    cityController.clear();
+    streetController.clear();
+    floorNumberController.clear();
+    apartmentNumberController.clear();
+    postalCodeController.clear();
+    phoneController.clear();
+  }
 
   Future<List<AddressModel>> getAllAddresses() async {
     return await addressManagement.getAllAddresses(
@@ -71,20 +89,8 @@ class _AddressesScreenState extends State<AddressesScreen> {
   Future<List<AddressModel>> requestData() async {
     if (address.isEmpty) {
       address = await getAllAddresses();
-      return address;
-    } else {
-      return await getAllAddresses();
     }
-  }
-
-  void clearControllers() {
-    nameController.clear();
-    cityController.clear();
-    streetController.clear();
-    floorNumberController.clear();
-    apartmentNumberController.clear();
-    postalCodeController.clear();
-    phoneController.clear();
+    return address;
   }
 
   @override
@@ -108,6 +114,13 @@ class _AddressesScreenState extends State<AddressesScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           clearControllers();
+          nameErrorText = null;
+          cityErrorText = null;
+          streetErrorText = null;
+          floorNumberErrorText = null;
+          apartmentNumberErrorText = null;
+          postalCodeErrorText = null;
+          phoneErrorText = null;
           showModalBottomSheet(
             context: context,
             backgroundColor: Colors.white,
@@ -153,6 +166,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             ),
                             child: MyTextField(
                               hint: 'الاسم',
+                              errorText: nameErrorText,
                               controller: nameController,
                               showprefixIcon: false,
                               align: TextAlign.right,
@@ -167,6 +181,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             child: MyTextField(
                               hint: 'المدينه',
                               controller: cityController,
+                              errorText: cityErrorText,
                               showprefixIcon: false,
                               align: TextAlign.right,
                               readOnly: false,
@@ -180,6 +195,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             child: MyTextField(
                               hint: 'الشارع',
                               controller: streetController,
+                              errorText: streetErrorText,
                               showprefixIcon: false,
                               align: TextAlign.right,
                               readOnly: false,
@@ -193,6 +209,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             child: MyTextField(
                               hint: 'رقم الشقه',
                               controller: apartmentNumberController,
+                              errorText: apartmentNumberErrorText,
                               showprefixIcon: false,
                               inputType: TextInputType.number,
                               align: TextAlign.right,
@@ -208,6 +225,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                               hint: 'رقم الدور',
                               controller: floorNumberController,
                               showprefixIcon: false,
+                              errorText: floorNumberErrorText,
                               inputType: TextInputType.number,
                               align: TextAlign.right,
                               readOnly: false,
@@ -222,6 +240,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                               hint: 'الكود البريدي',
                               controller: postalCodeController,
                               showprefixIcon: false,
+                              errorText: postalCodeErrorText,
                               align: TextAlign.right,
                               readOnly: false,
                             ),
@@ -234,6 +253,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             child: MyTextField(
                               hint: 'رقم الهاتف',
                               controller: phoneController,
+                              errorText: phoneErrorText,
                               showprefixIcon: false,
                               align: TextAlign.right,
                               readOnly: false,
@@ -271,17 +291,65 @@ class _AddressesScreenState extends State<AddressesScreen> {
                                     streetController.text.isEmpty ||
                                     phoneController.text.isEmpty ||
                                     floorNumberController.text.isEmpty ||
-                                    apartmentNumberController.text.isEmpty) {
+                                    apartmentNumberController.text.isEmpty ||
+                                    postalCodeController.text.isEmpty) {
                                   showSnackBar(
                                     'الرجاء ادخال جميع الحقول المطلوبه',
                                     'error',
                                   );
-                                }
+                                } else if (nameController.text.trim().length <
+                                    2) {
+                                  nameErrorText =
+                                      'الاسم يجب أن يحتوي على حرفين على الأقل';
+                                  setModalState(() {});
+                                } else if (cityController.text.trim().length <
+                                    2) {
+                                  cityErrorText =
+                                      'المدينة يجب أن تحتوي على حرفين على الأقل';
+                                  setModalState(() {});
+                                } else if (streetController.text.trim().length <
+                                    5) {
+                                  streetErrorText =
+                                      'الشارع يجب أن يحتوي على 5 أحرف على الأقل';
+                                  setModalState(() {});
+                                } else if (apartmentNumberController.text
+                                    .trim()
+                                    .isEmpty) {
+                                  apartmentNumberErrorText =
+                                      'رقم الشقة يجب أن يحتوي على حرف واحد على الأقل';
+                                  setModalState(() {});
+                                } else if (floorNumberController.text
+                                    .trim()
+                                    .isEmpty) {
+                                  floorNumberErrorText =
+                                      'رقم الطابق يجب أن يحتوي على حرف واحد على الأقل';
+                                  setModalState(() {});
+                                } else if (postalCodeController.text
+                                            .trim()
+                                            .length <
+                                        5 ||
+                                    postalCodeController.text.trim().length >
+                                        10) {
+                                  postalCodeErrorText =
+                                      'الرمز البريدي يجب أن يكون بين 5 و 10 أحرف';
+                                  setModalState(() {});
+                                } else if (phoneController.text.trim().length <
+                                        10 ||
+                                    phoneController.text.trim().length > 15) {
+                                  phoneErrorText =
+                                      'رقم الهاتف يجب أن يكون بين 10 و 15 حرف';
+                                  setModalState(() {});
+                                } else {
+                                  nameErrorText = null;
+                                  cityErrorText = null;
+                                  streetErrorText = null;
+                                  floorNumberErrorText = null;
+                                  apartmentNumberErrorText = null;
+                                  postalCodeErrorText = null;
+                                  phoneErrorText = null;
+                                  setModalState(() {});
 
-                                if (nameController.text.isNotEmpty &&
-                                    cityController.text.isNotEmpty &&
-                                    streetController.text.isNotEmpty &&
-                                    phoneController.text.isNotEmpty) {
+                                  // Show loading dialog
                                   showDialog(
                                     context: context,
                                     barrierDismissible: false,
@@ -291,6 +359,8 @@ class _AddressesScreenState extends State<AddressesScreen> {
                                       ),
                                     ),
                                   );
+
+                                  // Create AddressModel
                                   final address = AddressModel(
                                     id: 0,
                                     fullName: nameController.text,

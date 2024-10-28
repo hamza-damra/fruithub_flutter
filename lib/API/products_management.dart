@@ -60,6 +60,7 @@ class ProductsManagement {
           'accept': 'application/json; charset=UTF-8',
         },
       );
+      print(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         final Map<String, dynamic> data = jsonDecode(response.body);
