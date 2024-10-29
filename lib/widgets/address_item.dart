@@ -415,13 +415,25 @@ class _AddressItemState extends State<AddressItem> {
                                     width: screenWidth * 0.90,
                                     child: ElevatedButton(
                                       onPressed: () async {
-                                        if (fullNameController.text.isEmpty ||
-                                            cityController.text.isEmpty ||
-                                            streetController.text.isEmpty ||
-                                            phoneController.text.isEmpty ||
-                                            floorController.text.isEmpty ||
-                                            apartmentController.text.isEmpty ||
-                                            postalCodeController.text.isEmpty) {
+                                        nameErrorText = null;
+                                        cityErrorText = null;
+                                        streetErrorText = null;
+                                        floorNumberErrorText = null;
+                                        apartmentNumberErrorText = null;
+                                        postalCodeErrorText = null;
+                                        phoneErrorText = null;
+                                        setModalState(() {});
+                                        if (widget.address.fullName.isEmpty ||
+                                            widget.address.city.isEmpty ||
+                                            widget.address.streetAddress
+                                                .isEmpty ||
+                                            widget.address.apartmentNumber
+                                                .isEmpty ||
+                                            widget
+                                                .address.phoneNumber.isEmpty ||
+                                            widget
+                                                .address.floorNumber.isEmpty ||
+                                            widget.address.postalCode.isEmpty) {
                                           showSnackBar(
                                             'الرجاء ادخال جميع الحقول المطلوبه',
                                             'error',

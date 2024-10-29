@@ -286,6 +286,14 @@ class _AddressesScreenState extends State<AddressesScreen> {
                             width: screenWidth * 0.90,
                             child: ElevatedButton(
                               onPressed: () async {
+                                nameErrorText = null;
+                                cityErrorText = null;
+                                streetErrorText = null;
+                                floorNumberErrorText = null;
+                                apartmentNumberErrorText = null;
+                                postalCodeErrorText = null;
+                                phoneErrorText = null;
+                                setModalState(() {});
                                 if (nameController.text.isEmpty ||
                                     cityController.text.isEmpty ||
                                     streetController.text.isEmpty ||
