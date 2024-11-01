@@ -50,8 +50,23 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     IconButton(
-                      icon: SvgPicture.asset(
-                        'assets/images/trash.svg',
+                      icon: BlocBuilder<CartCubit, CartState>(
+                        builder: (context, state) {
+                          if (state is CartDeleteLoading &&
+                              state.id == widget.product.productId) {
+                            return const SizedBox(
+                              width: 17,
+                              height: 17,
+                              child: CircularProgressIndicator(
+                                color: Colors.grey,
+                                strokeWidth: 3,
+                              ),
+                            );
+                          }
+                          return SvgPicture.asset(
+                            'assets/images/trash.svg',
+                          );
+                        },
                       ),
                       onPressed: () async {
                         mostSelling = [];
@@ -174,11 +189,11 @@ class _CartItemWidgetState extends State<CartItemWidget> {
                         SizedBox(width: screenWidth * 0.04),
                         GestureDetector(
                           onTap: () async {
-                            setState(() {
-                              widget.product.quantity++;
-                            });
                             if (widget.product.quantity <
                                 widget.product.stockQuantity) {
+                              setState(() {
+                                widget.product.quantity++;
+                              });
                               await cArt.increaseProductQuantity(
                                 id: widget.product.productId,
                                 token:

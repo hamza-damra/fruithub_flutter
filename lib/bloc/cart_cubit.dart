@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/cart_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
 import 'package:fruitshub/globals.dart';
+import 'package:fruitshub/models/cart_item.dart';
 import 'package:http/http.dart' as http;
 
 class CartState {}
@@ -16,8 +19,12 @@ class CartDeleteLoading extends CartState {
 
 class CartDeleteSuccess extends CartState {
   final int id;
+  final List<CartItem> newCartItems;
 
-  CartDeleteSuccess({required this.id});
+  CartDeleteSuccess({
+    required this.id,
+    required this.newCartItems,
+  });
 }
 
 class CartDeleteError extends CartState {}
@@ -54,8 +61,21 @@ class CartCubit extends Cubit<CartState> {
         id: id,
       );
       if (response.statusCode == 200 || response.statusCode == 204) {
-        emit(CartDeleteSuccess(id: id));
-        emit(CartInitial());
+        Map<String, dynamic> newCartItemsResponse = jsonDecode(response.body);
+        List<dynamic> cartItems = newCartItemsResponse['items'];
+        List<CartItem> newCartItems = cartItems
+            .map(
+              (json) => CartItem.fromJson(json),
+            )
+            .toList();
+        emit(CartDeleteSuccess(
+          id: id,
+          newCartItems: newCartItems,
+        ));
+        //newCartItemsResponse.clear();
+        //cartItems.clear();
+        //newCartItems.clear();
+
         if (screen == 'fav') {
           mostSelling = [];
         }
@@ -84,7 +104,6 @@ class CartCubit extends Cubit<CartState> {
       );
       if (response.statusCode == 200 || response.statusCode == 201) {
         emit(CartAddSuccess(id: id));
-        emit(CartInitial());
         if (screen == 'fav') {
           mostSelling = [];
         }

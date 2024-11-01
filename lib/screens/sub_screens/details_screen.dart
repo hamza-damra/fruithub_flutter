@@ -27,6 +27,12 @@ class _DetailsScreenState extends State<DetailsScreen> {
   bool _isCartLoading = false;
 
   @override
+  void initState() {
+    BlocProvider.of<CartCubit>(context).sendCartInitial();
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;

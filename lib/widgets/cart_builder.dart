@@ -9,27 +9,41 @@ import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/cart_item.dart';
 import 'package:fruitshub/widgets/cart_item.dart';
 
-class Cart extends StatefulWidget {
-  const Cart({
+class CartBuilder extends StatefulWidget {
+  const CartBuilder({
     super.key,
+    this.status,
+    this.newCartItems,
   });
-
+  final String? status;
+  final List<CartItem>? newCartItems;
   @override
-  State<Cart> createState() => _CartState();
+  State<CartBuilder> createState() => _CartState();
 }
 
-class _CartState extends State<Cart> {
+class _CartState extends State<CartBuilder> {
   Future<List<CartItem>> getProducts() async {
+    print('-----------------------------------------------');
     return await CartManagement().getCartItems(
       token: await SharedPrefManager().getData('token'),
     );
   }
 
+  bool isItemsLoading = true;
   Future<List<CartItem>> requestData() async {
-    if (cart.isEmpty) {
+    if (cart.isEmpty && widget.status == 'Initial') {
+      print('cart builder Initial');
       cart = await getProducts();
+      isItemsLoading = false;
+      return cart;
+    } else if (widget.status == 'Delete Success') {
+      print('cart builder Delete Success');
+      isItemsLoading = false;
+      cart = widget.newCartItems!;
       return cart;
     } else {
+      print('not');
+      isItemsLoading = false;
       return cart;
     }
   }
@@ -52,7 +66,8 @@ class _CartState extends State<Cart> {
       body: FutureBuilder(
         future: requestData(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting &&
+              isItemsLoading) {
             return const SpinKitThreeBounce(
               color: Colors.green,
               size: 50.0,
@@ -98,7 +113,7 @@ class _CartState extends State<Cart> {
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
-                                      'منتجات في سله التسوق',
+                                      'منتجات في العربه',
                                       style: TextStyle(
                                         color: const Color(0xff1B5E37),
                                         fontWeight: FontWeight.bold,
@@ -232,7 +247,7 @@ class _CartState extends State<Cart> {
                         SizedBox(
                             height: screenHeight * 0.02), // Responsive height
                         Text(
-                          '! السله فارغه',
+                          '! العربه فارغه',
                           style: TextStyle(
                             fontFamily: 'Cairo',
                             fontWeight: FontWeight.bold,

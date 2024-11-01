@@ -86,7 +86,7 @@ class _AppControllerState extends State<AppController> {
                 margin: EdgeInsets.all(buttonMargin),
                 icon: FontAwesomeIcons.cartShopping,
                 iconSize: iconSize,
-                text: ' سله التسوق',
+                text: ' العربه',
                 textStyle: TextStyle(
                   fontFamily: 'Cairo',
                   fontSize: fontSize,

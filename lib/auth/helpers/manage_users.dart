@@ -47,6 +47,8 @@ class ManageUsers {
           'https://fruitappbackendspringbootrestfullapijava.onrender.com/api/v1/users/login?email=$email&password=$password'),
     );
 
+    print(response.body);
+
     return response;
   }
 
