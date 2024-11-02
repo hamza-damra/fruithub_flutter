@@ -427,10 +427,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
           if (state is AddressAddSuccess) {
             Navigator.pop(context);
             Navigator.pop(context);
-            showSnackBar(
-              'تم اضافه العنوان بنجاح',
-              'info',
-            );
+            // showSnackBar(
+            //   'تم اضافه العنوان بنجاح',
+            //   'info',
+            // );
             clearControllers();
           } else if (state is AddressAddError) {
             Navigator.pop(context);
@@ -444,10 +444,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
               Navigator.pop(context);
               Navigator.pop(context);
             }
-            showSnackBar(
-              'تم تعديل العنوان بنجاح',
-              'info',
-            );
+            // showSnackBar(
+            //   'تم تعديل العنوان بنجاح',
+            //   'info',
+            // );
             clearControllers();
           } else if (state is AddressUpdateError) {
             showSnackBar(
@@ -455,10 +455,10 @@ class _AddressesScreenState extends State<AddressesScreen> {
               'error',
             );
           } else if (state is AddressDeleteSuccess) {
-            showSnackBar(
-              'تم حذف العنوان بنجاح',
-              'info',
-            );
+            // showSnackBar(
+            //   'تم حذف العنوان بنجاح',
+            //   'info',
+            // );
             clearControllers();
           } else if (state is AddressDeleteError) {
             showSnackBar(
@@ -476,7 +476,7 @@ class _AddressesScreenState extends State<AddressesScreen> {
           }
 
           return FutureBuilder<List<AddressModel>>(
-            future: getAllAddresses(),
+            future: requestData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const SpinKitThreeBounce(

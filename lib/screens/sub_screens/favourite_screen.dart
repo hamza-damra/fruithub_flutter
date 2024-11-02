@@ -47,21 +47,22 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
       ),
       body: BlocConsumer<FavouriteCubit, FavouriteState>(
         listener: (context, state) {
-          if (state is FavouriteDeleteSuccess) {
-            showTopSnackBar(
-              Overlay.of(context),
-              displayDuration: const Duration(milliseconds: 10),
-              const CustomSnackBar.info(
-                message: "تم حذف المنتج من قائمه التمني",
-                textAlign: TextAlign.center,
-                textStyle: TextStyle(
-                  fontFamily: 'Cairo',
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-            );
-          } else if (state is FavouriteError) {
+          // if (state is FavouriteDeleteSuccess) {
+          //   showTopSnackBar(
+          //     Overlay.of(context),
+          //     displayDuration: const Duration(milliseconds: 10),
+          //     const CustomSnackBar.info(
+          //       message: "تم حذف المنتج من قائمه التمني",
+          //       textAlign: TextAlign.center,
+          //       textStyle: TextStyle(
+          //         fontFamily: 'Cairo',
+          //         fontWeight: FontWeight.bold,
+          //         color: Colors.white,
+          //       ),
+          //     ),
+          //   );
+          // } else
+          if (state is FavouriteError) {
             showTopSnackBar(
               Overlay.of(context),
               displayDuration: const Duration(milliseconds: 10),
@@ -78,12 +79,6 @@ class _FavouriteScreenState extends State<FavouriteScreen> {
           }
         },
         builder: (context, state) {
-          if (state is FavouriteLoading) {
-            return const SpinKitThreeBounce(
-              color: Colors.green,
-              size: 50.0,
-            );
-          }
           return Column(
             children: [
               Expanded(

@@ -1,6 +1,7 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fruitshub/API/address_management.dart';
 import 'package:fruitshub/auth/helpers/shared_pref_manager.dart';
+import 'package:fruitshub/globals.dart';
 import 'package:fruitshub/models/address.dart';
 import 'package:http/http.dart' as http;
 
@@ -38,6 +39,7 @@ class AddressCubit extends Cubit<AddressState> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        address = [];
         emit(AddressAddSuccess());
       } else {
         emit(AddressAddError());
@@ -58,6 +60,7 @@ class AddressCubit extends Cubit<AddressState> {
       );
 
       if (response.statusCode == 200 || response.statusCode == 201) {
+        address = [];
         emit(AddressUpdateSuccess(isSetDefult ? true : false));
       } else {
         emit(AddressUpdateError());
@@ -76,6 +79,7 @@ class AddressCubit extends Cubit<AddressState> {
       );
 
       if (response.statusCode == 204 || response.statusCode == 205) {
+        address = [];
         emit(AddressDeleteSuccess());
       } else {
         emit(AddressDeleteError());
