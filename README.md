@@ -1,5 +1,5 @@
 # Brief
-Fruit Ordering App
+Fruit Ordering App with java spring boot back end 
 
 ## OUTPUT
 ![1](https://github.com/user-attachments/assets/7191559e-ef66-49d4-9207-88d0ea5b4832)
